@@ -1,0 +1,36 @@
+﻿TODO:
+
+
+Others:
+-support delete? (maybe not, just hide for HIPAA compliance)
+
+
+Done:
+-check pending approval
+-parse subcategory (70 items!)
+-physician profile link (implemented model, shouldn't call from modal)
+-creator can close case
+-creator can edit case (v2 use viewModal)
+-comments
+-search
+-filter
+-marketing sample?
+-mobile responsiveness
+
+FEATURE LIST:
+-email
+-storage
+-search
+-filter
+
+Security
+-SSL
+-Identity
+-Antiforgery
+-Redundancy
+-Backup
+
+Engineering
+-source control
+-remote source control
+-cicd

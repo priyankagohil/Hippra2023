@@ -1,0 +1,27 @@
+﻿Files To modify:
+
+Some times it's far easier to modify the file directly than create a container holder and pass components. Below are the list of files to copy to your project.
+Make sure FTDesign\_Imports.razor do include the paths for these.
+
+1) Copy FTLayout to \Shared
+2) Change App.razor's MainLayout to FTLayout
+3) Configure FTLayout customization
+4) Configure FTNavBar
+5) Configure FTFooter
+
+
+Others:
+
+FTSidebarHeader
+FTSidebarMain
+FTSidebarMain
+FTNavBar
+FTFooter
+
+
+
+
+
+
+Features removed:
+-FTPage

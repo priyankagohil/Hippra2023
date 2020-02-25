@@ -1,0 +1,55 @@
+﻿@page
+@model Hippra.Pages.Comments.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>CaseComment</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CaseComment.PosterId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CaseComment.PosterId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CaseComment.PosterName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CaseComment.PosterName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CaseComment.posterSpeciality)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CaseComment.posterSpeciality)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CaseComment.Comment)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CaseComment.Comment)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CaseComment.PostedDate)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CaseComment.PostedDate)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CaseComment.Case)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CaseComment.Case.ID)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.CaseComment.ID">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

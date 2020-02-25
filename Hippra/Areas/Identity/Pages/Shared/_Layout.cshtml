@@ -1,0 +1,87 @@
+﻿@using Microsoft.AspNetCore.Hosting
+@using Microsoft.AspNetCore.Mvc.ViewEngines
+@inject IWebHostEnvironment Environment
+@inject ICompositeViewEngine Engine
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Hippra</title>
+    <link rel="stylesheet" href="~/Identity/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/10.0.0/css/fabric.min.css" />
+    <link href="~/css/FTDesign.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm  navbar-light  box-shadow py-2">
+        <div class="container-fluid nav-pady">
+
+                    <a class="navbar-brand ft-nav-brand-container" href="/">
+                        <img src="/img/hippra/hippralogo.jpg"  width="40" height="40" />
+                        <div class="flex-grow-1  ">
+                            <span class="ms-fontWeight-regular ms-fontSize-24">  Hippra</span>
+                        </div>
+
+                    </a>
+
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                @{
+                    var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
+                }
+                @if (result.Success)
+                {
+                    await Html.RenderPartialAsync("_LoginPartial");
+                }
+                else
+                {
+                    throw new InvalidOperationException("The default Identity UI layout requires a partial view '_LoginPartial' " +
+                        "usually located at '/Pages/_LoginPartial' or at '/Views/Shared/_LoginPartial' to work. Based on your configuration " +
+                        $"we have looked at it in the following locations: {System.Environment.NewLine}{string.Join(System.Environment.NewLine, result.SearchedLocations)}.");
+                }
+
+                <ul class="navbar-nav flex-grow-1">
+
+                        <li class="nav-item">
+                            <a class="nav-link " href="/About">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="/FTContact">Contact Us</a>
+                        </li>
+                    
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="footer border-top text-muted">
+        <div class="ft-footer border-top text-muted d-block">
+            <div class="text-center">
+                2020 &copy; Nexus 8 International ·
+                <a href="/About">About</a> ·
+                <a href="/Privacy">Privacy</a> ·
+                <a href="/Terms">Terms</a>
+            </div>
+
+        </div>
+    </footer>
+    <script src="~/Identity/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/Identity/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Identity/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

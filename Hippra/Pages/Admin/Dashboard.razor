@@ -1,0 +1,97 @@
+﻿@page "/Dashboard"
+@using Hippra
+@using Hippra.Pages.Common
+@using Hippra.Models.Enums
+@using Hippra.Services
+@using Hippra.Models.SQL
+@using Hippra.Models.POCO
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
+@using System.Security.Claims
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@inject IOptions<AppSettings> settings
+@inject IJSRuntime JSRuntime
+
+<div class="container">
+
+    <AuthorizeView>
+        <Authorized>
+            @if (isAdmin)
+            {
+                <br />
+                <br />
+                <h1 class="display-4">Dashboard</h1>
+                <br />
+                <br />
+                <hr />
+                <br />
+                <div class="row">
+                    <HMenu MenuItems="MenuItems" MenuClicked="MenuClicked" />
+                </div>
+                @switch (TabSelected)
+                {
+                    default:
+                        // 0
+                        <Accounts />
+                        break;
+                }
+            }
+            else
+            {
+                <p class="lead">Nothing to see here...</p>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <p class="lead">Nothing to see here...</p>
+        </NotAuthorized>
+    </AuthorizeView>
+
+
+</div>
+
+
+@code {
+
+    public List<MenuItem> MenuItems { get; set; }
+    public int TabSelected { get; set; }
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private AuthenticationState authState { get; set; }
+    private ClaimsPrincipal user { get; set; }
+    private bool isAdmin { get; set; } = false;
+
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        authState = await authenticationStateTask;
+        user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var usr = await UserManager.GetUserAsync(user);
+            if (usr.NormalizedEmail == settings.Value.FTManagerUsr.ToUpper())
+            {
+                isAdmin = true;
+                MenuItems = new List<MenuItem>()
+            {
+                    new MenuItem{ Name="Account", ID=0}
+                };
+
+                TabSelected = 0;
+
+            }
+        }
+
+
+    }
+    protected async Task MenuClicked(int tab)
+    {
+        TabSelected = tab;
+        this.StateHasChanged();
+    }
+
+}

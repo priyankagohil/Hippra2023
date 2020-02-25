@@ -1,0 +1,195 @@
+﻿
+@using System.ComponentModel.DataAnnotations;
+@using Microsoft.AspNetCore.Authentication;
+@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Identity;
+@using System.Text;
+@using System.Text.Encodings.Web;
+@using Hippra.Models.FTDesign;
+@using Hippra.Services;
+@inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
+@inject ProfileService pService;
+@using Hippra.Models.SQL;
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@using System.Security.Claims
+
+
+
+<AuthorizeView>
+    <Authorized Context="ChangeEmailContext">
+        <div class="card">
+            <div class="card-body">
+                <br />
+                <br />
+                <div class="d-block text-center">
+                    <EditForm Model="@inputModel" OnValidSubmit="@SubmitChangeEmail">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="row">
+                            <div class="offset-md-3 col-md-6 offset-md-3 text-left">
+
+                                <div class="mb-3 display-4 ">Manage Email</div>
+                                <br />
+                                <div class="mb-3">
+                                    @if (inputModel.IsEmailConfirmed)
+                                    {
+                                        <div class="input-group">
+                                            <InputText class="form-control" @bind-Value="@inputModel.Email" type="email" disabled />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text text-success font-weight-bold">✓</span>
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <InputText class="form-control" @bind-Value="@inputModel.Email" type="email" disabled />
+                                        <button class="btn btn-outline-info" @onclick="resendVerificationEmail">Resend email confirmation</button>
+                                    }
+
+                                </div>
+                                <div class="mb-3">
+                                    <label for="NewEmail">New Email</label>
+                                    <InputText class="form-control" id="NewEmail" type="email" required placeholder="Enter New Email" @bind-Value="@inputModel.NewEmail" aria-label="New Email" aria-describedby="New Email" />
+                                </div>
+                                <br />
+                                <hr />
+                                <br />
+                                <div class="mx-2">
+                                    <div class="d-flex justify-content-between">
+                                        <button class="btn btn-outline-dark" type="submit">Change Email</button>
+
+                                    </div>
+
+                                    @if (hasError)
+                                    {
+                                        <div class="alert alert-danger">Something went wrong. Please try again.</div>
+                                    }
+                                    <br />
+
+                                    @if (sentVerification)
+                                    {
+                                        <div class="alert alert-info">Verification Email Sent.</div>
+                                    }
+                                    <br />
+
+                                    @if (status == 1)
+                                    {
+                                        <div class="alert alert-info">Email Unchanged.</div>
+                                    }
+                                    <br />
+
+                                    @if (status == 2)
+                                    {
+                                        <div class="alert alert-info">Email Changed.</div>
+                                    }
+                                    <br />
+                                    <br />
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+                    </EditForm>
+
+                </div>
+                <br />
+                <br />
+            </div>
+        </div>
+
+
+    </Authorized>
+    <NotAuthorized>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="offset-md-3 col-md-6 offset-md-3 text-center">
+                        <br /><br />
+                        <div class="mb-3 ms-fontWeight-semibold ms-fontSize-24 ">Need To Sign In!</div>
+                        <br /><br />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+
+
+
+@code {
+    private FTEmailModel inputModel { get; set; } = new FTEmailModel();
+    private bool hasError { get; set; } = false;
+    private bool sentVerification { get; set; } = false;
+    private int status { get; set; } = 0;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private AuthenticationState authState { get; set; }
+    private ClaimsPrincipal user { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        authState = await authenticationStateTask;
+        user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var usr = await UserManager.GetUserAsync(user);
+
+            inputModel.Email = usr.Email;
+            inputModel.IsEmailConfirmed = usr.EmailConfirmed;
+
+        }
+
+
+    }
+
+    private async Task SubmitChangeEmail()
+    {
+        hasError = false;
+        var baseurl = NavigationManager.Uri;
+        baseurl = baseurl.Remove(baseurl.Length - 13);
+
+        status = 0;
+        var result = await pService.UpdateEmail(user, inputModel.NewEmail, baseurl);
+        if (result != -1)
+        {
+
+            //0 ok
+            //1 unchanged
+
+            if (result == 0)
+            {
+                status = 2;
+            }
+            if (result == 1)
+            {
+                status = 1;
+            }
+
+            this.StateHasChanged();
+        }
+        else
+        {
+            hasError = true;
+        }
+
+
+    }
+    private async Task resendVerificationEmail()
+    {
+        hasError = false;
+        var baseurl = NavigationManager.Uri;
+        baseurl = baseurl.Remove(baseurl.Length - 7);
+        await pService.SendVerificationEmail(inputModel.NewEmail, baseurl);
+        sentVerification = true;
+        this.StateHasChanged();
+    }
+}

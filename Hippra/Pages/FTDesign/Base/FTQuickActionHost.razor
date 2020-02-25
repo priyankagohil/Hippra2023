@@ -1,0 +1,13 @@
+﻿@using Hippra.Models.FTDesign
+
+<div class="d-flex flex-wrap">
+@foreach(var item in Items)
+{
+    <FTQuickActionItem item="item" />
+}
+</div>
+
+@code {
+    [Parameter]
+    public List<QuickActionItem> Items { get; set; }
+}

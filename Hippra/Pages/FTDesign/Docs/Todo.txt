@@ -1,0 +1,52 @@
+﻿features
+-cookie (done)
+-sidebar (done)
+-nav (done)
+-topcontrol (done)
+-subheader (done)
+-footer (done)
+
+user/identity
+--register (FTRegister)
+--login (FTLogin cannot do this) - will do redirect (using FTRZLogin)
+--logoff (get, for any blazor needs to call logoff)
+--change email (FTChangeEmail)
+--change password (FTChangePassword) - redirect to FTLogoff, then redirect to FTRZRelogin
+--relogin (razor pages, for change password)
+--download (FTPersonalData)
+--delete (FTDeleteAccount)
+--user settings (currently use FTLayoutSettings)
+--profile (FTProfile)
+--edit profile (FTEditProfile)
+--friends (FTContactManager)
+--2fa LOTS OF WORK HERE...skip for now?
+
+---MIGRATED ERTW UI to FTDesign (done 11/12)
+
+pages
+-error (done)
+-register wizard (done)
+-blog (done)
+--grid (done)
+--post (done)
+-pricing
+-invoice
+-faq
+
+components
+-charts (done)
+-calendar
+-tables
+-forms (lots)
+-controls (most default)
+-widgets (lots)
+-editors (v1 in FTBlogs)
+-file upload
+
+base/custom
+-list
+-notification
+-media
+-pagination (done)
+
+

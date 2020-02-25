@@ -1,0 +1,43 @@
+﻿
+
+    <div class="ft-main-px">
+        <div class="ft-subheader-bar text-dark">
+            <div class="ms-fontWeight-semibold ms-fontSize-20 ">
+                @Title
+            </div>
+            @if (HasCustomization)
+            {
+                if (HasSeparator)
+                {
+                    <div class="mx-2"> | </div>
+                }
+
+                @ChildContent
+            }
+
+
+        </div>
+    </div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+    [Parameter]
+    public bool HasSeparator { get; set; } = true;
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    public bool HasCustomization { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ChildContent == null)
+        {
+            HasCustomization = false;
+        }
+        else
+        {
+            HasCustomization = true;
+        }
+    }
+}

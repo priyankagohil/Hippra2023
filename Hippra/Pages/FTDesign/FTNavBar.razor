@@ -1,0 +1,194 @@
+﻿<nav class="navbar navbar-expand @NavCssClass navbar-light @NavbarCustomCssClass box-shadow py-2">
+    <div class="container-fluid nav-pady">
+        @if (HasNavBrand)
+        {
+            if (ISDemoMode)
+            {
+                <a class="navbar-brand ft-nav-brand-container" href="/">
+                    <i class="ms-Icon ms-Icon--Rocket @TextColorCustomCssClass mr-2" aria-hidden="true"></i>
+                    <div class="flex-grow-1 @TextColorCustomCssClass ">
+                        <span class="ms-fontWeight-regular ms-fontSize-24">  FTDesign</span>
+                    </div>
+
+                </a>
+            }
+            else
+            {
+                // customization
+                <a class="navbar-brand ft-nav-brand-container" href="/">
+                    <img src="/img/hippra/hippralogo.jpg" @TextColorCustomCssClass width="40" height="40" />
+                    <div class="flex-grow-1 @TextColorCustomCssClass ">
+                        <span class="ms-fontWeight-regular ms-fontSize-24">  Hippra</span>
+                    </div>
+
+                </a>
+            }
+
+        }
+        <ul class="navbar-nav flex-grow-1">
+            @if (ISDemoMode)
+            {
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle @TextColorCustomCssClass" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Pages
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/#">Create New Post</a>
+                        <a class="dropdown-item" href="/#">Generate Reports</a>
+                        <a class="dropdown-item" href="/#">Manage Orders</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/#">Customer Feedbacks</a>
+                        <a class="dropdown-item" href="/#">Register Member</a>
+
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link @TextColorCustomCssClass" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        No Arrow
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/#">Create New Post</a>
+                        <a class="dropdown-item" href="/#">Generate Reports</a>
+                        <a class="dropdown-item" href="/#">Manage Orders</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/#">Customer Feedbacks</a>
+                        <a class="dropdown-item" href="/#">Register Member</a>
+
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link @TextColorCustomCssClass" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Reports
+                    </a>
+                    <div class="dropdown-menu p-4" aria-labelledby="navbarDropdownMenuLink" style="width: 900px;">
+                        <div class="row">
+                            <div class="col ">
+
+                                <h6 class="dropdown-header">Financial Reports</h6>
+                                <a class="dropdown-item" href="#"><i class="ms-Icon ms-Icon--Financial" aria-hidden="true"></i> Annual Report</a>
+                                <a class="dropdown-item" href="#"><i class="ms-Icon ms-Icon--People" aria-hidden="true"></i> HR Report</a>
+                                <a class="dropdown-item" href="#"><i class="ms-Icon ms-Icon--CheckList" aria-hidden="true"></i> IPO Report</a>
+                                <a class="dropdown-item" href="#"><i class="ms-Icon ms-Icon--Chart" aria-hidden="true"></i> Finance Margins</a>
+                                <a class="dropdown-item" href="#"><i class="ms-Icon ms-Icon--BarChart4" aria-hidden="true"></i> Revenue Report</a>
+                            </div>
+                            <div class="col " style="border-left:solid;border-width:thin;border-left-color:lightgray;">
+                                <h6 class="dropdown-header">Project Reports</h6>
+                                <a class="dropdown-item" href="#">- ERTW Life</a>
+                                <a class="dropdown-item" href="#">- FTDesign</a>
+                                <a class="dropdown-item" href="#">- FT Consulting</a>
+                            </div>
+                            <div class="col " style="border-left:solid;border-width:thin;border-left-color:lightgray;">
+                                <h6 class="dropdown-header">HR Reports</h6>
+                                <a class="dropdown-item" href="#">· Staff Directory</a>
+                                <a class="dropdown-item" href="#">· Client Directory</a>
+                                <a class="dropdown-item" href="#">· Salary Report</a>
+                                <a class="dropdown-item" href="#">· Staff Payslips</a>
+                                <a class="dropdown-item" href="#">· Corporate Expenses</a>
+                                <a class="dropdown-item" href="#">· Project Expenses</a>
+                            </div>
+                            <div class="col " style="border-left:solid;border-width:thin;border-left-color:lightgray;">
+                                <h6 class="dropdown-header">Reporting Apps</h6>
+                                <a class="dropdown-item" href="#">Report Adjustments</a>
+                                <a class="dropdown-item" href="#">Report Settings</a>
+                                <a class="dropdown-item" href="#">Conversions</a>
+                                <a class="dropdown-item" href="#">Report Flow</a>
+                                <a class="dropdown-item" href="#">Audit & Logs</a>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @TextColorCustomCssClass" href="/#">Link</a>
+                </li>
+            }
+            else
+            {
+                //customization
+
+
+                @*<li class="nav-item d-none d-sm-block">
+                    <a class="nav-link @TextColorCustomCssClass" href="/About">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @TextColorCustomCssClass" href="/FTContact">Contact Us</a>
+                </li>*@
+            }
+
+        </ul>
+
+        <div class="navbar-nav flex-row">
+            @if (HasTopControls)
+            {
+                if (ISDemoMode)
+                {
+                    <FTLoginDisplay HasNotification="true" HasQuickAction="true" HasSearchBar="true" HasContactsPanel="true" />
+                }
+                else
+                {
+                    //customization
+                    <FTLoginDisplay HasContactsPanel="true" />
+                }
+
+            }
+
+
+        </div>
+    </div>
+</nav>
+
+@code {
+    [Parameter]
+    public bool IsFixTop { get; set; } = true;
+    [Parameter]
+    public bool HasTopControls { get; set; } = true;
+
+    // customization
+    private string NavCssClass { get; set; } = "";
+    private bool HasNavBrand { get; set; } = true;
+
+    [CascadingParameter(Name="DEMO_MODE")]
+    public bool ISDemoMode { get; set; }
+
+    [CascadingParameter(Name="FT_THEME")]
+    public ThemeOption themeOption { get; set; } = ThemeOption.LIGHT;
+    private string BtnCustomCssClass { get; set; } = "";
+    private string TextColorCustomCssClass { get; set; } = "";
+    private string NavbarCustomCssClass { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IsFixTop)
+        {
+            NavCssClass = "sticky-top";
+        }
+        switch (themeOption)
+        {
+            case ThemeOption.LIGHT:
+                BtnCustomCssClass = "btn-light";
+                TextColorCustomCssClass = "text-dark";
+                NavbarCustomCssClass = "navbar-light bg-light";
+                break;
+            case ThemeOption.FT_LIGHT:
+                BtnCustomCssClass  = "ft-btn-light";
+                TextColorCustomCssClass = "text-dark";
+                NavbarCustomCssClass = "ft-navbar-light  ft-bg-light";
+                break;
+            case ThemeOption.FT_DARK:
+                BtnCustomCssClass = "ft-btn-dark";
+                TextColorCustomCssClass = "text-white";
+                NavbarCustomCssClass = "ft-navbar-light  ft-bg-dark";
+                break;
+            default:
+            case ThemeOption.DARK:
+                BtnCustomCssClass = "btn-dark";
+                TextColorCustomCssClass = "text-white";
+                NavbarCustomCssClass = "navbar-dark bg-dark";
+                break;
+        }
+
+    }
+}

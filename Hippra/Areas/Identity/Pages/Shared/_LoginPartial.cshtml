@@ -1,0 +1,63 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Hippra.Models.SQL
+@using Microsoft.Extensions.Options
+@using Hippra
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@inject IOptions<AppSettings> settings
+
+
+    <ul class="navbar-nav">
+        @if (SignInManager.IsSignedIn(User))
+        {
+            @*var usr = await UserManager.GetUserAsync(User);
+            if (usr.NormalizedEmail == settings.Value.FTManagerUsr.ToUpper())
+            {
+                // for admin
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/Dashboard" title="Manage"><span style="font-size: 1.5em;"><i class="fas fa-tachometer-alt" style="width:24px"></i></span></a>
+                </li>
+            }
+            <li class="nav-item">
+                <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><span style="font-size: 1.5em;"><i class="fas fa-user-circle" style="width:24px"></i></span></a>
+            </li>*@
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="/FTRegister">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" href="/FTRZLogin">Login</a>
+            </li>
+        }
+    </ul>
+
+
+@*@using Microsoft.AspNetCore.Identity
+    @inject SignInManager<AppUser> SignInManager
+    @inject UserManager<AppUser> UserManager
+    @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+    <ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+        </li>
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/" method="post">
+                <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
+    </ul>*@

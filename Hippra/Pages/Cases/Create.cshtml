@@ -1,0 +1,119 @@
+﻿@page
+@model Hippra.Pages.Cases.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Case</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Case.PosterID" class="control-label"></label>
+                <input asp-for="Case.PosterID" class="form-control" />
+                <span asp-validation-for="Case.PosterID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.PosterName" class="control-label"></label>
+                <input asp-for="Case.PosterName" class="form-control" />
+                <span asp-validation-for="Case.PosterName" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Case.Status" /> @Html.DisplayNameFor(model => model.Case.Status)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.DateCreated" class="control-label"></label>
+                <input asp-for="Case.DateCreated" class="form-control" />
+                <span asp-validation-for="Case.DateCreated" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.DateLastUpdated" class="control-label"></label>
+                <input asp-for="Case.DateLastUpdated" class="form-control" />
+                <span asp-validation-for="Case.DateLastUpdated" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.DateClosed" class="control-label"></label>
+                <input asp-for="Case.DateClosed" class="form-control" />
+                <span asp-validation-for="Case.DateClosed" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.Topic" class="control-label"></label>
+                <input asp-for="Case.Topic" class="form-control" />
+                <span asp-validation-for="Case.Topic" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.Description" class="control-label"></label>
+                <input asp-for="Case.Description" class="form-control" />
+                <span asp-validation-for="Case.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.ResponseNeeded" class="control-label"></label>
+                <input asp-for="Case.ResponseNeeded" class="form-control" />
+                <span asp-validation-for="Case.ResponseNeeded" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.MedicalCategory" class="control-label"></label>
+                <input asp-for="Case.MedicalCategory" class="form-control" />
+                <span asp-validation-for="Case.MedicalCategory" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.PatientAge" class="control-label"></label>
+                <input asp-for="Case.PatientAge" class="form-control" />
+                <span asp-validation-for="Case.PatientAge" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.Gender" class="control-label"></label>
+                <input asp-for="Case.Gender" class="form-control" />
+                <span asp-validation-for="Case.Gender" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.Race" class="control-label"></label>
+                <input asp-for="Case.Race" class="form-control" />
+                <span asp-validation-for="Case.Race" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.Ethnicity" class="control-label"></label>
+                <input asp-for="Case.Ethnicity" class="form-control" />
+                <span asp-validation-for="Case.Ethnicity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.LabValues" class="control-label"></label>
+                <input asp-for="Case.LabValues" class="form-control" />
+                <span asp-validation-for="Case.LabValues" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.CurrentStageOfDisease" class="control-label"></label>
+                <input asp-for="Case.CurrentStageOfDisease" class="form-control" />
+                <span asp-validation-for="Case.CurrentStageOfDisease" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.CurrentTreatmentAdministered" class="control-label"></label>
+                <input asp-for="Case.CurrentTreatmentAdministered" class="form-control" />
+                <span asp-validation-for="Case.CurrentTreatmentAdministered" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Case.TreatmentOutcomes" class="control-label"></label>
+                <input asp-for="Case.TreatmentOutcomes" class="form-control" />
+                <span asp-validation-for="Case.TreatmentOutcomes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
