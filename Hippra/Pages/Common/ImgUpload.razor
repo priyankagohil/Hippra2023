@@ -1,0 +1,14 @@
+﻿<InputFile OnChange="HandleFileSelected" />
+
+
+@code {
+    // reference code https://blog.stevensanderson.com/2019/09/13/blazor-inputfile/
+    IFileListEntry file;
+
+    void HandleFileSelected(IFileListEntry[] files)
+    {
+        file = files.FirstOrDefault();
+    }
+
+
+}
