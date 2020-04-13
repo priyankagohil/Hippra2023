@@ -57,7 +57,7 @@ namespace Hippra
 
             services.AddIdentity<AppUser, IdentityRole>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = true;
+                options.SignIn.RequireConfirmedAccount = false;
                 options.User.RequireUniqueEmail = true;
             })
                 .AddDefaultTokenProviders()
