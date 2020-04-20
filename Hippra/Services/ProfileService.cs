@@ -401,6 +401,13 @@ namespace Hippra.Services
             return 0;
         }
 
-
+        public async Task<int> GetUserCount()
+        {
+            return await Hippra.Extensions.UserManagerExtensions.GetAllUsersCount(_userManager);
+        }
+        public async Task<List<string>> GetUserNameList()
+        {
+            return await Hippra.Extensions.UserManagerExtensions.GetAllUsersName(_userManager);
+        }
     }
 }

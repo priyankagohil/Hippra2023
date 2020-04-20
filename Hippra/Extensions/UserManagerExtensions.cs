@@ -119,5 +119,30 @@ namespace Hippra.Extensions
             }
 
         }
+        public static async Task<int> GetAllUsersCount(this UserManager<AppUser> um)
+        {
+
+                return um.Users.Count();
+            
+        }
+        public static async Task<List<AppUser>> GetAllUsers(this UserManager<AppUser> um)
+        {
+            // util, don't use unless it's necessary
+
+                return await um.Users.ToListAsync();
+            
+        }
+        public static async Task<List<string>> GetAllUsersName(this UserManager<AppUser> um)
+        {
+
+            var users = await um.Users.ToListAsync();
+            List<string> uList = new List<string>();
+            foreach (var u in users)
+            {
+                uList.Add(u.FirstName + " " + u.LastName);
+            }
+            return uList;
+
+        }
     }
 }

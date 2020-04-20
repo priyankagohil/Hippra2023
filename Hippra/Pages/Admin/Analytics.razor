@@ -1,0 +1,93 @@
+@page "/analytics"
+@using Hippra
+@using Hippra.Pages.Common
+@using Hippra.Models.Enums
+@using Hippra.Services
+@using Hippra.Models.SQL
+@using Hippra.Models.POCO
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
+@using System.Security.Claims
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@inject IOptions<AppSettings> settings
+@inject ProfileService pService
+@inject IJSRuntime JSRuntime
+
+<AuthorizeView>
+    <Authorized>
+        @if (isAdmin)
+        {
+            <br />
+            <br />
+            <h1 class="display-4">Accounts Analytics </h1>
+            <br />
+            <br />
+            <hr />
+            <br />
+
+            <div>
+                <strong>Number of users</strong> @NumOfUsers
+                <br />
+                <div class="lead">Users</div>
+                <hr />
+                @foreach (var i in UserNameList)
+                {
+                    <div>@i</div>
+                }
+            </div>
+
+        }
+        else
+        {
+            <p class="lead">Nothing to see here...</p>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <p class="lead">Nothing to see here...</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private AuthenticationState authState { get; set; }
+    private ClaimsPrincipal user { get; set; }
+    private bool isAdmin { get; set; } = false;
+
+    private List<AppUser> notApprovedUserList { get; set; }
+    private int NumOfUsers { get; set; } = 0;
+    private List<string> UserNameList { get; set; } = new List<string>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        authState = await authenticationStateTask;
+        user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var usr = await UserManager.GetUserAsync(user);
+            if (usr.NormalizedEmail == settings.Value.FTManagerUsr.ToUpper())
+            {
+                isAdmin = true;
+                notApprovedUserList = await pService.GetProfiles();
+                NumOfUsers = await pService.GetUserCount();
+                UserNameList = await pService.GetUserNameList();
+            }
+        }
+    }
+
+    private async Task Approve(int id)
+    {
+        await pService.ApproveAccount(id);
+        notApprovedUserList = await pService.GetProfiles();
+        this.StateHasChanged();
+    }
+    private async Task Deny(int id)
+    {
+        await pService.DeleteAccount(id);
+        notApprovedUserList = await pService.GetProfiles();
+        this.StateHasChanged();
+    }
+}

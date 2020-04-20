@@ -73,6 +73,7 @@
 
 
             </div>
+
         }
         else
         {
@@ -94,6 +95,7 @@
     private List<AppUser> notApprovedUserList { get; set; }
 
 
+
     protected override async Task OnInitializedAsync()
     {
         authState = await authenticationStateTask;
@@ -106,6 +108,7 @@
             {
                 isAdmin = true;
                 notApprovedUserList = await pService.GetProfiles();
+
             }
         }
     }
