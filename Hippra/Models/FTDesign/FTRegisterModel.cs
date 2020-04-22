@@ -25,7 +25,7 @@ namespace Hippra.Models.FTDesign
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
+        
         public string UserName { get; set; }
         [Required]
         public string FirstName { get; set; }
@@ -44,37 +44,37 @@ namespace Hippra.Models.FTDesign
         [Display(Name = "American Board Certified")]
         public bool AmericanBoardCertified { get; set; }
 
-        [Required]
+
         [Display(Name = "Residency Hospital")]
         public string ResidencyHospital { get; set; }
 
-        [Required]
+
         [Display(Name = "Medical School Attended")]
         public string MedicalSchoolAttended { get; set; }
 
-        [Required]
+
         [Display(Name = "Education/Degree")]
         public string EducationDegree { get; set; }
 
-        [Required]
+  
         [Display(Name = "Address")]
         public string Address { get; set; }
 
-        [Required]
+        
         [Display(Name = "Zipcode")]
         public string Zipcode { get; set; }
 
-        [Required]
+        
         [Display(Name = "State")]
         public string State { get; set; }
 
-        [Required]
+        
         [Display(Name = "City")]
         public string City { get; set; }
 
-        [Required]
+        
         [Display(Name = "Contact Number")]
-        [Phone]
+        //[Phone]
         public string PhoneNumber { get; set; }
 
         [Required]

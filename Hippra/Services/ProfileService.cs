@@ -160,8 +160,9 @@ namespace Hippra.Services
                     City = Input.City,
                     PhoneNumber = Input.PhoneNumber,
                     DateJoined = DateTime.Now,
-                    isApproved = false
+                    isApproved = true
                 };
+                // temporary approve all sign up
             }
 
 

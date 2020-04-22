@@ -30,7 +30,11 @@
         <div class="card">
             <div class="card-body">
                 <br />
-                <FTWizardMenu count="tabCount" MenuClicked="tabClicked" current="currentTab" />
+                @if (ShowTabs)
+                {
+                    <FTWizardMenu count="tabCount" MenuClicked="tabClicked" current="currentTab" />
+                }
+
                 <br />
                 <hr />
                 <br />
@@ -44,12 +48,13 @@
 
                                 <div class="mb-3 ms-fontWeight-semibold ms-fontSize-24 ">Create New Account</div>
                                 <br />
-                                <div class="mb-3">
+                               
+                                <div class="d-none mb-3">
                                     <label for="Email">Username</label>
-                                    <InputText class="form-control" id="Username" type="text" required placeholder="Enter Username" @bind-Value="@inputModel.UserName" aria-label="Username" aria-describedby="Username" />
+                                    <InputText class="form-control" id="Username" type="text"  placeholder="Enter Username (email for now)" @bind-Value="@inputModel.UserName" aria-label="Username" aria-describedby="Username" />
                                 </div>
                                 <div class="mb-3">
-                                    <label for="Email">Email</label>
+                                    <label for="Email">Username / Email</label>
                                     <InputText class="form-control" id="Email" type="email" required placeholder="Enter Email" @bind-Value="@inputModel.Email" aria-label="Email" aria-describedby="Email" />
                                     <div class="small text-muted">
                                         We'll never share your email with anyone else
@@ -70,9 +75,14 @@
                                     </div>
                                 </div>
                                 <br /><hr /><br />
-                                <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn btn-dark" @onclick="nextTab">Next Step</button>
-                                </div>
+                                @if (ShowTabs)
+                                {
+
+                                    <div class="d-flex justify-content-end">
+                                        <button type="button" class="btn btn-dark" @onclick="nextTab">Next Step</button>
+                                    </div>
+                                }
+
 
                             </div>
 
@@ -125,30 +135,35 @@
                                 </div>
                                 <div class=" mb-3">
                                     <label for="Residency">Residency Hospital</label>
-                                    <InputText class="form-control" id="Residency" required placeholder="Residency Hospital" @bind-Value="@inputModel.ResidencyHospital" aria-label="Residency" aria-describedby="Residency" />
+                                    <InputText class="form-control" id="Residency"  placeholder="Residency Hospital" @bind-Value="@inputModel.ResidencyHospital" aria-label="Residency" aria-describedby="Residency" />
                                     <div class="small text-muted">
                                         You can change this later
                                     </div>
                                 </div>
                                 <div class=" mb-3">
                                     <label for="MedicalSchool">Medical School Attended</label>
-                                    <InputText class="form-control" id="MedicalSchool" required placeholder="Medical School Attended" @bind-Value="@inputModel.MedicalSchoolAttended" aria-label="MedicalSchool" aria-describedby="MedicalSchool" />
+                                    <InputText class="form-control" id="MedicalSchool"  placeholder="Medical School Attended" @bind-Value="@inputModel.MedicalSchoolAttended" aria-label="MedicalSchool" aria-describedby="MedicalSchool" />
                                     <div class="small text-muted">
                                         You can change this later
                                     </div>
                                 </div>
                                 <div class=" mb-3">
                                     <label for="Education">Education/Degree</label>
-                                    <InputText class="form-control" id="Education" required placeholder="Education/Degree" @bind-Value="@inputModel.EducationDegree" aria-label="Education" aria-describedby="Education" />
+                                    <InputText class="form-control" id="Education"  placeholder="Education/Degree" @bind-Value="@inputModel.EducationDegree" aria-label="Education" aria-describedby="Education" />
                                     <div class="small text-muted">
                                         You can change this later
                                     </div>
                                 </div>
                                 <br /><hr /><br />
-                                <div class="d-flex justify-content-between">
-                                    <button type="button" class="btn btn-outline-dark" @onclick="prevTab">Previous</button>
-                                    <button type="button" class="btn btn-dark" @onclick="nextTab">Next Step</button>
-                                </div>
+                                @if (ShowTabs)
+                                {
+
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-dark" @onclick="prevTab">Previous</button>
+                                        <button type="button" class="btn btn-dark" @onclick="nextTab">Next Step</button>
+                                    </div>
+                                }
+
 
                             </div>
 
@@ -162,44 +177,49 @@
 
                                 <div class=" mb-3">
                                     <label for="Address">Address</label>
-                                    <InputText class="form-control" id="Address" required placeholder="Address" @bind-Value="@inputModel.Address" aria-label="Address" aria-describedby="Address" />
+                                    <InputText class="form-control" id="Address"  placeholder="Address" @bind-Value="@inputModel.Address" aria-label="Address" aria-describedby="Address" />
                                     <div class="small text-muted">
                                         You can change this later
                                     </div>
                                 </div>
                                 <div class=" mb-3">
                                     <label for="City">City</label>
-                                    <InputText class="form-control" id="City" required placeholder="City" @bind-Value="@inputModel.City" aria-label="City" aria-describedby="City" />
+                                    <InputText class="form-control" id="City"  placeholder="City" @bind-Value="@inputModel.City" aria-label="City" aria-describedby="City" />
                                     <div class="small text-muted">
                                         You can change this later
                                     </div>
                                 </div>
                                 <div class=" mb-3">
                                     <label for="State">State</label>
-                                    <InputText class="form-control" id="State" required placeholder="State" @bind-Value="@inputModel.State" aria-label="State" aria-describedby="State" />
+                                    <InputText class="form-control" id="State"  placeholder="State" @bind-Value="@inputModel.State" aria-label="State" aria-describedby="State" />
                                     <div class="small text-muted">
                                         You can change this later
                                     </div>
                                 </div>
                                 <div class=" mb-3">
                                     <label for="Zipcode">Zipcode</label>
-                                    <InputText class="form-control" id="Zipcode" required placeholder="Zipcode" @bind-Value="@inputModel.Zipcode" aria-label="Zipcode" aria-describedby="Zipcode" />
+                                    <InputText class="form-control" id="Zipcode"  placeholder="Zipcode" @bind-Value="@inputModel.Zipcode" aria-label="Zipcode" aria-describedby="Zipcode" />
                                     <div class="small text-muted">
                                         You can change this later
                                     </div>
                                 </div>
                                 <div class=" mb-3">
                                     <label for="PhoneNumber">Phone Number</label>
-                                    <InputText class="form-control" id="PhoneNumber" required placeholder="Phone Number" @bind-Value="@inputModel.PhoneNumber" aria-label="PhoneNumber" aria-describedby="PhoneNumber" />
+                                    <InputText class="form-control" id="PhoneNumber"  placeholder="Phone Number" @bind-Value="@inputModel.PhoneNumber" aria-label="PhoneNumber" aria-describedby="PhoneNumber" />
                                     <div class="small text-muted">
                                         You can change this later
                                     </div>
                                 </div>
                                 <br /><hr /><br />
-                                <div class="d-flex justify-content-between">
-                                    <button type="button" class="btn btn-outline-dark" @onclick="prevTab">Previous</button>
-                                    <button type="button" class="btn btn-dark" @onclick="nextTab">Next Step</button>
-                                </div>
+                                @if (ShowTabs)
+                                {
+
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-dark" @onclick="prevTab">Previous</button>
+                                        <button type="button" class="btn btn-dark" @onclick="nextTab">Next Step</button>
+                                    </div>
+                                }
+
                             </div>
 
 
@@ -276,6 +296,10 @@
     }
     private bool hasError { get; set; } = false;
 
+
+    // CONFIG
+    private bool ShowTabs { get; set; } = false;
+
     protected override async Task OnInitializedAsync()
     {
 
@@ -284,9 +308,23 @@
         menuArray = new List<array>();
         for (int i = 0; i < tabCount; i++)
         {
-            menuArray.Add(new array { cssClass = "d-none" });
+            if (ShowTabs)
+            {
+
+                menuArray.Add(new array { cssClass = "d-none" });
+            }
+            else
+            {
+                menuArray.Add(new array { cssClass = "" });
+
+            }
         }
         menuArray.ElementAt(currentTab).cssClass = "";
+
+        if (!ShowTabs)
+        {
+            menuArray.ElementAt(4).cssClass = "d-none";
+        }
 
         //specialtyList = new List<SelectListItem> {
         //        new SelectListItem { Value = "0", Text = "Anesthesiology" },
@@ -367,6 +405,7 @@
         baseurl = baseurl.Remove(baseurl.Length - 10);
 
         // fill bMedicalSpecialty back to inputModel
+        inputModel.UserName = inputModel.Email;
         inputModel.MedicalSpecialty = Int32.Parse(bMedicalSpecialty);
 
         var result = await pService.RegisterAccount(inputModel, baseurl);
@@ -375,10 +414,21 @@
             // 0 already signed in (this is me)
             // 1 PendingApproval
             // 2 RegisterConfirmation
+            if (ShowTabs)
+            {
+                menuArray.ElementAt(currentTab).cssClass = "d-none";
+                currentTab = currentTab + 1;
+                menuArray.ElementAt(currentTab).cssClass = "";
+            }
+            else
+            {
+                menuArray.ElementAt(0).cssClass = "d-none";
+                menuArray.ElementAt(1).cssClass = "d-none";
+                menuArray.ElementAt(2).cssClass = "d-none";
+                menuArray.ElementAt(3).cssClass = "d-none";
+                menuArray.ElementAt(4).cssClass = "";
+            }
 
-            menuArray.ElementAt(currentTab).cssClass = "d-none";
-            currentTab = currentTab + 1;
-            menuArray.ElementAt(currentTab).cssClass = "";
             this.StateHasChanged();
         }
         else
