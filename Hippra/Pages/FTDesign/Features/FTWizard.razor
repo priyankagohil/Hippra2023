@@ -238,10 +238,21 @@
                                 </div>
 
                                 <br /><hr /><br />
-                                <div class="d-flex justify-content-between">
-                                    <button type="button" class="btn btn-outline-dark" @onclick="prevTab">Previous</button>
-                                    <button class="btn btn-dark" disabled="@submitBtnCss" type="submit">Submit</button>
-                                </div>
+                                @if (ShowTabs)
+                                {
+                                    <div class="d-flex justify-content-between">
+                                        <button type="button" class="btn btn-outline-dark" @onclick="prevTab">Previous</button>
+                                        <button class="btn btn-dark" disabled="@submitBtnCss" type="submit">Submit</button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-dark" disabled="@submitBtnCss" type="submit">Submit</button>
+                                    </div>
+                                }
+
+
                             </div>
                             @if (hasError)
                             {
