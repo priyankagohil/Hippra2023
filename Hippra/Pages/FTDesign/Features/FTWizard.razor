@@ -49,29 +49,29 @@
                                 <br />
                                
                                 <div class="d-none mb-3">
-                                    <label for="Email">Username</label>
+                                    <label for="Email">* Username</label>
                                     <InputText class="form-control" id="Username" type="text"  placeholder="Enter Username (email for now)" @bind-Value="@inputModel.UserName" aria-label="Username" aria-describedby="Username" />
                                 </div>
                                 <div class="mb-3">
-                                    <label for="Email">Username / Email</label>
+                                    <label for="Email">* Username / Email</label>
                                     <InputText class="form-control" id="Email" type="email" required placeholder="Enter Email" @bind-Value="@inputModel.Email" aria-label="Email" aria-describedby="Email" />
                                     <div class="small text-muted">
                                         We'll never share your email with anyone else
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="Password">Password</label>
+                                    <label for="Password">* Password</label>
                                     <InputText class="form-control" id="Password" type="password" required placeholder="Enter Password" @bind-Value="@inputModel.Password" aria-label="Password" aria-describedby="Password" />
                                     <div class="small text-muted">
                                         8+ characters, Uppercase, Lowercase, Number, Special characters. You can change this later
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="ConfirmPassword">Confirm Password</label>
+                                    <label for="ConfirmPassword">* Confirm Password</label>
                                     <InputText class="form-control" id="ConfirmPassword" type="password" required placeholder="Confirm Password" @bind-Value="@inputModel.ConfirmPassword" aria-label="Confirm Password" aria-describedby="Confirm Password" />
-                                    <div class="small text-muted">
+                                    @*<div class="small text-muted">
                                         You can change this later
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <br /><hr /><br />
                                 @if (ShowTabs)
@@ -92,18 +92,18 @@
                                 <div class="ms-fontWeight-semibold ms-fontSize-24 ">Setup Profile</div>
                                 <br />
                                 <div class=" mb-3">
-                                    <label for="FirstName">First Name</label>
+                                    <label for="FirstName">* First Name</label>
                                     <InputText class="form-control" id="FirstName" required placeholder="First Name" @bind-Value="@inputModel.FirstName" aria-label="First Name" aria-describedby="First Name" />
-                                    <div class="small text-muted">
+                                    @*<div class="small text-muted">
                                         You can change this later
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <div class=" mb-3">
-                                    <label for="LastName">Last Name</label>
+                                    <label for="LastName">* Last Name</label>
                                     <InputText class="form-control" id="LastName" required placeholder="Last Name" @bind-Value="@inputModel.LastName" aria-label="Last Name" aria-describedby="Last Name" />
-                                    <div class="small text-muted">
+                                    @*<div class="small text-muted">
                                         You can change this later
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <div class=" mb-3">
                                     <label for="NPIN">National Provider Identifier Number</label>
@@ -135,23 +135,23 @@
                                 <div class=" mb-3">
                                     <label for="Residency">Residency Hospital</label>
                                     <InputText class="form-control" id="Residency"  placeholder="Residency Hospital" @bind-Value="@inputModel.ResidencyHospital" aria-label="Residency" aria-describedby="Residency" />
-                                    <div class="small text-muted">
+                                    @*<div class="small text-muted">
                                         You can change this later
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <div class=" mb-3">
                                     <label for="MedicalSchool">Medical School Attended</label>
                                     <InputText class="form-control" id="MedicalSchool"  placeholder="Medical School Attended" @bind-Value="@inputModel.MedicalSchoolAttended" aria-label="MedicalSchool" aria-describedby="MedicalSchool" />
-                                    <div class="small text-muted">
+                                    @*<div class="small text-muted">
                                         You can change this later
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <div class=" mb-3">
                                     <label for="Education">Education/Degree</label>
                                     <InputText class="form-control" id="Education"  placeholder="Education/Degree" @bind-Value="@inputModel.EducationDegree" aria-label="Education" aria-describedby="Education" />
-                                    <div class="small text-muted">
+                                    @*<div class="small text-muted">
                                         You can change this later
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <br /><hr /><br />
                                 @if (ShowTabs)
@@ -177,37 +177,37 @@
                                 <div class=" mb-3">
                                     <label for="Address">Address</label>
                                     <InputText class="form-control" id="Address"  placeholder="Address" @bind-Value="@inputModel.Address" aria-label="Address" aria-describedby="Address" />
-                                    <div class="small text-muted">
+                                    @*<div class="small text-muted">
                                         You can change this later
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <div class=" mb-3">
                                     <label for="City">City</label>
                                     <InputText class="form-control" id="City"  placeholder="City" @bind-Value="@inputModel.City" aria-label="City" aria-describedby="City" />
-                                    <div class="small text-muted">
+                                    @*<div class="small text-muted">
                                         You can change this later
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <div class=" mb-3">
                                     <label for="State">State</label>
                                     <InputText class="form-control" id="State"  placeholder="State" @bind-Value="@inputModel.State" aria-label="State" aria-describedby="State" />
-                                    <div class="small text-muted">
+                                    @*<div class="small text-muted">
                                         You can change this later
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <div class=" mb-3">
                                     <label for="Zipcode">Zipcode</label>
                                     <InputText class="form-control" id="Zipcode"  placeholder="Zipcode" @bind-Value="@inputModel.Zipcode" aria-label="Zipcode" aria-describedby="Zipcode" />
-                                    <div class="small text-muted">
+                                    @*<div class="small text-muted">
                                         You can change this later
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <div class=" mb-3">
                                     <label for="PhoneNumber">Phone Number</label>
                                     <InputText class="form-control" id="PhoneNumber"  placeholder="Phone Number" @bind-Value="@inputModel.PhoneNumber" aria-label="PhoneNumber" aria-describedby="PhoneNumber" />
-                                    <div class="small text-muted">
+                                    @*<div class="small text-muted">
                                         You can change this later
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <br /><hr /><br />
                                 @if (ShowTabs)
