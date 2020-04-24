@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Hippra.Migrations
 {
-    public partial class initSQLiteAgain : Migration
+    public partial class InitSQLite3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,13 +45,13 @@ namespace Hippra.Migrations
                     NPIN = table.Column<int>(nullable: false),
                     MedicalSpecialty = table.Column<int>(nullable: false),
                     AmericanBoardCertified = table.Column<bool>(nullable: false),
-                    ResidencyHospital = table.Column<string>(nullable: false),
-                    MedicalSchoolAttended = table.Column<string>(nullable: false),
-                    EducationDegree = table.Column<string>(nullable: false),
-                    Address = table.Column<string>(nullable: false),
-                    Zipcode = table.Column<string>(nullable: false),
-                    State = table.Column<string>(nullable: false),
-                    City = table.Column<string>(nullable: false),
+                    ResidencyHospital = table.Column<string>(nullable: true),
+                    MedicalSchoolAttended = table.Column<string>(nullable: true),
+                    EducationDegree = table.Column<string>(nullable: true),
+                    Address = table.Column<string>(nullable: true),
+                    Zipcode = table.Column<string>(nullable: true),
+                    State = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
                     PublicId = table.Column<int>(nullable: false),
                     DateJoined = table.Column<DateTime>(nullable: false),
                     Status = table.Column<int>(nullable: false),

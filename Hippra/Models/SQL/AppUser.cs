@@ -38,37 +38,37 @@ namespace Hippra.Models.SQL
         [Display(Name = "American Board Certified")]
         public bool AmericanBoardCertified { get; set; }
 
-        [Required]
+        //[Required]
         [PersonalData]
         [Display(Name = "Residency Hospital")]
         public string ResidencyHospital { get; set; }
 
-        [Required]
+        //[Required]
         [PersonalData]
         [Display(Name = "Medical School Attended")]
         public string MedicalSchoolAttended { get; set; }
 
-        [Required]
+        //[Required]
         [PersonalData]
         [Display(Name = "Education/Degree")]
         public string EducationDegree { get; set; }
 
-        [Required]
+        //[Required]
         [PersonalData]
         [Display(Name = "Address")]
         public string Address { get; set; }
 
-        [Required]
+        //[Required]
         [PersonalData]
         [Display(Name = "Zipcode")]
         public string Zipcode { get; set; }
 
-        [Required]
+        //[Required]
         [PersonalData]
         [Display(Name = "State")]
         public string State { get; set; }
 
-        [Required]
+        //[Required]
         [PersonalData]
         [Display(Name = "City")]
         public string City { get; set; }
