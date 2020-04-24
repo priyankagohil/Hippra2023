@@ -314,6 +314,7 @@ namespace Hippra.Services
         }
         public async Task<bool> AddComment(CaseComment CaseComment)
         {
+            CaseComment.ID = 0;
             _context.CaseComments.Add(CaseComment);
             await _context.SaveChangesAsync();
 

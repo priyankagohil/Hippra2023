@@ -113,7 +113,7 @@
             }
         }
         newComment.Comment = "";
-        CommentList = await hService.GetComments(postId);
+        CommentList = await hService.GetCommentsNoTracking(postId);
         isOpened = true;
         this.StateHasChanged();
     }
