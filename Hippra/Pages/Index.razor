@@ -930,7 +930,7 @@
     private AppUser usr { get; set; } = new AppUser();
 
     // Feature Config
-    private bool Version2 { get; set; } = false;
+    private bool Version2 { get; set; } = true;
 
     public int CurrentPage { get; set; } = 1;
     public int Count { get; set; }
@@ -1402,14 +1402,14 @@
         Version2 = !Version2;
         if (Version2)
         {
-            verStr = "New Page";
+            verStr = "Page (New)";
         }
         else
         {
-            verStr = "Popup";
+            verStr = "Popup (Old)";
         }
     }
-    private string verStr { get; set; } = "Popup";
+    private string verStr { get; set; } = "Page (New)";
 
     //private async Task OpenDeleteModal(int i)
     //{
