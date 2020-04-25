@@ -1,7 +1,27 @@
-﻿
+﻿<div class="ft-main-px">
+    @if (centerTitle)
+    {
+        <div class="ft-subheader-bar text-dark d-flex justify-content-between">
 
-    <div class="ft-main-px">
+            @if (HasBackBtn)
+            {
+                <FTBackBtn BackTitle="@BackTitle" UseRedirect="@UseRedirect" returnUrl="@returnUrl"></FTBackBtn>
+            }
+            <div class="ms-fontWeight-semibold ms-fontSize-20 ">
+                @Title
+            </div>
+
+            <div> </div>
+
+        </div>
+    }
+    else
+    {
         <div class="ft-subheader-bar text-dark">
+            @if (HasBackBtn)
+            {
+                <FTBackBtn BackTitle="@BackTitle" UseRedirect="@UseRedirect" returnUrl="@returnUrl"></FTBackBtn>
+            }
             <div class="ms-fontWeight-semibold ms-fontSize-20 ">
                 @Title
             </div>
@@ -16,8 +36,11 @@
             }
 
 
+
         </div>
-    </div>
+    }
+
+</div>
 
 @code {
     [Parameter]
@@ -26,6 +49,23 @@
     public bool HasSeparator { get; set; } = true;
     [Parameter]
     public RenderFragment ChildContent { get; set; }
+
+    //+ v2
+    // for center
+    [Parameter]
+    public bool centerTitle { get; set; } = false;
+
+    // for backBtn
+    [Parameter]
+    public string BackTitle { get; set; } = "";
+    [Parameter]
+    public bool HasBackBtn { get; set; } = false;
+    [Parameter]
+    public bool UseRedirect { get; set; } = true;
+    [Parameter]
+    public string returnUrl { get; set; } = "/";
+
+    //- v2
 
     public bool HasCustomization { get; set; } = false;
 
