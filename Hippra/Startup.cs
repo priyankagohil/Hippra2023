@@ -57,7 +57,7 @@ namespace Hippra
 
             services.AddIdentity<AppUser, IdentityRole>(options =>
             {
-                options.SignIn.RequireConfirmedAccount = true;
+                options.SignIn.RequireConfirmedAccount = false;
                 options.User.RequireUniqueEmail = true;
             })
                 .AddDefaultTokenProviders()
@@ -111,6 +111,7 @@ namespace Hippra
                 });
 
             services.AddTransient<ProfileService>();
+            // means run this service in background
             services.AddTransient<HippraService>();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<AppUser>>();
 

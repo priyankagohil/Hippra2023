@@ -1,0 +1,45 @@
+﻿@using Hippra.API
+@using Hippra.Services
+@inject HippraService hService 
+
+<InputFile OnChange="HandleFileSelected" multiple />
+
+@if (file != null)
+{
+    <p>Name: @file.Name</p>
+    <p>Size in bytes: @file.Size</p>
+    <p>Last modified date: @file.LastModified.ToShortDateString()</p>
+    <p>Content type (not always supplied by the browser): @file.Type</p>
+    <p>Content get type (not always supplied by the browser): @file.GetType()</p>
+    <div>
+        <img src="http://127.0.0.1:10000/devstoreaccount1/hipprastorage/imgabc" />
+    </div>
+}
+
+@code {
+    // reference code https://blog.stevensanderson.com/2019/09/13/blazor-inputfile/
+    IFileListEntry file;
+
+    [Parameter]
+    public int CaseId { get; set; } = -1;
+
+    private async Task<string> HandleFileSelected(IFileListEntry[] files)
+    {
+        int i = 0;
+        foreach(var file in files)
+        {
+            // file = files.FirstOrDefault();
+            if ((file.Type == "image/jpeg" || file.Type == "image/png" || file.Type == "image/gif") && file.Size > 0)
+            {
+                Console.WriteLine("This is a valid file");
+                // do something after validation
+                await hService.ImageUploadFunc(file.Data, CaseId + "n" + i++);
+            }
+            Console.WriteLine(file.Type);
+            Console.WriteLine(file.Size);
+        }
+
+        return "done!";
+    }
+
+}

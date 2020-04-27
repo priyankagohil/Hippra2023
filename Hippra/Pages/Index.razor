@@ -274,11 +274,11 @@
                                         <div class="col">
                                             <label for="Category">Category</label>
                                             @*<InputSelect id="Category" @bind-Value="@bCategory" onchange=@UpdateSubCategory>
-                                                @foreach (var g in CategoryList)
-                                                    {
-                                                    <option value="@g.Value">@g.Text</option>
-                                                    }
-                                            </InputSelect>*@
+                        @foreach (var g in CategoryList)
+                            {
+                            <option value="@g.Value">@g.Text</option>
+                            }
+                    </InputSelect>*@
                                             <select id="Category" @onchange=@UpdateSubCategory>
                                                 <option value="0" selected>Diagnostics</option>
                                                 <option value="1">Medicine</option>
@@ -361,7 +361,10 @@
                                 <div class="form-group">
                                     <InputTextArea class="form-control" placeholder="Treatment Outcomes" @bind-Value="@pCase.TreatmentOutcomes" row="12" />
                                 </div>
-
+                                <div>
+                                    Add Images Here:
+                                    <ImgUpload CaseId=@pCase.ID></ImgUpload>
+                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -543,6 +546,10 @@
 
                                         </div>
                                     }
+                                </div>
+                                <div>
+                                    Add Images Here: 
+                                    <ImgUpload></ImgUpload>
                                 </div>
                             </div>
                             <div class="modal-footer">

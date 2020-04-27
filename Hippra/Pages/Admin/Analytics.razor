@@ -1,0 +1,23 @@
+@page "/Analytics"
+
+@using Hippra.Services
+@using Hippra.Pages.FTDesign.Features
+@inject HippraService hService
+
+<h1> HELLO ANALYTICS</h1>
+
+<p class="lead">@Count</p>
+<p class="lead">@Name</p>
+
+<FTAnimalIcon image="4"></FTAnimalIcon>
+
+@code {
+
+    private string Name = "Haramrit";
+
+    private int Count { get; set; } = -1;
+    protected override async Task OnInitializedAsync()
+    {
+        Count = await hService.GetCaseCount();
+    }
+}
