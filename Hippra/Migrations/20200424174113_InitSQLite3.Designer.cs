@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hippra.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200201033459_initSQLiteAgain")]
-    partial class initSQLiteAgain
+    [Migration("20200424174113_InitSQLite3")]
+    partial class InitSQLite3
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,14 +27,12 @@ namespace Hippra.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("AmericanBoardCertified")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("City")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -45,7 +43,6 @@ namespace Hippra.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EducationDegree")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -70,7 +67,6 @@ namespace Hippra.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MedicalSchoolAttended")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MedicalSpecialty")
@@ -100,14 +96,12 @@ namespace Hippra.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ResidencyHospital")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("State")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
@@ -121,7 +115,6 @@ namespace Hippra.Migrations
                         .HasMaxLength(256);
 
                     b.Property<string>("Zipcode")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("isApproved")

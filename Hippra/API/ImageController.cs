@@ -71,7 +71,9 @@ namespace Hippra.API
                 {
                     using (Stream stream = ImageForm.OpenReadStream())
                     {
+
                         fileName = await ImageHelper.UploadImageToStorage(stream, ImageForm.FileName);
+
                     }
                 }
             }

@@ -57,7 +57,7 @@
             <div class="input-group mb-3">
                 <InputText class="form-control" id="" required placeholder="Write a Comment" @bind-Value="@newComment.Comment" aria-label="Comment" aria-describedby="Write a Comment" />
                 <div class="input-group-append">
-                    <button id="create-button" type="submit" class="btn btn-primary">Comment</button>
+                    <button id="comment-button" type="submit" class="btn btn-primary">Comment</button>
                 </div>
             </div>
 
@@ -83,7 +83,7 @@
     protected override async Task OnInitializedAsync()
     {
         //CommentList = await sService.GetComments(postId);
-        isOpened = false;
+        //isOpened = false;
 
     }
 
@@ -113,7 +113,7 @@
             }
         }
         newComment.Comment = "";
-        CommentList = await hService.GetComments(postId);
+        CommentList = await hService.GetCommentsNoTracking(postId);
         isOpened = true;
         this.StateHasChanged();
     }

@@ -31,6 +31,9 @@
                 </div>
                 @switch (TabSelected)
                 {
+                    case 1:
+                        <Analytics />
+                        break;
                     default:
                         // 0
                         <Accounts />
@@ -77,8 +80,9 @@
             {
                 isAdmin = true;
                 MenuItems = new List<MenuItem>()
-            {
-                    new MenuItem{ Name="Account", ID=0}
+                {
+                    new MenuItem{ Name="Account", ID=0},
+                    new MenuItem{ Name="Analytics", ID=1 }
                 };
 
                 TabSelected = 0;

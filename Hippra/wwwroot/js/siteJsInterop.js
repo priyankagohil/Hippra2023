@@ -75,6 +75,16 @@
     fireAlert: function (msg) {
         alert(msg);
     },
+    simBackEvent: function () {
+        window.history.back();
+    },
+    simRefreshEvent: function () {
+        location.reload();
+    },
+    updateFormSelect: function (formValue) {
+        document.getElementById("Category").value = formValue;
+        console.log("updateFormSelect");
+    },
     FTHTTPRedirect: function (link) {
         window.location.replace(link);
     }
