@@ -220,6 +220,80 @@ namespace Hippra.Services
 
             return true;
         }
+
+        public async Task<int> CreateEmptyCase(int userId)
+        {
+            string key = $"{Guid.NewGuid().ToString()}";
+            int id = -1;
+
+            Case c = new Case();
+            c.PosterID = userId;
+            c.Description = key;
+            _context.Cases.Add(c);
+            _context.SaveChanges();
+
+            c = await _context.Cases.FirstOrDefaultAsync(s => s.Description == key);
+            if (c != null)
+            {
+                id = c.ID;
+                c.Description = "";
+                _context.Cases.Update(c);
+                await _context.SaveChangesAsync();
+            }
+            return id;
+
+        }
+
+
+        public async Task<bool> CreateCase(Case EditedCase)
+        {
+            var Case = await _context.Cases.FirstOrDefaultAsync(m => m.ID == EditedCase.ID);
+
+            if (Case == null)
+            {
+                return false;
+            }
+            Case.Status = true;
+            Case.DateLastUpdated = DateTime.Now;
+            Case.DateCreated = EditedCase.DateCreated;
+            Case.PosterName = EditedCase.PosterName;
+            Case.PosterSpecialty = EditedCase.PosterSpecialty;
+
+            Case.Topic = EditedCase.Topic;
+            Case.Description = EditedCase.Description;
+            Case.ResponseNeeded = EditedCase.ResponseNeeded;
+            Case.MedicalCategory = EditedCase.MedicalCategory;
+            Case.PatientAge = EditedCase.PatientAge;
+
+            Case.Gender = EditedCase.Gender;
+            Case.Race = EditedCase.Race;
+            Case.Ethnicity = EditedCase.Ethnicity;
+            Case.LabValues = EditedCase.LabValues;
+            Case.CurrentStageOfDisease = EditedCase.CurrentStageOfDisease;
+
+            Case.CurrentTreatmentAdministered = EditedCase.CurrentTreatmentAdministered;
+            Case.TreatmentOutcomes = EditedCase.TreatmentOutcomes;
+
+            try
+            {
+                _context.Update(Case);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CaseExists(EditedCase.ID))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return true;
+        }
+
         public async Task<bool> EditCase(Case EditedCase)
         {
             var Case = await _context.Cases.FirstOrDefaultAsync(m => m.ID == EditedCase.ID);
