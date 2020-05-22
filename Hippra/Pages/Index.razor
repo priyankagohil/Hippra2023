@@ -1067,15 +1067,19 @@
 
         if (actionOptions == 0)
         {
-
-            cases = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, targetPage, PageSize, -1);
-            Count = await hService.GetCaseCount();
+            var searchResults = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, targetPage, PageSize, -1);
+            cases = searchResults.Cases;
+            Count = searchResults.TotalCount;
+            //cases = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, targetPage, PageSize, -1);
+            //Count = await hService.GetCaseCount();
         }
         else
         {
-
-            cases = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, targetPage, PageSize, usr.PublicId);
-            Count = await hService.GetMyCaseCount(usr.PublicId);
+            var searchResults = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, targetPage, PageSize, usr.PublicId);
+            cases = searchResults.Cases;
+            Count = searchResults.TotalCount;
+            //cases = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, targetPage, PageSize, usr.PublicId);
+            //Count = await hService.GetMyCaseCount(usr.PublicId);
         }
 
         foreach(var i in cases)

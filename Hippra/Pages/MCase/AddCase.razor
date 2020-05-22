@@ -276,7 +276,10 @@
         {
             userInfo = await UserManager.GetUserAsync(user);
             await PopulateLists();
-            returnUrl = returnUrl;
+
+            //v2
+            pCase.ID = await hService.CreateEmptyCase(userInfo.PublicId);
+
         }
         else
         {
@@ -296,6 +299,7 @@
         var usr = await UserManager.GetUserAsync(user);
 
         Case validatedCase = new Case();
+
         validatedCase.DateCreated = DateTime.Now;
         validatedCase.DateLastUpdated = validatedCase.DateCreated;
         validatedCase.Description = pCase.Description;
@@ -315,7 +319,12 @@
         validatedCase.LabValues = pCase.LabValues;
         validatedCase.Status = true;
 
-        await hService.AddCase(validatedCase);
+        //v1
+        //await hService.AddCase(validatedCase);
+        //v2
+        validatedCase.ID = pCase.ID;
+        await hService.CreateCase(validatedCase);
+
         NavigationManager.NavigateTo("/");
 
     }
