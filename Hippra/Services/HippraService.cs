@@ -372,10 +372,9 @@ namespace Hippra.Services
 
         public async Task<bool> ImageUploadFunc(Stream file, string name)
         {
-           await ImageHelper.UploadImageToStorage(file, name);
+           string filename = await ImageHelper.UploadImageToStorage(file, name).ConfigureAwait(true);
             return true;
         }
-
 
     }
 }

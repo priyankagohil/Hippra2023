@@ -37,7 +37,7 @@ namespace Hippra.Code
         }
         public async Task<string> UploadImageToStorage(Stream fileStream, string fileName)
         {
-            fileName = "img" + fileName;// + Guid.NewGuid().ToString();
+            fileName = "img_" + fileName;// + Guid.NewGuid().ToString();
             await Storage.SetBlobFile(fileName, fileStream).ConfigureAwait(true);
             return fileName;
         }
