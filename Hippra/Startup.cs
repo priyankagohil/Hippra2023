@@ -112,6 +112,7 @@ namespace Hippra
                 });
 
             services.AddTransient<ProfileService>();
+            // means run this service in background
             services.AddTransient<HippraService>();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<AppUser>>();
 

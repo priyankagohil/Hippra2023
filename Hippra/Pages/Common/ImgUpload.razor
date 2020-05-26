@@ -1,14 +1,70 @@
-﻿<InputFile OnChange="HandleFileSelected" />
+﻿@using Hippra.API
+@using Hippra.Services
+@inject HippraService hService
+
+<InputFile multiple OnChange="HandleFileSelected" />
+
+@if (selectedFiles != null)
+{
+    //foreach (var file in selectedFiles)
+    for (int i = 0; i < selectedFiles.Count(); i++)
+    {
+        <div>
+            <h2>@selectedFiles[i].Name</h2>
+            Size: <strong>@selectedFiles[i].Size bytes</strong>;
+            Last modified: <strong>@selectedFiles[i].LastModified.ToShortDateString()</strong>;
+            Type: <strong>@selectedFiles[i].Type</strong>
+            <img src=@img_names.ElementAt(i) height=10% width=10% />
+        </div>
+    }
+}
+<div>
+    ABCDEFG
+</div>
 
 
 @code {
     // reference code https://blog.stevensanderson.com/2019/09/13/blazor-inputfile/
-    IFileListEntry file;
+    IFileListEntry[] selectedFiles;
 
-    void HandleFileSelected(IFileListEntry[] files)
+    List<string> img_names = new List<string>();
+    ..
+    [Parameter]
+    public int CaseId { get; set; } = -1;
+
+    private async Task<string> HandleFileSelected(IFileListEntry[] files)
     {
-        file = files.FirstOrDefault();
+
+        selectedFiles = files;
+        Console.WriteLine(selectedFiles);
+
+        int i = 0;
+        foreach (var file in files)
+        {
+
+            // file = files.FirstOrDefault();
+            if ((file.Type == "image/jpeg" || file.Type == "image/png" || file.Type == "image/gif") && file.Size > 0)
+            {
+                Console.WriteLine("This is a valid file");
+
+                string extension = file.Type.Remove(0, 6);
+                string img_url = CaseId + "_" + i++ + "_." + extension;
+
+                string image_uri = "http://127.0.0.1:10000/devstoreaccount1/hipprastorage/img_" + img_url;
+                img_names.Add(image_uri);
+
+                Console.WriteLine("Count is " + img_names.Count);
+
+                img_names.ForEach(Console.WriteLine);
+                await hService.ImageUploadFunc(file.Data, img_url);
+                // do something after validation
+
+            }
+            Console.WriteLine(file.Type);
+            Console.WriteLine(file.Name);
+            Console.WriteLine(file.Size);
+        }
+
+        return "done!";
     }
-
-
 }

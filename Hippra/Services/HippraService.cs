@@ -22,6 +22,7 @@ using FTEmailService;
 using Microsoft.EntityFrameworkCore;
 using Hippra.Models.Enums;
 using Hippra.Code;
+using Hippra.API;
 using System.IO;
 
 namespace Hippra.Services
@@ -49,6 +50,7 @@ namespace Hippra.Services
             Storage = new AzureStorage(settings);
             ImageHelper = new ImageHelper(Storage);
         }
+
         public async Task<int> GetCaseCount()
         {
             return _context.Cases.Count();
@@ -411,7 +413,6 @@ namespace Hippra.Services
         }
         public async Task<bool> AddComment(CaseComment CaseComment)
         {
-            CaseComment.ID = 0;
             _context.CaseComments.Add(CaseComment);
             await _context.SaveChangesAsync();
 
@@ -452,7 +453,6 @@ namespace Hippra.Services
             return _context.CaseComments.Any(e => e.ID == id);
         }
 
-
         public async Task<bool> DeleteComment(int caseCommentId)
         {
             var CaseComment = await _context.CaseComments.FindAsync(caseCommentId);
@@ -481,5 +481,11 @@ namespace Hippra.Services
         {
             return AppSettings.StorageUrl;
         }
+        public async Task<bool> ImageUploadFunc(Stream file, string name)
+        {
+           string filename = await ImageHelper.UploadImageToStorage(file, name).ConfigureAwait(true);
+            return true;
+        }
+
     }
 }

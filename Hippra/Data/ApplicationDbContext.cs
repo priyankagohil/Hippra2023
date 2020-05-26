@@ -13,7 +13,10 @@ namespace Hippra.Data
             : base(options)
         {
         }
+
+        //means db has table named Cases
         public DbSet<Case> Cases { get; set; }
+
         public DbSet<CaseComment> CaseComments { get; set; }
     }
 }
