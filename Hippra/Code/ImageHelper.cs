@@ -41,6 +41,10 @@ namespace Hippra.Code
             await Storage.SetBlobFile(fileName, fileStream);
             return fileName;
         }
+        public async Task<string> DeleteImageToStorage(string fileName)
+        {
+            return await Storage.DeleteBlob(fileName);
+        }
         public static async Task<string> ProcessFormFile(IFormFile formFile,
             ModelStateDictionary modelState)
         {

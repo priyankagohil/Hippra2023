@@ -18,6 +18,8 @@
 @using Hippra.Pages.MCase
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
+@using Hippra.Pages.FTDesign.Components2 
+
 @inject IHttpContextAccessor httpContextAccessor
 @inject IJSRuntime JSRuntime
 @inject SignInManager<AppUser> SignInManager
@@ -78,11 +80,11 @@
                                     <div class="col">
                                         <label for="Category">Category</label>
                                         @*<InputSelect id="Category" @bind-Value="@bCategory" onchange=@UpdateSubCategory>
-                                        @foreach (var g in CategoryList)
-                                            {
-                                            <option value="@g.Value">@g.Text</option>
-                                            }
-                                    </InputSelect>*@
+                        @foreach (var g in CategoryList)
+                            {
+                            <option value="@g.Value">@g.Text</option>
+                            }
+                    </InputSelect>*@
                                         <select id="Category" @onchange=@UpdateSubCategory>
                                             <option value="0" selected>Diagnostics</option>
                                             <option value="1">Medicine</option>
@@ -166,8 +168,9 @@
                                 <InputTextArea class="form-control" placeholder="Treatment Outcomes" @bind-Value="@pCase.TreatmentOutcomes" row="12" />
                             </div>
                             <div>
-                                Add Images Here:
-                                <ImgUpload></ImgUpload>
+                                <div>Image</div>
+                                <FTImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl"></FTImgUpload>
+
                             </div>
                         </div>
                         <div class="mx-4 d-flex justify-content-between">
@@ -265,7 +268,8 @@
         public int Priority { get; set; }
     }
 
-
+    private string fileName;
+    private string imgUrl;
 
     protected override async Task OnInitializedAsync()
     {
@@ -279,6 +283,7 @@
 
             //v2
             pCase.ID = await hService.CreateEmptyCase(userInfo.PublicId);
+            fileName = "c" + pCase.ID;
 
         }
         else
@@ -318,6 +323,7 @@
         validatedCase.TreatmentOutcomes = pCase.TreatmentOutcomes;
         validatedCase.LabValues = pCase.LabValues;
         validatedCase.Status = true;
+        validatedCase.imgUrl = imgUrl;
 
         //v1
         //await hService.AddCase(validatedCase);

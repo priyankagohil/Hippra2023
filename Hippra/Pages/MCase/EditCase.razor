@@ -18,6 +18,7 @@
 @using Hippra.Pages.MCase
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
+@using Hippra.Pages.FTDesign.Components2
 @inject IHttpContextAccessor httpContextAccessor
 @inject IJSRuntime JSRuntime
 @inject SignInManager<AppUser> SignInManager
@@ -77,11 +78,11 @@
                                     <div class="col">
                                         <label for="Category">Category</label>
                                         @*<InputSelect id="Category" @bind-Value="@bCategory" onchange=@UpdateSubCategory>
-                                        @foreach (var g in CategoryList)
-                                            {
-                                            <option value="@g.Value">@g.Text</option>
-                                            }
-                                    </InputSelect>*@
+                        @foreach (var g in CategoryList)
+                            {
+                            <option value="@g.Value">@g.Text</option>
+                            }
+                    </InputSelect>*@
                                         @if (ParseCategoryValueFromSub(pCase.MedicalCategory) == "0")
                                         {
                                             <select id="Category" @onchange=@UpdateSubCategory>
@@ -191,8 +192,9 @@
                             </div>
 
                             <div>
-                                Add Images Here:
-                                <ImgUpload></ImgUpload>
+                                <div>Image</div>
+                                <FTImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl"></FTImgUpload>
+
                             </div>
                             <br />
                             <div>
@@ -313,7 +315,8 @@
         public int Priority { get; set; }
     }
 
-
+    private string fileName;
+    private string imgUrl;
 
     protected override async Task OnInitializedAsync()
     {
@@ -334,6 +337,9 @@
             }
             await PopulateModel(tCase);
             pCase.Comments = await hService.GetCommentsNoTracking(caseId);
+
+            fileName = "c" + pCase.ID;
+            imgUrl = tCase.imgUrl;
         }
         else
         {
@@ -359,6 +365,7 @@
         pCase.Ethnicity = Int32.Parse(bEthnicity);
         pCase.MedicalCategory = Int32.Parse(bSubCategory);
         pCase.ResponseNeeded = priorityRadio.Priority;
+        pCase.imgUrl = imgUrl;
 
 
         await hService.EditCase(pCase);

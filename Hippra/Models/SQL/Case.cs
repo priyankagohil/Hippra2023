@@ -35,6 +35,7 @@ namespace Hippra.Models.SQL
         public string CurrentStageOfDisease { get; set; }
         public string CurrentTreatmentAdministered { get; set; }
         public string TreatmentOutcomes { get; set; }
+        public string imgUrl { get; set; }
 
         public List<CaseComment> Comments { get; set; }
     }

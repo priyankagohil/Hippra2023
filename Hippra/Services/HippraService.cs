@@ -22,6 +22,7 @@ using FTEmailService;
 using Microsoft.EntityFrameworkCore;
 using Hippra.Models.Enums;
 using Hippra.Code;
+using System.IO;
 
 namespace Hippra.Services
 {
@@ -270,6 +271,7 @@ namespace Hippra.Services
             Case.Ethnicity = EditedCase.Ethnicity;
             Case.LabValues = EditedCase.LabValues;
             Case.CurrentStageOfDisease = EditedCase.CurrentStageOfDisease;
+            Case.imgUrl = EditedCase.imgUrl;
 
             Case.CurrentTreatmentAdministered = EditedCase.CurrentTreatmentAdministered;
             Case.TreatmentOutcomes = EditedCase.TreatmentOutcomes;
@@ -323,7 +325,7 @@ namespace Hippra.Services
 
             Case.CurrentTreatmentAdministered = EditedCase.CurrentTreatmentAdministered;
             Case.TreatmentOutcomes = EditedCase.TreatmentOutcomes;
-
+            Case.imgUrl = EditedCase.imgUrl;
             try
             {
                 _context.Update(Case);
@@ -464,5 +466,20 @@ namespace Hippra.Services
             return false;
         }
 
+        // image upload
+        public async Task<string> UploadImgToAzureAsync(Stream fileStream, string fileName)
+        {
+            return await ImageHelper.UploadImageToStorage(fileStream, fileName);
+        }
+
+        public async Task<bool> DeleteImage(string filename)
+        {
+            await ImageHelper.DeleteImageToStorage(filename);
+            return true;
+        }
+        public string GetImgStorageUrl()
+        {
+            return AppSettings.StorageUrl;
+        }
     }
 }

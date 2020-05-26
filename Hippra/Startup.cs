@@ -97,7 +97,8 @@ namespace Hippra
                 Configuration.GetSection("AppSettings").GetSection("FTEmailCred").Value = Configuration["FTEmailCred"];
                 Configuration.GetSection("AppSettings").GetSection("FTManagerUsr").Value = Configuration["FTManagerUsr"];
                 Configuration.GetSection("AppSettings").GetSection("FTManagerPwd").Value = Configuration["FTManagerPwd"];
-
+                Configuration.GetSection("AppSettings").GetSection("RootUrl").Value = Configuration["RootUrl"];
+                Configuration.GetSection("AppSettings").GetSection("StorageUrl").Value = Configuration["StorageUrl"];
                 services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             }
             //AddSingleton AddScoped AddTransient

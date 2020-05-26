@@ -164,7 +164,26 @@ namespace Hippra.Data
 
             return null;
         }
+        public async Task<string> DeleteBlob(string fileName)
+        {
+            if (!CheckChatRootContainer())
+            {
+                await InitChatRootContainer();
+                if (!CheckChatRootContainer())
+                {
+                    Debug.WriteLine(errCodeRootContainerNotFound);
+                    return "";
+                }
+            }
+            CloudBlockBlob blockBlob = chatRootContainer.GetBlockBlobReference(fileName);
+            var exists = await blockBlob.ExistsAsync();
+            if (exists)
+            {
+                await blockBlob.DeleteAsync();
+            }
 
+            return "";
+        }
         public async Task<string> GetBlobReference()
         {
             if (!CheckChatRootContainer())
