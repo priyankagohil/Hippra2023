@@ -2,27 +2,36 @@
 
 @inject HippraService hService
 
-<p>imgUrl: @imgUrl</p>
-<p>savedImgUrl: @savedImgUrl</p>
-<p>display: @displayImgUrl</p>
 
-<InputFile OnChange="HandleFileSelected" />
+    <div class="mx-4">
+        @*<p>Debug code:</p>
+        <p>imgUrl: @imgUrl</p>
+        <p>savedImgUrl: @savedImgUrl</p>
+        <p>display: @displayImgUrl</p>*@
 
-@if (!string.IsNullOrWhiteSpace(displayImgUrl))
-{
-    <p><img src="@displayImgUrl" /></p>
-    <div class="btn btn-outline-danger" @onclick="DeleteFile">
-        delete
+        <InputFile OnChange="HandleFileSelected" />
+
+        @if (!string.IsNullOrWhiteSpace(displayImgUrl))
+        {
+            <p><img src="@displayImgUrl" /></p>
+            <div class="btn btn-outline-danger" @onclick="DeleteFile">
+                delete
+            </div>
+
+        }
+        else
+        {
+            if (isDeleted)
+            {
+                <p>File Deleted</p>
+            }
+        }
+
+
     </div>
 
-}
-else
-{
-    if (isDeleted)
-    {
-        <p>File Deleted</p>
-    }
-}
+
+
 
 
 @code {

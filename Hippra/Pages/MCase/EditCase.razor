@@ -190,12 +190,16 @@
                             <div class="form-group">
                                 <InputTextArea class="form-control" placeholder="Treatment Outcomes" @bind-Value="@pCase.TreatmentOutcomes" row="12" />
                             </div>
-
-                            <div>
-                                <div>Image</div>
+                            <div class="mb-4">
+                                <div class="mb-4">Image</div>
                                 <FTImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl"></FTImgUpload>
 
                             </div>
+                            <div>
+                                Add Images Here:
+                                <ImgUpload CaseId=@pCase.ID></ImgUpload>
+                            </div>
+
                             <br />
                             <div>
                                 @if (userInfo.PublicId == pCase.PosterID)
@@ -217,10 +221,7 @@
                             </div>
                             <br />
                             <hr />
-                            <div>
-                                Add Images Here:
-                                <ImgUpload CaseId=@pCase.ID></ImgUpload>
-                            </div>
+
                             <br />
                             <div class="mx-4 d-flex justify-content-between">
                                 <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
