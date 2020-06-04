@@ -2,7 +2,121 @@
 @using Hippra.Services
 @inject HippraService hService
 
-<InputFile multiple OnChange="HandleFileSelected" />
+
+@using Hippra.Services
+
+@inject HippraService hService
+
+    <InputFile OnChange="HandleFileSelected" />
+
+    @if (!string.IsNullOrWhiteSpace(displayImgUrl))
+    {
+        <p><img src="@displayImgUrl" /></p>
+        <div class="btn btn-outline-danger" @onclick="DeleteFile">
+            delete
+        </div>
+    }
+    else
+    {
+        if (isDeleted)
+        {
+            <p>File Deleted</p>
+        }
+    }
+
+@code {
+    [Parameter]
+    public string fileName { get; set; } = "";
+    [Parameter]
+    public string imgUrl { get; set; } = "";
+
+    private string savedImgUrl = "";
+    private string displayImgUrl = "";
+
+    [Parameter]
+    public EventCallback<string> fileNameChanged { get; set; }
+    [Parameter]
+    public EventCallback<string> imgUrlChanged { get; set; }
+
+    IFileListEntry file;
+
+    private bool isDeleted { get; set; } = false;
+    private int counter { get; set; } = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        displayImgUrl = imgUrl;
+        savedImgUrl = hService.GetImgStorageUrl() + "img" + fileName;
+    }
+
+    public async Task HandleFileSelected(IFileListEntry[] files)
+    {
+        file = files.FirstOrDefault();
+
+        if (file == null)
+        {
+            StateHasChanged();
+            return;
+        }
+        if (file.Size < 100)
+        {
+            StateHasChanged();
+            return;
+        }
+        if (file.Type.Contains("png") || file.Type.Contains("jpg") || file.Type.Contains("jpeg") || file.Type.Contains("gif"))
+        {
+            string extension = file.Type.Remove(0, 6);
+            fileName = fileName + "." + extension;
+            await hService.UploadImgToAzureAsync(file.Data, fileName);
+            imgUrl = savedImgUrl;
+            displayImgUrl = imgUrl + "?" + counter++;
+            isDeleted = false;
+            imgUrlChanged.InvokeAsync(imgUrl);
+            StateHasChanged();
+            return;
+        }
+        else
+        {
+            StateHasChanged();
+            return;
+        }
+    }
+
+    public async Task DeleteFile()
+    {
+        var response = await hService.DeleteImage(fileName);
+        if (response)
+        {
+            isDeleted = true;
+            imgUrl = "";
+            displayImgUrl = "";
+            imgUrlChanged.InvokeAsync(imgUrl);
+        }
+        StateHasChanged();
+    }
+    private Task OnfileNameChanged(ChangeEventArgs e)
+    {
+        fileName = e.Value.ToString();
+        return fileNameChanged.InvokeAsync(fileName);
+    }
+
+    private Task OnimgUrlChanged(ChangeEventArgs e)
+    {
+        imgUrl = e.Value.ToString();
+        return imgUrlChanged.InvokeAsync(imgUrl);
+    }
+
+
+}
+
+
+
+
+
+
+
+
+@*<InputFile multiple OnChange="HandleFileSelected" />
 
 @if (selectedFiles != null)
 {
@@ -18,9 +132,6 @@
         </div>
     }
 }
-<div>
-    ABCDEFG
-</div>
 
 
 @code {
@@ -28,7 +139,7 @@
     IFileListEntry[] selectedFiles;
 
     List<string> img_names = new List<string>();
-    
+
 
 
     [Parameter]
@@ -69,4 +180,4 @@
 
         return "done!";
     }
-}
+}*@
