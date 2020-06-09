@@ -82,7 +82,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //CommentList = await sService.GetComments(postId);
+        //CommentList = await hService.GetCommentsNoTracking(postId);
         //isOpened = false;
 
     }
@@ -108,6 +108,7 @@
                 newComment.LastUpdatedDate = newComment.PostedDate;
                 newComment.posterSpeciality = ParseMedicalSpecialty((MedicalSpecialtyType) usr.MedicalSpecialty);
                 newComment.CaseID = postId;
+                newComment.ID = 0;
 
                 await hService.AddComment(newComment);
             }

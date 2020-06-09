@@ -53,15 +53,15 @@ namespace Hippra.Services
 
         public async Task<int> GetCaseCount()
         {
-            return _context.Cases.Count();
+            return _context.Cases.AsNoTracking().Count();
         }
         public async Task<int> GetMyCaseCount(int profileId)
         {
-            return _context.Cases.Where(s=>s.PosterID == profileId).Count();
+            return _context.Cases.AsNoTracking().Where(s=>s.PosterID == profileId).Count();
         }
         public async Task<List<Case>> GetCases(int CurrentPage, int PageSize, int id)
         {
-            List<Case> cases;
+            List<Case> cases = null;
             if (id == -1)
             {
                 cases = await _context.Cases.OrderByDescending(s => s.DateCreated).Include(c => c.Comments).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
@@ -210,11 +210,13 @@ namespace Hippra.Services
 
         public async Task<Case> GetCase(int caseCaseId)
         {
-            return await _context.Cases.FirstOrDefaultAsync(c => c.ID == caseCaseId);
+            var result = await _context.Cases.FirstOrDefaultAsync(c => c.ID == caseCaseId);
+            return result;
         }
         public async Task<Case> GetCaseNoTracking(int caseCaseId)
         {
-            return await _context.Cases.AsNoTracking().FirstOrDefaultAsync(c => c.ID == caseCaseId);
+            var result = await _context.Cases.AsNoTracking().FirstOrDefaultAsync(c => c.ID == caseCaseId);
+            return result;
         }
         public async Task<bool> AddCase(Case Case)
         {
@@ -311,6 +313,7 @@ namespace Hippra.Services
                 Case.DateClosed = DateTime.Now;
                 Case.Status = false;
             }
+           
             Case.DateLastUpdated = DateTime.Now;
 
             Case.Topic = EditedCase.Topic;
@@ -379,7 +382,7 @@ namespace Hippra.Services
         }
         private bool CaseExists(int id)
         {
-            return _context.Cases.Any(e => e.ID == id);
+            return _context.Cases.AsNoTracking().Any(e => e.ID == id);
         }
         public async Task<bool> DeleteCase(int caseCaseId)
         {
@@ -401,7 +404,8 @@ namespace Hippra.Services
         }
         public async Task<List<CaseComment>> GetCommentsNoTracking(int caseId)
         {
-            return await _context.CaseComments.AsNoTracking().Where(c => c.CaseID == caseId).ToListAsync();
+            var result = await _context.CaseComments.AsNoTracking().Where(c => c.CaseID == caseId).ToListAsync();
+            return result;
         }
         public async Task<CaseComment> GetComment(int caseCommentId)
         {
@@ -415,7 +419,7 @@ namespace Hippra.Services
         {
             _context.CaseComments.Add(CaseComment);
             await _context.SaveChangesAsync();
-
+            
             return true;
         }
         public async Task<bool> EditComment(CaseComment EditedCaseComment)
@@ -450,7 +454,7 @@ namespace Hippra.Services
         }
         private bool CaseCommentExists(int id)
         {
-            return _context.CaseComments.Any(e => e.ID == id);
+            return _context.CaseComments.AsNoTracking().Any(e => e.ID == id);
         }
 
         public async Task<bool> DeleteComment(int caseCommentId)
