@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200609074710_updateDb.cs" />
+    <Compile Remove="Migrations\20200609074710_updateDb.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
 
 
     <PackageReference Include="BlazorInputFile" Version="0.2.0" />

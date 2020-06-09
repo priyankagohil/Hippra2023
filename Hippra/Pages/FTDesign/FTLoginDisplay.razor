@@ -96,11 +96,11 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            var usr = await UserManager.GetUserAsync(user);
-            if (usr.NormalizedEmail == settings.Value.FTManagerUsr.ToUpper())
-            {
-                isAdmin = true;
-            }
+            //var usr = await UserManager.GetUserAsync(user);
+            //if (usr.NormalizedEmail == settings.Value.FTManagerUsr.ToUpper())
+            //{
+            //    isAdmin = true;
+            //}
         }
         switch (themeOption)
         {
