@@ -15,7 +15,8 @@ namespace Hippra.Models.SQL
         public string Comment { get; set; }
         public DateTime PostedDate { get; set; }
         public DateTime LastUpdatedDate { get; set; }
-        public string imgUrl { get; set; }
+        public string ImgUrl { get; set; }
+ /*       public string commentGUID { get; set; }*/
         public int CaseID { get; set; }
         public Case Case { get; set; }
     }

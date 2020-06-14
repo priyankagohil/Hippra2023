@@ -5,7 +5,7 @@
 
 @if (!string.IsNullOrWhiteSpace(displayImgUrl))
 {
-    <p><img src="@displayImgUrl" /></p>
+    <p><img src="@displayImgUrl" width="20%" height="20%"/></p>
     <div class="btn btn-outline-danger" @onclick="DeleteFile">
         delete
     </div>
@@ -60,12 +60,14 @@ else
         if (file.Type.Contains("png") || file.Type.Contains("jpg") || file.Type.Contains("jpeg") || file.Type.Contains("gif"))
         {
             string extension = file.Type.Remove(0, 6);
-            fileName = fileName + "." + extension;
+            fileName = fileName + Guid.NewGuid().ToString() + "." + extension;
             await hService.UploadImgToAzureAsync(file.Data, fileName);
             imgUrl = savedImgUrl + fileName;
             displayImgUrl = imgUrl + "?" + counter++;
             isDeleted = false;
             imgUrlChanged.InvokeAsync(imgUrl);
+            Console.WriteLine("lavda-lasun " + imgUrl);
+            Console.WriteLine("lavda-lasun2222 " + displayImgUrl);
             StateHasChanged();
             return;
         }

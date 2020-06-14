@@ -18,13 +18,15 @@
 @using Hippra.Pages.MCase
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
+@using Hippra.Pages.Common 
 @inject IHttpContextAccessor httpContextAccessor
 @inject IJSRuntime JSRuntime
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 @inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
 @inject ProfileService pService
-@inject HippraService hService
+@inject HippraService hService 
+
 
 <AuthorizeView>
     <Authorized Context="DetailCaseContext">
@@ -121,7 +123,7 @@
 
                         <div class="pb-5 row justify-content-center">
                             <div class="col-md-8" id="vmf">
-                                <FTComments postId="@pCase.ID" CommentList="@pCase.Comments" isOpened="true" />
+                                <Comments postId="@pCase.ID" CommentList="@pCase.Comments" isOpened="true" />
                             </div>
                         </div>
 
