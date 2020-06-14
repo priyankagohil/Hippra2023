@@ -307,6 +307,7 @@
     private string bEthnicity { get; set; } = "3";
 
     private string debug { get; set; } = "";
+    private Case tCase = null;
 
     private PriorityModel priorityRadio = new PriorityModel();
     public class PriorityModel
@@ -329,14 +330,14 @@
             await PopulateLists();
             returnUrl = returnUrl + caseId;
 
-            var tCase = await hService.GetCaseNoTracking(caseId);
+            tCase = await hService.GetCaseNoTracking(caseId);
             if (tCase == null)
             {
                 // didn't find it, should flag for error
                 return;
             }
             await PopulateModel(tCase);
-            pCase.Comments = await hService.GetCommentsNoTracking(caseId);
+            //pCase.Comments = await hService.GetCommentsNoTracking(caseId);
 
             fileName = "c" + pCase.ID;
             imgUrl = tCase.imgUrl;
@@ -358,17 +359,29 @@
     {
         var usr = await UserManager.GetUserAsync(user);
 
-        pCase.PosterName = usr.FirstName + " " + usr.LastName;
-        pCase.PosterSpecialty = ParseMedicalSpecialty((MedicalSpecialtyType)usr.MedicalSpecialty);
-        pCase.Race = Int32.Parse(bRace);
-        pCase.Gender = Int32.Parse(bGender);
-        pCase.Ethnicity = Int32.Parse(bEthnicity);
-        pCase.MedicalCategory = Int32.Parse(bSubCategory);
-        pCase.ResponseNeeded = priorityRadio.Priority;
-        pCase.imgUrl = imgUrl;
+        tCase.PosterName = usr.FirstName + " " + usr.LastName;
+        tCase.PosterSpecialty = ParseMedicalSpecialty((MedicalSpecialtyType)usr.MedicalSpecialty);
+        tCase.Race = Int32.Parse(bRace);
+        tCase.Gender = Int32.Parse(bGender);
+        tCase.Ethnicity = Int32.Parse(bEthnicity);
+        tCase.MedicalCategory = Int32.Parse(bSubCategory);
+        tCase.ResponseNeeded = priorityRadio.Priority;
+        tCase.imgUrl = imgUrl;
 
 
-        await hService.EditCase(pCase);
+        // copy back to tCase
+
+        tCase.Description = pCase.Description;
+        tCase.Topic = pCase.Topic;
+
+        tCase.PatientAge = pCase.PatientAge;
+        tCase.CurrentStageOfDisease = pCase.CurrentStageOfDisease;
+        tCase.CurrentTreatmentAdministered = pCase.CurrentTreatmentAdministered;
+        tCase.TreatmentOutcomes = pCase.TreatmentOutcomes;
+        tCase.LabValues = pCase.LabValues;
+        tCase.Status = pCase.Status;
+
+        await hService.EditCase(tCase);
         NavigationManager.NavigateTo(returnUrl);
 
     }
