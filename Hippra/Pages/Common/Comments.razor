@@ -112,6 +112,7 @@
                 newComment.LastUpdatedDate = newComment.PostedDate;
                 newComment.posterSpeciality = ParseMedicalSpecialty((MedicalSpecialtyType)usr.MedicalSpecialty);
                 newComment.CaseID = postId;
+                newComment.ID = 0;
 
                 Console.WriteLine("Before: " + imgUrl);
 
