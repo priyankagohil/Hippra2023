@@ -62,7 +62,7 @@ else
             string extension = file.Type.Remove(0, 6);
             fileName = fileName + "." + extension;
             await hService.UploadImgToAzureAsync(file.Data, fileName);
-            imgUrl = savedImgUrl + fileName;
+            imgUrl = savedImgUrl + "."+extension;
             displayImgUrl = imgUrl + "?" + counter++;
             isDeleted = false;
             imgUrlChanged.InvokeAsync(imgUrl);
