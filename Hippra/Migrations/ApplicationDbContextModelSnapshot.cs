@@ -14,7 +14,7 @@ namespace Hippra.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.4");
+                .HasAnnotation("ProductVersion", "3.1.1");
 
             modelBuilder.Entity("Hippra.Models.SQL.AppUser", b =>
                 {
@@ -213,9 +213,6 @@ namespace Hippra.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ImgUrl")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("LastUpdatedDate")
                         .HasColumnType("TEXT");
 
@@ -226,6 +223,9 @@ namespace Hippra.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("PosterName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("imgUrl")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("posterSpeciality")
