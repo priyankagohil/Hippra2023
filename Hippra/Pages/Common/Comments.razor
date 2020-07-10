@@ -37,7 +37,10 @@
         @c.Comment
     </div>
     <div class="px-4">
-        <img src="@c.ImgUrl" width="20%" height="20%"/>
+        @if (!string.IsNullOrWhiteSpace(c.ImgUrl))
+        {
+            <img src="@c.ImgUrl" width="20%" height="20%" />
+        }
     </div>
     <div class="text-right text-black-50">
         <small>@c.LastUpdatedDate</small>
@@ -59,9 +62,11 @@
             <div class="input-group mb-3">
                 <InputText class="form-control" id="" required placeholder="Write a Comment" @bind-Value="@newComment.Comment" aria-label="Comment" aria-describedby="Write a Comment" />
                 <div class="input-group-append">
-                    <CmtImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl"></CmtImgUpload>
                     <button id="comment-button" type="submit" class="btn btn-primary">Comment</button>
                 </div>
+            </div>
+            <div class="border">
+                <CmtImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl" @bind-isSubmitted="isSubmitted"></CmtImgUpload>
             </div>
 
         </EditForm>
@@ -85,6 +90,7 @@
 
     private string fileName;
     private string imgUrl;
+    private bool isSubmitted;
 
     protected override async Task OnInitializedAsync()
     {
@@ -94,10 +100,12 @@
     private async Task OpenComment()
     {
         isOpened = true;
+        isSubmitted = false;
         this.StateHasChanged();
     }
     private async Task AddComment()
     {
+        isSubmitted = false;
         authState = await authenticationStateTask;
         user = authState.User;
 
@@ -116,16 +124,25 @@
 
                 Console.WriteLine("Before: " + imgUrl);
 
-                newComment.ImgUrl = imgUrl;
+                if (!string.IsNullOrWhiteSpace(imgUrl))
+                {
+                    Console.WriteLine("Hereeeeeee!");
+                    newComment.ImgUrl = imgUrl;
+                }
 
                 Console.WriteLine("After: " + imgUrl);
 
-                await hService.AddComment(newComment);
+                hService.AddComment(newComment);
+
+                isSubmitted = true;
             }
         }
         newComment.Comment = "";
         CommentList = await hService.GetCommentsNoTracking(postId);
+        imgUrl = "";
+        newComment.ImgUrl = "";
         isOpened = true;
+        Console.WriteLine("isSubmitted after adding to db: " + isSubmitted);
         this.StateHasChanged();
     }
     private string ParseMedicalSpecialty(MedicalSpecialtyType MedicalSpecialty)
