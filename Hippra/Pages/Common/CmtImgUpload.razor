@@ -1,4 +1,5 @@
 ﻿@using Hippra.Services
+
 @inject HippraService hService
 <InputFile OnChange="HandleFileSelected" /> 
 
@@ -20,6 +21,7 @@ else
     }
 }
 
+
 @code {
     [Parameter]
     public string fileName { get; set; } = "";
@@ -31,6 +33,8 @@ else
     private string savedImgUrl = "";
     private string displayImgUrl = "";
     private string fileName2 = "";
+    private string guid = "";
+
 
     [Parameter]
     public EventCallback<string> fileNameChanged { get; set; }
@@ -41,27 +45,32 @@ else
 
     IFileListEntry file;
 
+
     private bool isDeleted { get; set; } = false;
     private int counter { get; set; } = 0;
 
     protected override async Task OnInitializedAsync()
     {
+
         displayImgUrl = imgUrl;
         savedImgUrl = hService.GetImgStorageUrl() + "img";
         Console.WriteLine("value of isSubmitted is " + isSubmitted);
     }
 
+
+
     public async Task HandleFileSelected(IFileListEntry[] files)
     {
         isSubmitted = false;
         isSubmittedChanged.InvokeAsync(isSubmitted);
-
+        imgUrl = "";
         file = files.FirstOrDefault();
 
         Console.WriteLine("value of isSubmitted inside HandleFilesSelected is " + isSubmitted);
 
         if (file == null)
         {
+
             StateHasChanged();
             return;
         }
@@ -73,13 +82,17 @@ else
         if (file.Type.Contains("png") || file.Type.Contains("jpg") || file.Type.Contains("jpeg") || file.Type.Contains("gif"))
         {
             string extension = file.Type.Remove(0, 6);
-            fileName = fileName + Guid.NewGuid().ToString() + "." + extension;
+            guid = Guid.NewGuid().ToString();
+
+            fileName = fileName + guid + "." + extension;
             fileName2 = fileName;
-            await hService.UploadImgToAzureAsync(file.Data, fileName);
-            imgUrl = savedImgUrl + fileName;
+            await hService.UploadImgToAzureAsync(file.Data, fileName2);
+
+            imgUrl = savedImgUrl + fileName2;
             displayImgUrl = imgUrl + "?" + counter++;
             isDeleted = false;
             imgUrlChanged.InvokeAsync(imgUrl);
+
             Console.WriteLine("savedImgUrl is " + savedImgUrl);
             Console.WriteLine("displayImgUrl is " + displayImgUrl);
             Console.WriteLine("imgUrl is " + imgUrl);
@@ -90,10 +103,11 @@ else
             {
                 Console.WriteLine("isSubmitted is TRUEEEE");
                 isSubmitted = false;
-                imgUrl = "";
                 displayImgUrl = "";
                 imgUrlChanged.InvokeAsync(imgUrl);
             }
+
+            savedImgUrl = hService.GetImgStorageUrl() + "img";
 
             StateHasChanged();
             return;
@@ -106,6 +120,8 @@ else
 
     }
 
+
+
     public async Task DeleteFile()
     {
 
@@ -114,21 +130,26 @@ else
         if (response)
         {
             isDeleted = true;
+
             imgUrl = "";
             displayImgUrl = "";
+
             imgUrlChanged.InvokeAsync(imgUrl);
         }
+
         StateHasChanged();
     }
     private Task OnfileNameChanged(ChangeEventArgs e)
     {
         fileName = e.Value.ToString();
+
         return fileNameChanged.InvokeAsync(fileName);
     }
 
     private Task OnimgUrlChanged(ChangeEventArgs e)
     {
         imgUrl = e.Value.ToString();
+
         return imgUrlChanged.InvokeAsync(imgUrl);
     }
 
