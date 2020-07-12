@@ -54,7 +54,6 @@ else
 
         displayImgUrl = imgUrl;
         savedImgUrl = hService.GetImgStorageUrl() + "img";
-        Console.WriteLine("value of isSubmitted is " + isSubmitted);
     }
 
 
@@ -65,8 +64,6 @@ else
         isSubmittedChanged.InvokeAsync(isSubmitted);
         imgUrl = "";
         file = files.FirstOrDefault();
-
-        Console.WriteLine("value of isSubmitted inside HandleFilesSelected is " + isSubmitted);
 
         if (file == null)
         {
@@ -93,15 +90,8 @@ else
             isDeleted = false;
             imgUrlChanged.InvokeAsync(imgUrl);
 
-            Console.WriteLine("savedImgUrl is " + savedImgUrl);
-            Console.WriteLine("displayImgUrl is " + displayImgUrl);
-            Console.WriteLine("imgUrl is " + imgUrl);
-            Console.WriteLine("fileName is " + fileName);
-            Console.WriteLine("fileName2 is " + fileName2);
-
             if (isSubmitted)
             {
-                Console.WriteLine("isSubmitted is TRUEEEE");
                 isSubmitted = false;
                 displayImgUrl = "";
                 imgUrlChanged.InvokeAsync(imgUrl);
@@ -124,8 +114,6 @@ else
 
     public async Task DeleteFile()
     {
-
-        Console.WriteLine("The filename deleted is " + fileName2);
         var response = await hService.DeleteImage(fileName2);
         if (response)
         {

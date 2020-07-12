@@ -122,15 +122,10 @@
                 newComment.CaseID = postId;
                 newComment.ID = 0;
 
-                Console.WriteLine("Before: " + imgUrl);
-
                 if (!string.IsNullOrWhiteSpace(imgUrl))
                 {
-                    Console.WriteLine("Hereeeeeee!");
                     newComment.ImgUrl = imgUrl;
                 }
-
-                Console.WriteLine("After: " + imgUrl);
 
                 hService.AddComment(newComment);
 
@@ -142,7 +137,6 @@
         imgUrl = "";
         newComment.ImgUrl = "";
         isOpened = true;
-        Console.WriteLine("isSubmitted after adding to db: " + isSubmitted);
         this.StateHasChanged();
     }
     private string ParseMedicalSpecialty(MedicalSpecialtyType MedicalSpecialty)
