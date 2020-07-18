@@ -1,0 +1,165 @@
+﻿@using Hippra.Services
+@inject HippraService hService
+
+@*<p>Img File Names is @imgFileNames</p>*@
+
+<InputFile multiple OnChange="HandleFileSelected" />
+
+@if (imgUrls != null || imgUrls.Count > 0)
+{
+    @foreach (string url in imgUrls)
+    {
+        @if (!string.IsNullOrWhiteSpace(url))
+        {
+            <p><img src="@url" width="10%" height="auto" /></p>
+            @*<div class="btn btn-outline-danger" @onclick="(e => { DeleteFile(url); })" @onchange="OnChangeCallback">*@
+            <div class="btn btn-outline-danger" @onclick="(e => { DeleteFile(url); })">
+                delete
+            </div>
+        }
+        else
+        {
+            if (isDeleted)
+            {
+                <p>File Deleted</p>// we could probably have a popup toast notification
+            }
+        }
+    }
+}
+
+@code
+{
+    [Parameter]
+    public string fileName { get; set; } = "";
+    [Parameter]
+    public string imgUrl { get; set; } = "";
+
+    private string savedImgUrl = "";
+    private string displayImgUrl = "";
+
+    [Parameter]
+    public EventCallback<string> fileNameChanged { get; set; }
+    [Parameter]
+    public EventCallback<string> imgUrlChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<ChangeEventArgs> OnChangeCallback { get; set; }
+
+    IFileListEntry file;
+    IFileListEntry[] selectedFiles;
+
+    public string imgFileNames;
+    private string tempFileName;
+    private List<string> imgUrls = new List<string>();
+    private bool isDeleted { get; set; } = false;
+    private int counter { get; set; } = 0;
+    private string[] imgUrlsArray;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        displayImgUrl = imgUrl;
+        savedImgUrl = hService.GetImgStorageUrl() + "img" + fileName;
+        //deserialize here
+        imgUrls = imgUrl.Split(' ').ToList();
+    }
+
+    public async Task HandleFileSelected(IFileListEntry[] files)
+    {
+        selectedFiles = files;
+        tempFileName = fileName;
+
+        foreach (var f in selectedFiles)
+        {
+            Console.WriteLine("file name is " + f.Name);
+            Console.WriteLine("file type is " + f.Type);
+
+            if (f == null)
+            {
+                StateHasChanged();
+                return;
+            }
+
+            if (f.Size < 100)
+            {
+                StateHasChanged();
+                return;
+            }
+
+            if (f.Type.Contains("png") || f.Type.Contains("jpg") || f.Type.Contains("jpeg") || f.Type.Contains("gif"))
+            {
+                Console.WriteLine("File is an image");
+
+                fileName = tempFileName; // **to clear concatenation for previous image
+                string extension = f.Type.Remove(0, 6);
+
+                fileName = fileName + "_" + counter + "." + extension;
+
+                await hService.UploadImgToAzureAsync(f.Data, fileName);
+
+                imgUrl = savedImgUrl + "_" + counter + "." + extension;
+                displayImgUrl = imgUrl;
+                isDeleted = false;
+
+                imgFileNames = imgFileNames + displayImgUrl + " ";
+                imgUrls.Add(displayImgUrl);
+
+                Console.WriteLine("imgUrl is " + imgUrl);
+                Console.WriteLine("savedImgUrl is " + savedImgUrl);
+                Console.WriteLine("displayImgUrl is " + displayImgUrl);
+                Console.WriteLine("filename is " + fileName);
+                Console.WriteLine("imgFilenames is ::: " + imgFileNames);
+
+                counter += 1;
+            }
+
+            else
+            {
+                Console.WriteLine("We've reached else condition");
+                StateHasChanged();
+            }
+        }
+
+        imgUrlChanged.InvokeAsync(imgFileNames);
+        StateHasChanged();
+        return;
+
+    }
+
+    public async Task DeleteFile(string deleteUrl)
+    {
+        Console.WriteLine(deleteUrl);
+        string filename = deleteUrl.Replace(hService.GetImgStorageUrl(), "");
+        Console.WriteLine(filename);
+        Console.WriteLine(deleteUrl);
+        var response = await hService.DeleteImage(filename);
+        if (response)
+        {
+            isDeleted = true;
+            //imgUrl = "";
+            //displayImgUrl = "";
+            imgUrls.Remove(deleteUrl);
+            imgUrl = imgUrl.Replace(deleteUrl, "");
+            imgUrlChanged.InvokeAsync(imgUrl);
+        }
+        StateHasChanged();
+    }
+
+    //public EventCallback<FocusEventArgs> CheckFunc()
+    //{
+    //    Console.WriteLine("This works!\n\n\n\n");
+    //    return OnChangeCallback.InvokeAsync();
+    //}
+
+    private Task OnfileNameChanged(ChangeEventArgs e)
+    {
+        fileName = e.Value.ToString();
+        return fileNameChanged.InvokeAsync(fileName);
+    }
+
+    private Task OnimgUrlChanged(ChangeEventArgs e)
+    {
+        imgUrl = e.Value.ToString();
+        return imgUrlChanged.InvokeAsync(imgUrl);
+    }
+}
