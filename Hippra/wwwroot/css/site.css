@@ -333,3 +333,8 @@ textarea {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.hover-class:hover {
+    background-color: #cce5ff;
+    cursor: pointer;
+}
