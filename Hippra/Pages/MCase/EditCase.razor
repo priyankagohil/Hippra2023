@@ -191,8 +191,12 @@
                                 <InputTextArea class="form-control" placeholder="Treatment Outcomes" @bind-Value="@pCase.TreatmentOutcomes" row="12" />
                             </div>                  
                             <div>
-                                <ImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl"></ImgUpload>
-                             </div>
+                                @*<ImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl"></ImgUpload>*@
+                                
+                                @*<TestMultiImg @bind-fileName="fileName" @bind-imgUrl="imgUrl" OnChangeCallback="@UpdateImgUrl" ></TestMultiImg>*@
+                                <TestMultiImg @bind-fileName="fileName" @bind-imgUrl="imgUrl"></TestMultiImg>
+
+                            </div>
 
                             <br />
                             <div>
@@ -317,6 +321,7 @@
 
     private string fileName;
     private string imgUrl;
+    @*private string originalImgUrl;*@
 
     protected override async Task OnInitializedAsync()
     {
@@ -340,12 +345,12 @@
 
             fileName = "c" + pCase.ID;
             imgUrl = tCase.imgUrl;
+            @*originalImgUrl = imgUrl;*@
         }
         else
         {
             // shouldn't get here
         }
-
 
     }
 
@@ -353,6 +358,37 @@
     {
         NavigationManager.NavigateTo(returnUrl);
     }
+
+    @*private async Task UpdateImgUrl(ChangeEventArgs e)
+    {
+        Console.WriteLine("UpdateImgUrl executed");
+
+        var usr = await UserManager.GetUserAsync(user);
+
+        tCase.PosterName = pCase.PosterName;
+        tCase.PosterSpecialty = pCase.PosterSpecialty;
+        tCase.Race = pCase.Race;
+        tCase.Gender = pCase.Gender;
+        tCase.Ethnicity = pCase.Ethnicity;
+        tCase.MedicalCategory = pCase.MedicalCategory;
+        tCase.ResponseNeeded = pCase.ResponseNeeded;
+        tCase.imgUrl = imgUrl;
+
+        // copy back to tCase
+
+        tCase.Description = pCase.Description;
+        tCase.Topic = pCase.Topic;
+
+        tCase.PatientAge = pCase.PatientAge;
+        tCase.CurrentStageOfDisease = pCase.CurrentStageOfDisease;
+        tCase.CurrentTreatmentAdministered = pCase.CurrentTreatmentAdministered;
+        tCase.TreatmentOutcomes = pCase.TreatmentOutcomes;
+        tCase.LabValues = pCase.LabValues;
+        tCase.Status = pCase.Status;
+
+        await hService.EditCase(tCase);
+
+    }*@
 
     private async Task UpdateCase()
     {
@@ -366,7 +402,6 @@
         tCase.MedicalCategory = Int32.Parse(bSubCategory);
         tCase.ResponseNeeded = priorityRadio.Priority;
         tCase.imgUrl = imgUrl;
-
 
         // copy back to tCase
 

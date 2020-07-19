@@ -107,17 +107,20 @@
                         @if (!string.IsNullOrWhiteSpace(@pCase.imgUrl))
                         {
                             <div class="lead">Images</div>
-                            <div class="py-5 row justify-content-center">
-                                <div class="col-md-2">
+                            @foreach (string url in imgUrls)
+                            {
+                                <div class="py-5 row justify-content-center">
+                                    <div class="col-md-2">
 
-                                </div>
-                                <div class="col-md-8">
-                                    <img src="@pCase.imgUrl" width="40%"  />
-                                </div>
-                                <div class="col-md-2">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <img src="@url" width="10%" height="auto"/>
+                                    </div>
+                                    <div class="col-md-2">
 
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         }
 
 
@@ -216,6 +219,7 @@
         public int Priority { get; set; }
     }
 
+    private string[] imgUrls;
 
 
     protected override async Task OnInitializedAsync()
@@ -238,6 +242,8 @@
             await PopulateModel(tCase);
             pCase.Comments = await hService.GetCommentsNoTracking(caseId);
             pCase.imgUrl = tCase.imgUrl;
+            //deserialize
+            imgUrls = @pCase.imgUrl.Split(' ');
         }
         else
         {
