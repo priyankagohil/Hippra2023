@@ -243,7 +243,10 @@
             pCase.Comments = await hService.GetCommentsNoTracking(caseId);
             pCase.imgUrl = tCase.imgUrl;
             //deserialize
-            imgUrls = @pCase.imgUrl.Split(' ');
+            if (!string.IsNullOrWhiteSpace(@pCase.imgUrl))
+            {
+                imgUrls = @pCase.imgUrl.Split(' ');
+            }
         }
         else
         {

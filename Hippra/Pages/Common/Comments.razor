@@ -37,9 +37,9 @@
         @c.Comment
     </div>
     <div class="px-4">
-        @if (!string.IsNullOrWhiteSpace(c.ImgUrl))
+        @if (!string.IsNullOrWhiteSpace(c.imgUrl))
         {
-            <img src="@c.ImgUrl" width="20%" height="20%" />
+            <img src="@c.imgUrl" width="20%" height="20%" />
         }
     </div>
     <div class="text-right text-black-50">
@@ -124,7 +124,7 @@
 
                 if (!string.IsNullOrWhiteSpace(imgUrl))
                 {
-                    newComment.ImgUrl = imgUrl;
+                    newComment.imgUrl = imgUrl;
                 }
 
                 hService.AddComment(newComment);
@@ -135,7 +135,7 @@
         newComment.Comment = "";
         CommentList = await hService.GetCommentsNoTracking(postId);
         imgUrl = "";
-        newComment.ImgUrl = "";
+        newComment.imgUrl = "";
         isOpened = true;
         this.StateHasChanged();
     }
