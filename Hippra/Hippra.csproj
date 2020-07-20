@@ -47,7 +47,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\img\hippra\" />
     <Folder Include="wwwroot\file\" />
   </ItemGroup>
 
