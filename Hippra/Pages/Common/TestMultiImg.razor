@@ -61,7 +61,10 @@
         displayImgUrl = imgUrl;
         savedImgUrl = hService.GetImgStorageUrl() + "img" + fileName;
         //deserialize here
-        imgUrls = imgUrl.Split(' ').ToList();
+        if (!string.IsNullOrWhiteSpace(imgUrl))
+        {
+            imgUrls = imgUrl.Split(' ').ToList();
+        }
     }
 
     public async Task HandleFileSelected(IFileListEntry[] files)
