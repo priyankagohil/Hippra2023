@@ -19,6 +19,8 @@ using Hippra.Data;
 using FTEmailService;
 using Hippra.Models.SQL;
 using Hippra.Services;
+using AutoMapper;
+
 
 namespace Hippra
 {
@@ -62,7 +64,11 @@ namespace Hippra
             })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+            services.AddAutoMapper(typeof(Startup));
             
+
             services.AddRazorPages();
             //services.AddMvc();
             services.AddServerSideBlazor();//.AddCircuitOptions(options => { options.DetailedErrors = true; });
@@ -143,7 +149,7 @@ namespace Hippra
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapControllers();
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
