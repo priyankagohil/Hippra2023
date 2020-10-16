@@ -338,3 +338,16 @@ textarea {
     background-color: #cce5ff;
     cursor: pointer;
 }
+
+label {
+    display: inline-block;
+}
+
+    label input {
+        display: none;
+    }
+
+input:checked ~ #caseImg {
+    width: 100%;
+    height: auto;
+}

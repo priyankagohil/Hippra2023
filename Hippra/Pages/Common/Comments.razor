@@ -39,7 +39,10 @@
     <div class="px-4">
         @if (!string.IsNullOrWhiteSpace(c.imgUrl))
         {
-            <img src="@c.imgUrl" width="20%" height="20%" />
+        <label>
+            <input type="checkbox">
+            <img id="caseImg" src="@c.imgUrl" width="20%" height="20%" />
+        </label>
         }
     </div>
     <div class="text-right text-black-50">
