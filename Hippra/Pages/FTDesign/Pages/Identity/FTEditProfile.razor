@@ -112,17 +112,17 @@
                                         </div>
                                         <div class=" mb-3">
                                             <label for="Residency">Residency Hospital</label>
-                                            <InputText class="form-control" id="Residency" required placeholder="Residency Hospital" @bind-Value="@inputModel.ResidencyHospital" aria-label="Residency" aria-describedby="Residency" />
+                                            <InputText class="form-control" id="Residency"  placeholder="Residency Hospital" @bind-Value="@inputModel.ResidencyHospital" aria-label="Residency" aria-describedby="Residency" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="MedicalSchool">Medical School Attended</label>
-                                            <InputText class="form-control" id="MedicalSchool" required placeholder="Medical School Attended" @bind-Value="@inputModel.MedicalSchoolAttended" aria-label="MedicalSchool" aria-describedby="MedicalSchool" />
+                                            <InputText class="form-control" id="MedicalSchool"  placeholder="Medical School Attended" @bind-Value="@inputModel.MedicalSchoolAttended" aria-label="MedicalSchool" aria-describedby="MedicalSchool" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="Education">Education/Degree</label>
-                                            <InputText class="form-control" id="Education" required placeholder="Education/Degree" @bind-Value="@inputModel.EducationDegree" aria-label="Education" aria-describedby="Education" />
+                                            <InputText class="form-control" id="Education"  placeholder="Education/Degree" @bind-Value="@inputModel.EducationDegree" aria-label="Education" aria-describedby="Education" />
 
                                         </div>
                                         <br />
@@ -139,27 +139,27 @@
 
                                         <div class=" mb-3">
                                             <label for="Address">Address</label>
-                                            <InputText class="form-control" id="Address" required placeholder="Address" @bind-Value="@inputModel.Address" aria-label="Address" aria-describedby="Address" />
+                                            <InputText class="form-control" id="Address"  placeholder="Address" @bind-Value="@inputModel.Address" aria-label="Address" aria-describedby="Address" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="City">City</label>
-                                            <InputText class="form-control" id="City" required placeholder="City" @bind-Value="@inputModel.City" aria-label="City" aria-describedby="City" />
+                                            <InputText class="form-control" id="City"  placeholder="City" @bind-Value="@inputModel.City" aria-label="City" aria-describedby="City" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="State">State</label>
-                                            <InputText class="form-control" id="State" required placeholder="State" @bind-Value="@inputModel.State" aria-label="State" aria-describedby="State" />
+                                            <InputText class="form-control" id="State"  placeholder="State" @bind-Value="@inputModel.State" aria-label="State" aria-describedby="State" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="Zipcode">Zipcode</label>
-                                            <InputText class="form-control" id="Zipcode" required placeholder="Zipcode" @bind-Value="@inputModel.Zipcode" aria-label="Zipcode" aria-describedby="Zipcode" />
+                                            <InputText class="form-control" id="Zipcode"  placeholder="Zipcode" @bind-Value="@inputModel.Zipcode" aria-label="Zipcode" aria-describedby="Zipcode" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="PhoneNumber">Phone Number</label>
-                                            <InputText class="form-control" id="PhoneNumber" required placeholder="Phone Number" @bind-Value="@inputModel.PhoneNumber" aria-label="PhoneNumber" aria-describedby="PhoneNumber" />
+                                            <InputText class="form-control" id="PhoneNumber"  placeholder="Phone Number" @bind-Value="@inputModel.PhoneNumber" aria-label="PhoneNumber" aria-describedby="PhoneNumber" />
 
                                         </div>
                                         <br />
@@ -441,40 +441,43 @@
         //    return;
         //}
 
-        //authState = await authenticationStateTask;
-        //user = authState.User;
-        //if (user.Identity.IsAuthenticated)
-        //{
-        //    var usr = await UserManager.GetUserAsync(user);
-        //    usr.CoolName = userInfo.CoolName;
-        //    usr.UserName = userInfo.UserName;
-        //    usr.PublicId = userInfo.PublicId;
-        //    usr.CurrentLocation = userInfo.CurrentLocation;
-        //    usr.AnimalIcon = Int32.Parse(userInfo.avatar);
-        //    usr.School = userInfo.School;
-        //    usr.Year = userInfo.Year;
-        //    usr.Bio = userInfo.Bio;
-        //    usr.Profession = userInfo.Profession;
-        //    usr.FacebookLink = userInfo.FacebookLink;
-        //    usr.LinkedInLink = userInfo.LinkedInLink;
-        //    usr.PublicEmail = userInfo.PublicEmail;
+        authState = await authenticationStateTask;
+        user = authState.User;
+        if (user.Identity.IsAuthenticated)
+        {
+            var usr = await UserManager.GetUserAsync(user);
 
-        //    try
-        //    {
-        //        await UserManagerExtensions.UpdateUserProfile(UserManager, user, usr);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        hasError = true;
-        //        this.StateHasChanged();
-        //        return;
-        //    }
-        //    status = 1;
-        //    this.StateHasChanged();
-        //    return;
-        //}
-        //hasError = true;
-        //this.StateHasChanged();
+            usr.FirstName = inputModel.FirstName;
+            usr.LastName = inputModel.LastName;
+            usr.NPIN = inputModel.NPIN;
+            usr.MedicalSpecialty = Int32.Parse(inputModel.mSpecialty);
+            usr.AmericanBoardCertified = inputModel.AmericanBoardCertified;
+
+            usr.ResidencyHospital = inputModel.ResidencyHospital;
+            usr.MedicalSchoolAttended = inputModel.MedicalSchoolAttended;
+            usr.EducationDegree = inputModel.EducationDegree;
+            usr.Address = inputModel.Address;
+            usr.Zipcode = inputModel.Zipcode;
+            usr.State = inputModel.State;
+            usr.City = inputModel.City;
+            usr.PhoneNumber = inputModel.PhoneNumber; // check this 
+
+            try
+            {
+                await UserManagerExtensions.UpdateUserProfile(UserManager, user, usr);
+            }
+            catch (Exception e)
+            {
+                hasError = true;
+                this.StateHasChanged();
+                return;
+            }
+            status = 1;
+            this.StateHasChanged();
+            return;
+        }
+        hasError = true;
+        this.StateHasChanged();
         return;
 
 

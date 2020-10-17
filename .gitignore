@@ -341,3 +341,11 @@ healthchecksdb
 
 #sqlite
 *.sqlite
+/Hippra/.config/dotnet-tools.json
+/Hippra/Properties/ServiceDependencies/hippra - Web Deploy1/mssql1.arm.json
+/Hippra/Properties/ServiceDependencies/hippra - Web Deploy1/profile.arm.json
+/Hippra/Properties/ServiceDependencies/hippra - Web Deploy1 SQL/mssql1.arm.json
+/Hippra/Properties/ServiceDependencies/hippra - Web Deploy1 SQL/profile.arm.json
+/Hippra/Properties/serviceDependencies.hippra - Web Deploy1 SQL.json
+/Hippra/Properties/serviceDependencies.hippra - Web Deploy1.json
+/Hippra/Properties/serviceDependencies.json
