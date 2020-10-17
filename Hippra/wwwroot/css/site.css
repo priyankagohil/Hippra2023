@@ -339,13 +339,13 @@ textarea {
     cursor: pointer;
 }
 
-label {
+.label-img {
     display: inline-block;
 }
 
-    label input {
-        display: none;
-    }
+.label-img input {
+    display: none;
+}
 
 input:checked ~ #caseImg {
     width: 100%;
