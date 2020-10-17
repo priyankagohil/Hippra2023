@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Hippra.Migrations
 {
-    public partial class InitSQLite3 : Migration
+    public partial class sqlserverInit : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -67,7 +67,7 @@ namespace Hippra.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     PosterID = table.Column<int>(nullable: false),
                     PosterName = table.Column<string>(nullable: true),
                     PosterSpecialty = table.Column<string>(nullable: true),
@@ -86,7 +86,8 @@ namespace Hippra.Migrations
                     LabValues = table.Column<string>(nullable: true),
                     CurrentStageOfDisease = table.Column<string>(nullable: true),
                     CurrentTreatmentAdministered = table.Column<string>(nullable: true),
-                    TreatmentOutcomes = table.Column<string>(nullable: true)
+                    TreatmentOutcomes = table.Column<string>(nullable: true),
+                    imgUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -98,7 +99,7 @@ namespace Hippra.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -119,7 +120,7 @@ namespace Hippra.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -204,13 +205,14 @@ namespace Hippra.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     PosterId = table.Column<int>(nullable: false),
                     PosterName = table.Column<string>(nullable: true),
                     posterSpeciality = table.Column<string>(nullable: true),
                     Comment = table.Column<string>(nullable: true),
                     PostedDate = table.Column<DateTime>(nullable: false),
                     LastUpdatedDate = table.Column<DateTime>(nullable: false),
+                    imgUrl = table.Column<string>(nullable: true),
                     CaseID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -233,7 +235,8 @@ namespace Hippra.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -259,7 +262,8 @@ namespace Hippra.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CaseComments_CaseID",

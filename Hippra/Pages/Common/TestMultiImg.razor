@@ -1,7 +1,7 @@
 ﻿@using Hippra.Services
 @inject HippraService hService
 
-@*<p>Img File Names is @imgFileNames</p>*@
+@*<p>Img File Names is @fileName @imgUrl </p>*@
 
 <InputFile multiple OnChange="HandleFileSelected" />
 
@@ -99,6 +99,11 @@
                 fileName = fileName + "_" + counter + "." + extension;
 
                 await hService.UploadImgToAzureAsync(f.Data, fileName);
+
+                if (!savedImgUrl.Contains("imgc"))
+                {
+                    savedImgUrl = savedImgUrl + tempFileName;
+                }
 
                 imgUrl = savedImgUrl + "_" + counter + "." + extension;
                 displayImgUrl = imgUrl;
