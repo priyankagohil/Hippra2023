@@ -20,7 +20,7 @@ using FTEmailService;
 using Hippra.Models.SQL;
 using Hippra.Services;
 using AutoMapper;
-
+using System.Runtime.InteropServices;
 
 namespace Hippra
 {
@@ -46,13 +46,25 @@ namespace Hippra
                 options.MinimumSameSitePolicy = SameSiteMode.Lax;
             });
 
-            // for production
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
+            bool isWindows = System.Runtime.InteropServices.RuntimeInformation
+                                               .IsOSPlatform(OSPlatform.Windows);
 
-            //services.AddDbContext<ApplicationDbContext>(options =>
-            //    options.UseSqlite(Configuration.GetConnectionString("DefaultSQLiteConnection")), ServiceLifetime.Transient);
+            if (isWindows)
+            {
+                // for production
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlServer(
+                        Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
+            }
+            else
+            {
+
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseSqlite(Configuration.GetConnectionString("DefaultSQLiteConnection")), ServiceLifetime.Transient);
+            }
+
+
+
 
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
