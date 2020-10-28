@@ -11,7 +11,10 @@
     {
         @if (!string.IsNullOrWhiteSpace(url))
         {
-            <p><img src="@url" width="10%" height="auto" /></p>
+            <p><label class="label-img">
+                <input type="checkbox">
+                     <img id="caseImg" src="@url" width="10%" height="auto" />
+                </label></p>
             @*<div class="btn btn-outline-danger" @onclick="(e => { DeleteFile(url); })" @onchange="OnChangeCallback">*@
             <div class="btn btn-outline-danger" @onclick="(e => { DeleteFile(url); })">
                 delete
