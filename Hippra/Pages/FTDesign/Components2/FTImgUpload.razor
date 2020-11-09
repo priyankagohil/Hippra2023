@@ -9,7 +9,7 @@
         <p>savedImgUrl: @savedImgUrl</p>
         <p>display: @displayImgUrl</p>*@
 
-        <InputFile OnChange="HandleFileSelected" />
+        <InputFile OnChange="@HandleFileSelected" />
 
         @if (!string.IsNullOrWhiteSpace(displayImgUrl))
         {
@@ -49,7 +49,7 @@
     [Parameter]
     public EventCallback<string> imgUrlChanged { get; set; }
 
-    IFileListEntry file;
+    //IFileListEntry file;
 
 
     private bool isDeleted { get; set; } = false;
@@ -64,9 +64,63 @@
 
     }
 
+    IList<string> imageDataUrls = new List<string>();
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var maxAllowedFiles = 1;
+        var format = "image/png";
+
+        foreach (var imageFile in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            if (imageFile == null || imageFile.Size < 100)
+            {
+                StateHasChanged();
+                return;
+            }
+
+            if( imageFile.Name.Contains("png")||
+                imageFile.Name.Contains("jpg") ||
+                imageFile.Name.Contains("jpeg") ||
+                imageFile.Name.Contains("gif"))
+            {
+
+                var buffer = new byte[imageFile.Size];
+                await hService.UploadImgToAzureAsync(imageFile.OpenReadStream(), fileName);
+
+                imgUrl = savedImgUrl;
+
+                displayImgUrl = imgUrl + "?" + counter++;
+                isDeleted = false;
+                imgUrlChanged.InvokeAsync(imgUrl);
+
+                StateHasChanged();
+                return;
+            }
+            else
+            {
+                StateHasChanged();
+                return;
+            }
 
 
-    public async Task HandleFileSelected(IFileListEntry[] files)
+
+            @*var buffer = new byte[imageFile.Size];
+
+            var resizedImageFile = await imageFile.RequestImageFileAsync(format,
+                100, 100);
+            var buffer = new byte[resizedImageFile.Size];
+            await resizedImageFile.OpenReadStream().ReadAsync(buffer);
+            var imageDataUrl =
+                $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+
+            imageDataUrls.Add(imageDataUrl);*@
+        }
+    }
+
+
+
+    @*public async Task HandleFileSelected(IFileListEntry[] files)
     {
         file = files.FirstOrDefault();
 
@@ -102,38 +156,38 @@
         }
 
 
-    }
+    }*@
 
 
 
-    public async Task DeleteFile()
+public async Task DeleteFile()
+{
+    var response = await hService.DeleteImage(fileName);
+    if (response)
     {
-        var response = await hService.DeleteImage(fileName);
-        if (response)
-        {
-            isDeleted = true;
+        isDeleted = true;
 
-            imgUrl = "";
-            displayImgUrl = "";
+        imgUrl = "";
+        displayImgUrl = "";
 
-            imgUrlChanged.InvokeAsync(imgUrl);
-        }
-
-        StateHasChanged();
-    }
-    private Task OnfileNameChanged(ChangeEventArgs e)
-    {
-        fileName = e.Value.ToString();
-
-        return fileNameChanged.InvokeAsync(fileName);
+        imgUrlChanged.InvokeAsync(imgUrl);
     }
 
-    private Task OnimgUrlChanged(ChangeEventArgs e)
-    {
-        imgUrl = e.Value.ToString();
+    StateHasChanged();
+}
+private Task OnfileNameChanged(ChangeEventArgs e)
+{
+    fileName = e.Value.ToString();
 
-        return imgUrlChanged.InvokeAsync(imgUrl);
-    }
+    return fileNameChanged.InvokeAsync(fileName);
+}
+
+private Task OnimgUrlChanged(ChangeEventArgs e)
+{
+    imgUrl = e.Value.ToString();
+
+    return imgUrlChanged.InvokeAsync(imgUrl);
+}
 
 
 }

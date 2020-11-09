@@ -1,7 +1,6 @@
 ﻿@using Hippra.Services
 @inject HippraService hService
-
-@*<p>Img File Names is @fileName @imgUrl </p>*@
+@*<p>Img File Names is @imgFileNames</p>*@
 
 <InputFile multiple OnChange="HandleFileSelected" />
 
@@ -11,10 +10,12 @@
     {
         @if (!string.IsNullOrWhiteSpace(url))
         {
-            <p><label class="label-img">
-                <input type="checkbox">
-                     <img id="caseImg" src="@url" width="10%" height="auto" />
-                </label></p>
+            <p>
+                <label class="label-img">
+                    <input type="checkbox">
+                    <img id="caseImg" src="@url" width="10%" height="auto" />
+                </label>
+            </p>
             @*<div class="btn btn-outline-danger" @onclick="(e => { DeleteFile(url); })" @onchange="OnChangeCallback">*@
             <div class="btn btn-outline-danger" @onclick="(e => { DeleteFile(url); })">
                 delete
@@ -48,8 +49,8 @@
     [Parameter]
     public EventCallback<ChangeEventArgs> OnChangeCallback { get; set; }
 
-    IFileListEntry file;
-    IFileListEntry[] selectedFiles;
+    @*IFileListEntry file;
+        IFileListEntry[] selectedFiles;*@
 
     public string imgFileNames;
     private string tempFileName;
@@ -70,43 +71,39 @@
         }
     }
 
-    public async Task HandleFileSelected(IFileListEntry[] files)
+    public async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
-        selectedFiles = files;
+        var maxAllowedFiles = 5;
+        var format = "image/png";
+
+        @*var selectedFiles = files;*@
         tempFileName = fileName;
 
-        foreach (var f in selectedFiles)
+
+        foreach (var imageFile in e.GetMultipleFiles(maxAllowedFiles))
         {
-            Console.WriteLine("file name is " + f.Name);
-            Console.WriteLine("file type is " + f.Type);
-
-            if (f == null)
+            if (imageFile == null || imageFile.Size < 100)
             {
                 StateHasChanged();
                 return;
             }
 
-            if (f.Size < 100)
+            if (imageFile.Name.Contains("png") ||
+                imageFile.Name.Contains("jpg") ||
+                imageFile.Name.Contains("jpeg") ||
+                imageFile.Name.Contains("gif"))
             {
-                StateHasChanged();
-                return;
-            }
 
-            if (f.Type.Contains("png") || f.Type.Contains("jpg") || f.Type.Contains("jpeg") || f.Type.Contains("gif"))
-            {
-                Console.WriteLine("File is an image");
+                var buffer = new byte[imageFile.Size];
+
 
                 fileName = tempFileName; // **to clear concatenation for previous image
-                string extension = f.Type.Remove(0, 6);
+                string extension = imageFile.Name.Remove(0, 6);
 
                 fileName = fileName + "_" + counter + "." + extension;
 
-                await hService.UploadImgToAzureAsync(f.Data, fileName);
-
-                if (!savedImgUrl.Contains("imgc"))
-                {
-                    savedImgUrl = savedImgUrl + tempFileName;
-                }
+                @*await hService.UploadImgToAzureAsync(f.Data, fileName);*@
+                await hService.UploadImgToAzureAsync(imageFile.OpenReadStream(), fileName);
 
                 imgUrl = savedImgUrl + "_" + counter + "." + extension;
                 displayImgUrl = imgUrl;
@@ -122,18 +119,97 @@
                 Console.WriteLine("imgFilenames is ::: " + imgFileNames);
 
                 counter += 1;
-            }
 
+
+            }
             else
             {
-                Console.WriteLine("We've reached else condition");
                 StateHasChanged();
+                return;
             }
+            imgUrlChanged.InvokeAsync(imgFileNames);
+            StateHasChanged();
+            return;
+
+
+            @*var buffer = new byte[imageFile.Size];
+
+                var resizedImageFile = await imageFile.RequestImageFileAsync(format,
+                    100, 100);
+                var buffer = new byte[resizedImageFile.Size];
+                await resizedImageFile.OpenReadStream().ReadAsync(buffer);
+                var imageDataUrl =
+                    $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+
+                imageDataUrls.Add(imageDataUrl);*@
         }
 
-        imgUrlChanged.InvokeAsync(imgFileNames);
-        StateHasChanged();
-        return;
+
+
+
+
+        @*selectedFiles = files;
+            tempFileName = fileName;
+
+            foreach (var f in selectedFiles)
+            {
+                Console.WriteLine("file name is " + f.Name);
+                Console.WriteLine("file type is " + f.Type);
+
+                if (f == null)
+                {
+                    StateHasChanged();
+                    return;
+                }
+
+                if (f.Size < 100)
+                {
+                    StateHasChanged();
+                    return;
+                }
+
+                if (f.Type.Contains("png") || f.Type.Contains("jpg") || f.Type.Contains("jpeg") || f.Type.Contains("gif"))
+                {
+                    Console.WriteLine("File is an image");
+
+                    fileName = tempFileName; // **to clear concatenation for previous image
+                    string extension = f.Type.Remove(0, 6);
+
+                    fileName = fileName + "_" + counter + "." + extension;
+
+                    await hService.UploadImgToAzureAsync(f.Data, fileName);
+
+                    if (!savedImgUrl.Contains("imgc"))
+                    {
+                        savedImgUrl = savedImgUrl + tempFileName;
+                    }
+
+                    imgUrl = savedImgUrl + "_" + counter + "." + extension;
+                    displayImgUrl = imgUrl;
+                    isDeleted = false;
+
+                    imgFileNames = imgFileNames + displayImgUrl + " ";
+                    imgUrls.Add(displayImgUrl);
+
+                    Console.WriteLine("imgUrl is " + imgUrl);
+                    Console.WriteLine("savedImgUrl is " + savedImgUrl);
+                    Console.WriteLine("displayImgUrl is " + displayImgUrl);
+                    Console.WriteLine("filename is " + fileName);
+                    Console.WriteLine("imgFilenames is ::: " + imgFileNames);
+
+                    counter += 1;
+                }
+
+                else
+                {
+                    Console.WriteLine("We've reached else condition");
+                    StateHasChanged();
+                }
+            }
+
+            imgUrlChanged.InvokeAsync(imgFileNames);
+            StateHasChanged();
+            return;*@
 
     }
 

@@ -55,19 +55,30 @@
 
                             <hr />
                             <div class="form-group">
-                                <div>Priority</div>
+
+                                <InputRadioGroup Name="rate" @bind-Value="Priority">
+                                    Priority
+                                    <br>
+                                    <InputRadio Name="rate" Value="CaseResponseLevelType.HIGH" />High
+                                    <InputRadio Name="rate" Value="CaseResponseLevelType.MID" />Mid
+                                    <InputRadio Name="rate" Value="CaseResponseLevelType.LOW" />Low
+                                </InputRadioGroup>
+
+
+                                @*
+                                    <div>Priority</div>
                                 <label>
-                                    <InputRadio name="rate" SelectedValue="0" @bind-Value="@priorityRadio.Priority" />
-                                    High
-                                </label>
-                                <label>
-                                    <InputRadio name="rate" SelectedValue="1" @bind-Value="@priorityRadio.Priority" />
-                                    Medium
-                                </label>
-                                <label>
-                                    <InputRadio name="rate" SelectedValue="2" @bind-Value="@priorityRadio.Priority" />
-                                    Low
-                                </label>
+            <InputRadio name="rate" SelectedValue="0" @bind-Value="@priorityRadio.Priority" />
+            High
+        </label>
+        <label>
+            <InputRadio name="rate" SelectedValue="1" @bind-Value="@priorityRadio.Priority" />
+            Medium
+        </label>
+        <label>
+            <InputRadio name="rate" SelectedValue="2" @bind-Value="@priorityRadio.Priority" />
+            Low
+        </label>*@
                             </div>
                             <div class="form-group">
                                 <div>Patient Age</div>
@@ -270,6 +281,9 @@
         public int Priority { get; set; }
     }
 
+    [EnumDataType(typeof(CaseResponseLevelType))]
+    public CaseResponseLevelType Priority { get; set; } = CaseResponseLevelType.HIGH;
+
     private string fileName;
     private string imgUrl;
 
@@ -318,7 +332,8 @@
         validatedCase.Gender = Int32.Parse(bGender);
         validatedCase.Ethnicity = Int32.Parse(bEthnicity);
         validatedCase.MedicalCategory = Int32.Parse(bSubCategory);
-        validatedCase.ResponseNeeded = priorityRadio.Priority;
+        @*validatedCase.ResponseNeeded = priorityRadio.Priority;// old*@
+        validatedCase.ResponseNeeded = PriorityToInt(Priority);
         validatedCase.PatientAge = pCase.PatientAge;
         validatedCase.CurrentStageOfDisease = pCase.CurrentStageOfDisease;
         validatedCase.CurrentTreatmentAdministered = pCase.CurrentTreatmentAdministered;
@@ -1143,6 +1158,23 @@
         }
 
 
+        return rValue;
+    }
+    private int PriorityToInt(CaseResponseLevelType priority)
+    {
+        int rValue = 0;
+        switch (priority)
+        {
+            case CaseResponseLevelType.MID:
+                rValue = 1;
+                break;
+            case CaseResponseLevelType.LOW:
+                rValue = 2;
+                break;
+            default:
+                rValue = 0;
+                break;
+        }
         return rValue;
     }
     private string ParseStatus(bool tStatus)

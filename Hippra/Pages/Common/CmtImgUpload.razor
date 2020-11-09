@@ -1,7 +1,8 @@
 ﻿@using Hippra.Services
 
 @inject HippraService hService
-<InputFile OnChange="HandleFileSelected" /> 
+@*<InputFile OnChange="HandleFileSelected" />*@
+<InputFile OnChange="@HandleFileSelected" />
 
 @if (!string.IsNullOrWhiteSpace(displayImgUrl))
 {
@@ -43,7 +44,7 @@ else
     [Parameter]
     public EventCallback<bool> isSubmittedChanged { get; set; }
 
-    IFileListEntry file;
+    @*IFileListEntry file;*@
 
 
     private bool isDeleted { get; set; } = false;
@@ -58,56 +59,69 @@ else
 
 
 
-    public async Task HandleFileSelected(IFileListEntry[] files)
+    //public async Task HandleFileSelected(IFileListEntry[] files)
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
         isSubmitted = false;
         isSubmittedChanged.InvokeAsync(isSubmitted);
         imgUrl = "";
-        file = files.FirstOrDefault();
 
-        if (file == null)
+        var maxAllowedFiles = 1;
+        var format = "image/png";
+
+        foreach (var imageFile in e.GetMultipleFiles(maxAllowedFiles))
         {
-
-            StateHasChanged();
-            return;
-        }
-        if (file.Size < 100)
-        {
-            StateHasChanged();
-            return;
-        }
-        if (file.Type.Contains("png") || file.Type.Contains("jpg") || file.Type.Contains("jpeg") || file.Type.Contains("gif"))
-        {
-            string extension = file.Type.Remove(0, 6);
-            guid = Guid.NewGuid().ToString();
-
-            fileName = fileName + guid + "." + extension;
-            fileName2 = fileName;
-            await hService.UploadImgToAzureAsync(file.Data, fileName2);
-
-            imgUrl = savedImgUrl + fileName2;
-            displayImgUrl = imgUrl + "?" + counter++;
-            isDeleted = false;
-            imgUrlChanged.InvokeAsync(imgUrl);
-
-            if (isSubmitted)
+            if (imageFile == null || imageFile.Size < 100)
             {
-                isSubmitted = false;
-                displayImgUrl = "";
-                imgUrlChanged.InvokeAsync(imgUrl);
+                StateHasChanged();
+                return;
             }
 
-            savedImgUrl = hService.GetImgStorageUrl() + "img";
+            if (imageFile.Name.Contains("png") ||
+                imageFile.Name.Contains("jpg") ||
+                imageFile.Name.Contains("jpeg") ||
+                imageFile.Name.Contains("gif"))
+            {
 
-            StateHasChanged();
-            return;
+                var buffer = new byte[imageFile.Size];
+
+
+                string extension = imageFile.Name.Remove(0, 6);
+                guid = Guid.NewGuid().ToString();
+
+                fileName = fileName + guid + "." + extension;
+                fileName2 = fileName;
+                @*await hService.UploadImgToAzureAsync(file.Data, fileName2);*@
+                await hService.UploadImgToAzureAsync(imageFile.OpenReadStream(), fileName2);
+
+
+                imgUrl = savedImgUrl + fileName2;
+                displayImgUrl = imgUrl + "?" + counter++;
+                isDeleted = false;
+                imgUrlChanged.InvokeAsync(imgUrl);
+
+                if (isSubmitted)
+                {
+                    isSubmitted = false;
+                    displayImgUrl = "";
+                    imgUrlChanged.InvokeAsync(imgUrl);
+                }
+
+                savedImgUrl = hService.GetImgStorageUrl() + "img";
+
+                StateHasChanged();
+                return;
+
+            }
+            else
+            {
+                StateHasChanged();
+                return;
+            }
+
+
         }
 
-        else
-        {
-            StateHasChanged();
-            return;
-        }
 
     }
 
