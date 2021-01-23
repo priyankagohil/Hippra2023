@@ -147,6 +147,16 @@
 
                                                                     </div>
                                                                 </div>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <label for="PriorityFilter">Priority</label>
+                                                                        <select id="PriorityFilter" @onchange="@UpdatePriority">
+                                                                            <option value="-1">All</option>
+                                                                            <option value="0">Stat</option>
+                                                                            <option value="1">Over Coffee</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             <div>
                                                                 <button class="btn btn-outline-secondary" type="submit">Filter</button>
@@ -265,18 +275,26 @@
                                 <hr />
                                 <div class="form-group">
                                     <div>Priority</div>
+                                    <InputRadioGroup Name="rate" @bind-Value="priorityRadio.Priority">
+                                        Priority
+                                        <br>
+                                        <InputRadio Name="rate" Value="CaseResponseLevelType.HIGH" />Stat
+                                        <InputRadio Name="rate" Value="CaseResponseLevelType.MID" />Over Coffee
+                                        @*<InputRadio Name="rate" Value="CaseResponseLevelType.LOW" />Low*@
+                                    </InputRadioGroup>
+
                                     @*<label>
-                                        <InputRadio name="rate" SelectedValue="0" @bind-Value="@priorityRadio.Priority" />
-                                        High
-                                    </label>
-                                    <label>
-                                        <InputRadio name="rate" SelectedValue="1" @bind-Value="@priorityRadio.Priority" />
-                                        Medium
-                                    </label>
-                                    <label>
-                                        <InputRadio name="rate" SelectedValue="2" @bind-Value="@priorityRadio.Priority" />
-                                        Low
-                                    </label>*@
+            <InputRadio name="rate" SelectedValue="0" @bind-Value="@priorityRadio.Priority" />
+            High
+        </label>
+        <label>
+            <InputRadio name="rate" SelectedValue="1" @bind-Value="@priorityRadio.Priority" />
+            Medium
+        </label>
+        <label>
+            <InputRadio name="rate" SelectedValue="2" @bind-Value="@priorityRadio.Priority" />
+            Low
+        </label>*@
                                 </div>
                                 <div class="form-group">
                                     <div>Patient Age</div>
@@ -408,18 +426,25 @@
                                 <hr />
                                 <div class="form-group">
                                     <div>Priority</div>
+                                    <InputRadioGroup Name="rate" @bind-Value="priorityRadio.Priority">
+                                        Priority
+                                        <br>
+                                        <InputRadio Name="rate" Value="CaseResponseLevelType.HIGH" />Stat
+                                        <InputRadio Name="rate" Value="CaseResponseLevelType.MID" />Over Coffee
+                                        @*<InputRadio Name="rate" Value="CaseResponseLevelType.LOW" />Low*@
+                                    </InputRadioGroup>
                                     @*<label>
-                                        <InputRadio name="rate" SelectedValue="0" @bind-Value="@priorityRadio.Priority" />
-                                        High
-                                    </label>
-                                    <label>
-                                        <InputRadio name="rate" SelectedValue="1" @bind-Value="@priorityRadio.Priority" />
-                                        Medium
-                                    </label>
-                                    <label>
-                                        <InputRadio name="rate" SelectedValue="2" @bind-Value="@priorityRadio.Priority" />
-                                        Low
-                                    </label>*@
+            <InputRadio name="rate" SelectedValue="0" @bind-Value="@priorityRadio.Priority" />
+            High
+        </label>
+        <label>
+            <InputRadio name="rate" SelectedValue="1" @bind-Value="@priorityRadio.Priority" />
+            Medium
+        </label>
+        <label>
+            <InputRadio name="rate" SelectedValue="2" @bind-Value="@priorityRadio.Priority" />
+            Low
+        </label>*@
                                 </div>
                                 <div class="form-group">
                                     <div>Patient Age</div>
@@ -696,11 +721,11 @@
 
                                     </div>
                                     <div class="col-md-8">
-                                        <div class="">Created By: @pCase.PosterName <span class="text-black-50"> (@pCase.PosterSpecialty) </span></div>
-                                        <div>Case Status: @pCase.ParsedStatus</div>
-                                        <div>Priority: @pCase.Priority</div>
-                                        <div>Date Created: @pCase.DateCreated.ToShortDateString() </div>
-                                        <div>Last Updated: @pCase.DateLastUpdated.ToShortDateString()</div>
+                                        <div class=""><strong>Created By:</strong> @pCase.PosterName <span class="text-black-50"> (@pCase.PosterSpecialty) </span></div>
+                                        <div><strong>Case Status:</strong> @pCase.ParsedStatus</div>
+                                        <div><strong>Priority:</strong> @pCase.Priority</div>
+                                        <div><strong>Date Created:</strong> @pCase.DateCreated.ToShortDateString() </div>
+                                        <div><strong>Last Updated:</strong> @pCase.DateLastUpdated.ToShortDateString()</div>
                                     </div>
                                     <div class="col-md-2">
 
@@ -739,18 +764,25 @@
                                     <hr />
                                     <div class="form-group">
                                         <div>Priority</div>
+                                        <InputRadioGroup Name="rate" @bind-Value="priorityRadio.Priority">
+                                            Priority
+                                            <br>
+                                            <InputRadio Name="rate" Value="CaseResponseLevelType.HIGH" />Stat
+                                            <InputRadio Name="rate" Value="CaseResponseLevelType.MID" />Over Coffee
+                                            @*<InputRadio Name="rate" Value="CaseResponseLevelType.LOW" />Low*@
+                                        </InputRadioGroup>
                                         @*<label>
-                                            <InputRadio name="rate" SelectedValue="0" @bind-Value="@priorityRadio.Priority" />
-                                            High
-                                        </label>
-                                        <label>
-                                            <InputRadio name="rate" SelectedValue="1" @bind-Value="@priorityRadio.Priority" />
-                                            Medium
-                                        </label>
-                                        <label>
-                                            <InputRadio name="rate" SelectedValue="2" @bind-Value="@priorityRadio.Priority" />
-                                            Low
-                                        </label>*@
+            <InputRadio name="rate" SelectedValue="0" @bind-Value="@priorityRadio.Priority" />
+            High
+        </label>
+        <label>
+            <InputRadio name="rate" SelectedValue="1" @bind-Value="@priorityRadio.Priority" />
+            Medium
+        </label>
+        <label>
+            <InputRadio name="rate" SelectedValue="2" @bind-Value="@priorityRadio.Priority" />
+            Low
+        </label>*@
                                     </div>
                                     <div class="form-group">
                                         <div>Patient Age</div>
@@ -957,6 +989,7 @@
     {
         public bool showClosed { get; set; } = false;
         public string SubCategory { get; set; } = "-1";
+        public string Priority { get; set; } = "-1";
     }
     private List<SelectListItem> SubCategoryFilterList { get; set; } = new List<SelectListItem>(){
                 new SelectListItem { Value = "-1", Text = "No Filters" }
@@ -1063,14 +1096,20 @@
         cases = new List<Case>();
 
         int tSubCategory = -1;
+        int tPriority = -1;
         if (!string.IsNullOrEmpty(filters.SubCategory))
         {
             tSubCategory = Int32.Parse(filters.SubCategory);
         }
+        if (!string.IsNullOrEmpty(filters.Priority))
+        {
+            tPriority = Int32.Parse(filters.Priority);
+        }
+
 
         if (actionOptions == 0)
         {
-            var searchResults = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, targetPage, PageSize, -1);
+            var searchResults = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, tPriority, targetPage, PageSize, -1);
             cases = searchResults.Cases;
             Count = searchResults.TotalCount;
             //cases = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, targetPage, PageSize, -1);
@@ -1078,7 +1117,7 @@
         }
         else
         {
-            var searchResults = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, targetPage, PageSize, usr.PublicId);
+            var searchResults = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, tPriority, targetPage, PageSize, usr.PublicId);
             cases = searchResults.Cases;
             Count = searchResults.TotalCount;
             //cases = await hService.GetCasesNoTracking(searchString, filters.showClosed, tSubCategory, targetPage, PageSize, usr.PublicId);
@@ -1483,6 +1522,10 @@
         bEthnicity = tCase.Ethnicity.ToString();
         bRace = tCase.Race.ToString();
 
+    }
+    private async Task UpdatePriority(ChangeEventArgs e)
+    {
+        filters.Priority = e.Value.ToString();
     }
     private async Task UpdateSubCategoryFilter(ChangeEventArgs e)
     {
@@ -2231,13 +2274,13 @@
         switch (priority)
         {
             case 1:
-                rValue = "Medium";
+                rValue = "Over Coffee";
                 break;
-            case 2:
+            /*case 2:
                 rValue = "Low";
-                break;
+                break;*/
             default:
-                rValue = "High";
+                rValue = "Stat";
                 break;
         }
 

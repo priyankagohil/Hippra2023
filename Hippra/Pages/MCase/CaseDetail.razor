@@ -94,11 +94,11 @@
 
                             </div>
                             <div class="col-md-8">
-                                <div class="">Created By: @pCase.PosterName <span class="text-black-50"> (@pCase.PosterSpecialty) </span></div>
-                                <div>Case Status: @pCase.ParsedStatus</div>
-                                <div>Priority: @pCase.Priority</div>
-                                <div>Date Created: @pCase.DateCreated.ToShortDateString() </div>
-                                <div>Last Updated: @pCase.DateLastUpdated.ToShortDateString()</div>
+                                <div class=""><strong>Created By:</strong> @pCase.PosterName <span class="text-black-50"> (@pCase.PosterSpecialty) </span></div>
+                                <div><strong>Case Status:</strong> @pCase.ParsedStatus</div>
+                                <div><strong>Priority:</strong> @pCase.Priority</div>
+                                <div><strong>Date Created:</strong> @pCase.DateCreated.ToShortDateString() </div>
+                                <div><strong>Last Updated:</strong> @pCase.DateLastUpdated.ToShortDateString()</div>
                             </div>
                             <div class="col-md-2">
 
@@ -1058,13 +1058,13 @@
         switch (priority)
         {
             case 1:
-                rValue = "Medium";
+                rValue = "Over Coffee";
                 break;
             case 2:
                 rValue = "Low";
                 break;
             default:
-                rValue = "High";
+                rValue = "Stat";
                 break;
         }
 

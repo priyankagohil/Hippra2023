@@ -59,9 +59,9 @@
                                 <InputRadioGroup Name="rate" @bind-Value="Priority">
                                     Priority
                                     <br>
-                                    <InputRadio Name="rate" Value="CaseResponseLevelType.HIGH" />High
-                                    <InputRadio Name="rate" Value="CaseResponseLevelType.MID" />Mid
-                                    <InputRadio Name="rate" Value="CaseResponseLevelType.LOW" />Low
+                                    <InputRadio Name="rate" Value="CaseResponseLevelType.HIGH" />Stat
+                                    <InputRadio Name="rate" Value="CaseResponseLevelType.MID" />Over Coffee
+                                    @*<InputRadio Name="rate" Value="CaseResponseLevelType.LOW" />Low*@
                                 </InputRadioGroup>
 
 
@@ -1139,23 +1139,23 @@
         }
 
 
-        return rValue;
-    }
-    private string ParsePriority(int priority)
-    {
-        string rValue = "";
-        switch (priority)
-        {
-            case 1:
-                rValue = "Medium";
-                break;
-            case 2:
-                rValue = "Low";
-                break;
-            default:
-                rValue = "High";
-                break;
+            return rValue;
         }
+        private string ParsePriority(int priority)
+        {
+            string rValue = "";
+            switch (priority)
+            {
+                case 1:
+                    rValue = "Over Coffee";
+                    break;
+                /*case 2:
+                    rValue = "Low";
+                    break;*/
+                default:
+                    rValue = "Stat";
+                    break;
+            }
 
 
         return rValue;

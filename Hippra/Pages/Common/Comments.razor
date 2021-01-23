@@ -29,48 +29,95 @@
             <hr />
             @foreach (var c in CommentList)
             {
-<div class="p-2 mb-2 bg-light rounded">
-    <div class="">
-        <strong> @c.PosterName </strong> <span class="text-black-50">( @c.posterSpeciality )</span>
-    </div>
-    <div class="px-4">
-        @c.Comment
-    </div>
-    <div class="px-4">
-        @if (!string.IsNullOrWhiteSpace(c.imgUrl))
-        {
-        <label class="label-img">
-            <input type="checkbox">
-            <img id="caseImg" src="@c.imgUrl" width="20%" height="20%" />
-        </label>
-        }
-    </div>
-    <div class="text-right text-black-50">
-        <small>@c.LastUpdatedDate</small>
-    </div>
-</div>
-            }
-        }
-        else
-        {
-            <div class="d-block text-right text-black-50 mb-2" @onclick="OpenComment">
-                @CommentList.Count Comments
-            </div>
-        }
-    }
-    <div>
-        <EditForm Model="@newComment" OnValidSubmit="@AddComment">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
-            <div class="input-group mb-3">
-                <InputText class="form-control" id="" required placeholder="Write a Comment" @bind-Value="@newComment.Comment" aria-label="Comment" aria-describedby="Write a Comment" />
-                <div class="input-group-append">
-                    <button id="comment-button" type="submit" class="btn btn-primary">Comment</button>
-                </div>
-            </div>
-            <div class="border">
-                <CmtImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl" @bind-isSubmitted="isSubmitted"></CmtImgUpload>
-            </div>
+                if (c.ID != EditThis)
+                {
+                    <div class="p-2 mb-2 bg-light rounded">
+                        <div class="">
+                            <strong> @c.PosterName </strong> <span class="text-black-50">( @c.posterSpeciality )</span>
+                        </div>
+                        <div class="px-4">
+                            @c.Comment
+                        </div>
+                        <div class="px-4">
+                            @if (!string.IsNullOrWhiteSpace(c.imgUrl))
+                            {
+                                <label class="label-img">
+                                    <input type="checkbox">
+                                    <img id="caseImg" src="@c.imgUrl" width="20%" height="20%" />
+                                </label>
+                            }
+                        </div>
+                        <div class="text-right text-black-50">
+                            <small>@c.LastUpdatedDate</small>
+                        </div>
+                    </div>
+                    if (c.PosterId == usr.PublicId)
+                    {
+                        <div>
+                            <button class="comment-button" @onclick="(e => { EditComment(c.ID); })">Edit</button>
+                            <button class="comment-button" @onclick="(e => { DeleteComment(c.ID); })">Delete</button>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="p-2 mb-2 bg-warning rounded">
+                        
+                        <div style="color: Black">New Comment:</div>
+                        <div>
+                            <EditForm Model="@newComment" OnValidSubmit="(e => { UpdateComment(c); })">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary />
+                                <div class="input-group mb-3">
+                                    <InputText class="form-control" id="" required placeholder="Write a Comment" @bind-Value="@c.Comment" aria-label="Comment" aria-describedby="Edit a Comment" />
+                                    <div class="input-group-append">
+                                        <button id="comment-button" type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                </div>
+                                <div class="px-4">
+                                    @if (!string.IsNullOrWhiteSpace(c.imgUrl))
+                                    {
+                                        <label class="label-img">
+                                            <input type="checkbox">
+                                            <img id="caseImg" src="@c.imgUrl" width="20%" height="20%" />
+                                        </label>
+                                        <div class="btn btn-outline-danger" @onclick="(e => { DeleteFile(c); })">
+                                            delete
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <CmtImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl" @bind-isSubmitted="isSubmitted"></CmtImgUpload>
+
+                                    }
+                                </div>
+
+                            </EditForm>
+                        </div>
+                     </div>
+                        }
+                        }
+                        }
+                        else
+                        {
+                        <div class="d-block text-right text-black-50 mb-2" @onclick="OpenComment">
+                            @CommentList.Count Comments
+                        </div>
+                        }
+                        }
+                        <div>
+                            <EditForm Model="@newComment" OnValidSubmit="@AddComment">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary />
+                                <div class="input-group mb-3">
+                                    <InputText class="form-control" id="" required placeholder="Write a Comment" @bind-Value="@newComment.Comment" aria-label="Comment" aria-describedby="Write a Comment" />
+                                    <div class="input-group-append">
+                                        <button id="comment-button" type="submit" class="btn btn-primary">Comment</button>
+                                    </div>
+                                </div>
+                                <div class="border">
+                                    <CmtImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl" @bind-isSubmitted="isSubmitted"></CmtImgUpload>
+                                </div>
 
         </EditForm>
     </div>
@@ -91,14 +138,53 @@
     public bool isOpened { get; set; }
     private CaseComment newComment = new CaseComment();
 
-    private string fileName;
-    private string imgUrl;
-    private bool isSubmitted;
+                        private int EditThis = -1;
+                        private string fileName;
+                        private string imgUrl;
+                        private bool isSubmitted;
+                        private string[] imgUrls;
 
-    protected override async Task OnInitializedAsync()
-    {
-        OpenComment();
-    }
+                        public async Task EditComment(int ID)
+                        {
+                            EditThis = ID;
+                            this.StateHasChanged();
+                        }
+                        public async Task DeleteComment(int ID)
+                        {
+
+                            isSubmitted = false;
+                            authState = await authenticationStateTask;
+                            user = authState.User;
+
+                            if (user.Identity.IsAuthenticated)
+                            {
+                                usr = await UserManager.GetUserAsync(user);
+                                if (usr != null)
+                                {
+                                    await hService.DeleteComment(ID);
+
+                                    isSubmitted = true;
+                                }
+                            }
+                            CommentList = await hService.GetCommentsNoTracking(postId);
+                            this.StateHasChanged();
+                        }
+                        public async Task DeleteFile(CaseComment c)
+                        {
+                            c.imgUrl = "";
+                        }
+                        protected override async Task OnInitializedAsync()
+                        {
+                            OpenComment();
+                            authState = await authenticationStateTask;
+                            user = authState.User;
+
+                            if (user.Identity.IsAuthenticated)
+                            {
+                                usr = await UserManager.GetUserAsync(user);
+                            }
+
+                        }
 
     private async Task OpenComment()
     {
@@ -132,18 +218,58 @@
 
                 await hService.AddComment(newComment);
 
-                isSubmitted = true;
-            }
-        }
-        newComment.Comment = "";
-        CommentList = await hService.GetCommentsNoTracking(postId);
-        imgUrl = "";
-        newComment.imgUrl = "";
-        isOpened = true;
-        this.StateHasChanged();
-    }
-    private string ParseMedicalSpecialty(MedicalSpecialtyType MedicalSpecialty)
-    {
+                                    isSubmitted = true;
+                                }
+                            }
+                            newComment.Comment = "";
+                            CommentList = await hService.GetCommentsNoTracking(postId);
+                            imgUrl = "";
+                            newComment.imgUrl = "";
+                            isOpened = true;
+                            this.StateHasChanged();
+                        }
+                        private async Task UpdateComment(CaseComment c)
+                        {
+                            isSubmitted = false;
+                            authState = await authenticationStateTask;
+                            user = authState.User;
+
+                            if (user.Identity.IsAuthenticated)
+                            {
+                                usr = await UserManager.GetUserAsync(user);
+                                if (usr != null)
+                                {
+
+                                    newComment.PostedDate = c.PostedDate;
+                                    newComment.LastUpdatedDate = newComment.PostedDate;
+                                    newComment.CaseID = postId;
+                                    newComment.ID = c.ID;
+                                    newComment.Comment = c.Comment;
+
+                                    if (!string.IsNullOrWhiteSpace(imgUrl))
+                                    {
+                                        newComment.imgUrl = imgUrl;
+                                    }
+                                    else if (!string.IsNullOrWhiteSpace(c.imgUrl))
+                                    {
+                                        newComment.imgUrl = c.imgUrl;
+                                    }
+
+                                    await hService.EditComment(newComment);
+
+                                    isSubmitted = true;
+                                }
+                            }
+                            EditThis = -1;
+                            newComment.Comment = "";
+                            CommentList = await hService.GetCommentsNoTracking(postId);
+                            imgUrl = "";
+                            newComment.imgUrl = "";
+                            isOpened = true;
+                            this.StateHasChanged();
+                        }
+                        private string ParseMedicalSpecialty(MedicalSpecialtyType MedicalSpecialty)
+                        {
 
         string medicalSpecialty = "";
         switch (MedicalSpecialty)
