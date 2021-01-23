@@ -349,3 +349,6 @@ healthchecksdb
 /Hippra/Properties/serviceDependencies.hippra - Web Deploy1 SQL.json
 /Hippra/Properties/serviceDependencies.hippra - Web Deploy1.json
 /Hippra/Properties/serviceDependencies.json
+
+#ignore migrations directory
+Migrations/
