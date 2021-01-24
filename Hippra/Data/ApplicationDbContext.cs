@@ -18,5 +18,8 @@ namespace Hippra.Data
         public DbSet<Case> Cases { get; set; }
 
         public DbSet<CaseComment> CaseComments { get; set; }
+
+        public DbSet<Tag> Tags { get; set; }
+
     }
 }

@@ -16,6 +16,21 @@ namespace Hippra.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.0");
 
+            modelBuilder.Entity("CaseTag", b =>
+                {
+                    b.Property<int>("CasesID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TagsID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CasesID", "TagsID");
+
+                    b.HasIndex("TagsID");
+
+                    b.ToTable("CaseTag");
+                });
+
             modelBuilder.Entity("Hippra.Models.SQL.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -238,6 +253,20 @@ namespace Hippra.Migrations
                     b.ToTable("CaseComments");
                 });
 
+            modelBuilder.Entity("Hippra.Models.SQL.Tag", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TagName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Tags");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -364,6 +393,21 @@ namespace Hippra.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("CaseTag", b =>
+                {
+                    b.HasOne("Hippra.Models.SQL.Case", null)
+                        .WithMany()
+                        .HasForeignKey("CasesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hippra.Models.SQL.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Hippra.Models.SQL.CaseComment", b =>

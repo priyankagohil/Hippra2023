@@ -38,5 +38,7 @@ namespace Hippra.Models.SQL
         public string imgUrl { get; set; }
 
         public List<CaseComment> Comments { get; set; }
+
+        public List<Tag> Tags { get; set; }
     }
 }
