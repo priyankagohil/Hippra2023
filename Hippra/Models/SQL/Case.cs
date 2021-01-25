@@ -39,6 +39,6 @@ namespace Hippra.Models.SQL
 
         public List<CaseComment> Comments { get; set; }
 
-        public List<Tag> Tags { get; set; }
+        //public List<Tag> Tags { get; set; } //  many to many relations (let's use Phat's implementation for now)
     }
 }
