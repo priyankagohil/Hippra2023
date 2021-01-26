@@ -3,18 +3,35 @@ using System;
 using Hippra.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Hippra.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210124073722_AddTag2")]
+    partial class AddTag2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("CaseTag", b =>
+                {
+                    b.Property<int>("CasesID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TagsID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("CasesID", "TagsID");
+
+                    b.HasIndex("TagsID");
+
+                    b.ToTable("CaseTag");
+                });
 
             modelBuilder.Entity("Hippra.Models.SQL.AppUser", b =>
                 {
@@ -187,9 +204,6 @@ namespace Hippra.Migrations
                     b.Property<bool>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("TagID")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Topic")
                         .HasColumnType("TEXT");
 
@@ -200,8 +214,6 @@ namespace Hippra.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("TagID");
 
                     b.ToTable("Cases");
                 });
@@ -385,11 +397,19 @@ namespace Hippra.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Hippra.Models.SQL.Case", b =>
+            modelBuilder.Entity("CaseTag", b =>
                 {
+                    b.HasOne("Hippra.Models.SQL.Case", null)
+                        .WithMany()
+                        .HasForeignKey("CasesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Hippra.Models.SQL.Tag", null)
-                        .WithMany("Cases")
-                        .HasForeignKey("TagID");
+                        .WithMany()
+                        .HasForeignKey("TagsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Hippra.Models.SQL.CaseComment", b =>
@@ -457,11 +477,6 @@ namespace Hippra.Migrations
             modelBuilder.Entity("Hippra.Models.SQL.Case", b =>
                 {
                     b.Navigation("Comments");
-                });
-
-            modelBuilder.Entity("Hippra.Models.SQL.Tag", b =>
-                {
-                    b.Navigation("Cases");
                 });
 #pragma warning restore 612, 618
         }
