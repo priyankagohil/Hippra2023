@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@page "/tagsearch/{caseId:int}/{tagName}"
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
@@ -11,8 +11,8 @@
 @using Hippra.Services
 @using Hippra.Models.SQL
 @using Hippra.Models.Enums
-@using Hippra.Extensions 
-@using Hippra.Pages.Common 
+@using Hippra.Extensions
+@using Hippra.Pages.Common
 @using Hippra.Pages.FTDesign.Features
 @using Hippra.Pages.FTDesign
 @using Hippra.Pages.Home
@@ -44,9 +44,9 @@
             <div>
                 @if (Version2)
                 {
-                <button type="button" class="btn my-1 btn-outline-dark" data-backdrop="static" @onclick="(e=>NavToCreateCase())">
-                    <i class="fas fa-plus"></i> Create Case
-                </button>
+                    <button type="button" class="btn my-1 btn-outline-dark" data-backdrop="static" @onclick="(e=>NavToCreateCase())">
+                        <i class="fas fa-plus"></i> Create Case
+                    </button>
                 }
                 else
                 {
@@ -67,23 +67,23 @@
 
 
                     @*<div>
-                    count: @Count
-                </div>
-                <div>
-                    currentPage: @CurrentPage
-                </div>
-                                            <div>
-                            @debug
+                            count: @Count
                         </div>
-                                            <div class="d-block text-center">
-                            <div class="row">
+                        <div>
+                            currentPage: @CurrentPage
+                        </div>
+                                                    <div>
+                                    @debug
+                                </div>
+                                                    <div class="d-block text-center">
+                                    <div class="row">
 
-                            </div>
-                        </div>
+                                    </div>
+                                </div>
                     *@
                     @*<div class="alert alert-primary" role="alert">
-                        This is a dev demo build!
-                    </div>*@
+                            This is a dev demo build!
+                        </div>*@
 
 
                     <br />
@@ -92,11 +92,11 @@
                             <div class="offset-md-2 col-md-8 offset-md-2 text-left">
                                 @if (actionOptions == 1)
                                 {
-                                    <div class="mb-3 display-4 ">My Cases</div>
+                                    <div class="mb-3 display-4 "><span>Tag [</span><span class="tag-search-item">@tagName</span><span>] in My Cases</span></div>
                                 }
                                 else
                                 {
-                                    <div class="mb-3 display-4 ">All Cases</div>
+                                    <div class="mb-3 display-4 "><span>Tag [</span><span class="tag-search-item">@tagName</span><span>] in All Cases</span></div>
                                 }
                                 <br />
                                 <div class="card text-center">
@@ -104,7 +104,7 @@
                                         <div>
                                             <EditForm Model="@searchString" OnValidSubmit="@searchHandler">
                                                 <div class="input-group">
-                                                    <InputText class="form-control" style="height:40px" placeholder="Search Topic" @bind-Value="@searchString" />
+                                                    <InputText class="form-control" style="height:40px" placeholder="Search Tag" @bind-Value="@searchString" />
                                                     <div class="input-group-append">
                                                         <button class="btn btn-outline-secondary" type="submit">Search</button>
                                                         <button type="button" class="btn btn-outline-info" @onclick="@toggleFilters"><i class="ms-Icon ms-Icon--Filter" aria-hidden="true"></i></button>
@@ -313,11 +313,11 @@
                                         <div class="col">
                                             <label for="Category">Category</label>
                                             @*<InputSelect id="Category" @bind-Value="@bCategory" onchange=@UpdateSubCategory>
-                        @foreach (var g in CategoryList)
-                            {
-                            <option value="@g.Value">@g.Text</option>
-                            }
-                    </InputSelect>*@
+                                                    @foreach (var g in CategoryList)
+                                                        {
+                                                        <option value="@g.Value">@g.Text</option>
+                                                        }
+                                                </InputSelect>*@
                                             <select id="Category" @onchange=@UpdateSubCategory>
                                                 <option value="0" selected>Diagnostics</option>
                                                 <option value="1">Medicine</option>
@@ -463,11 +463,11 @@
                                         <div class="col">
                                             <label for="Category">Category</label>
                                             @*<InputSelect id="Category" @bind-Value="@bCategory" onchange=@UpdateSubCategory>
-                                                @foreach (var g in CategoryList)
-                                                    {
-                                                    <option value="@g.Value">@g.Text</option>
-                                                    }
-                                            </InputSelect>*@
+                                                    @foreach (var g in CategoryList)
+                                                        {
+                                                        <option value="@g.Value">@g.Text</option>
+                                                        }
+                                                </InputSelect>*@
                                             @if (ParseCategoryValueFromSub(pCase.MedicalCategory) == "0")
                                             {
                                                 <select id="Category" @onchange=@UpdateSubCategory>
@@ -594,7 +594,7 @@
                                     }
                                 </div>
                                 <div>
-                                    Add Images Here: 
+                                    Add Images Here:
                                     <ImgUpload></ImgUpload>
                                 </div>
                             </div>
@@ -610,50 +610,50 @@
         </div>
 
         @*@if (pProfile.ProfileId != -1)
-        {
-            <div id="viewProfileModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" style="display: none;" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered modal" role="document">
-                    <div class="modal-content">
+            {
+                <div id="viewProfileModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenteredScrollableTitle" style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal" role="document">
+                        <div class="modal-content">
 
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="pTitle">Physician Profile </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="pTitle">Physician Profile </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
 
-                        <div class="modal-body">
+                            <div class="modal-body">
 
-                            <div class="lead">@pProfile.Name</div>
-                            <div class="py-5 row justify-content-center">
+                                <div class="lead">@pProfile.Name</div>
+                                <div class="py-5 row justify-content-center">
 
-                                <div class="col-md-8">
-                                    <div class="" >@pProfile.Specialty</div>
+                                    <div class="col-md-8">
+                                        <div class="" >@pProfile.Specialty</div>
 
-                                    @if (pProfile.Certified)
-                                    {
-                                        <div class="">
-                                            Is American Board Certified.
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                <div class="">
-                                    Not American Board Certified.
-                                </div>
-                                    }
+                                        @if (pProfile.Certified)
+                                        {
+                                            <div class="">
+                                                Is American Board Certified.
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                    <div class="">
+                                        Not American Board Certified.
+                                    </div>
+                                        }
+
+                                    </div>
+
 
                                 </div>
 
 
                             </div>
-
-
                         </div>
                     </div>
                 </div>
-            </div>
-        }*@
+            }*@
 
         @if (pCase.ID != 0)
         {
@@ -757,9 +757,9 @@
 
                                     </div>
                                     <div class="form-group">
-                                        
-                                        
-                                        
+
+
+
                                         <InputText class="form-control" required placeholder="Topic" @bind-Value="@pCase.Topic" />
                                     </div>
                                     <div class="form-group">
@@ -801,11 +801,11 @@
                                             <div class="col">
                                                 <label for="Category">Category</label>
                                                 @*<InputSelect id="Category" @bind-Value="@bCategory" onchange=@UpdateSubCategory>
-                                                    @foreach (var g in CategoryList)
-                                                        {
-                                                        <option value="@g.Value">@g.Text</option>
-                                                        }
-                                                </InputSelect>*@
+                                                        @foreach (var g in CategoryList)
+                                                            {
+                                                            <option value="@g.Value">@g.Text</option>
+                                                            }
+                                                    </InputSelect>*@
                                                 @if (ParseCategoryValueFromSub(pCase.MedicalCategory) == "0")
                                                 {
                                                     <select id="Category" @onchange=@UpdateSubCategory>
@@ -962,7 +962,9 @@
 
 @code {
     [Parameter]
-    public int userId { get; set; } = -1; // public ID
+    public int caseId { get; set; } = -1; // public ID
+    [Parameter]
+    public string tagName { get; set; } = "";
 
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
@@ -1066,6 +1068,8 @@
     {
         authState = await authenticationStateTask;
         user = authState.User;
+        searchString = tagName;
+        filters.showTagOnly = true;
 
         if (user.Identity.IsAuthenticated)
         {
@@ -1113,12 +1117,7 @@
             tPriority = Int32.Parse(filters.Priority);
         }
 
-        List<int> caseListContainTag = new List<int>();
-        if(filters.showTagOnly)
-        {
-            caseListContainTag = await hService.GetCasesIdByTag(searchString);
-        }
-
+        List<int> caseListContainTag = await hService.GetCasesIdByTag(searchString);
         if (actionOptions == 0)
         {
             var searchResults = await hService.GetCasesNoTracking(searchString, filters.showClosed, filters.showTagOnly, tSubCategory, tPriority, targetPage, PageSize, -1, caseListContainTag);
@@ -1136,10 +1135,11 @@
             //Count = await hService.GetMyCaseCount(usr.PublicId);
         }
 
-        foreach(var i in cases)
+        foreach (var i in cases)
         {
 
-            SearchResults.Add(new ParsedCase(){
+            SearchResults.Add(new ParsedCase()
+            {
                 ID = i.ID,
                 Topic = i.Topic,
                 Description = i.Description,
@@ -1153,7 +1153,7 @@
     }
     private async Task searchHandler()
     {
-        if (actionOptions==1)
+        if (actionOptions == 1)
         {
             await ShowMyCases();
         }
@@ -1940,11 +1940,11 @@
         string rValue = "";
 
 
-        if (subCategory <26)
+        if (subCategory < 26)
         {
             rValue = "Diagnostics";
         }
-        else if(subCategory<55)
+        else if (subCategory < 55)
         {
             rValue = "Medicine";
         }

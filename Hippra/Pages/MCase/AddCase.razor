@@ -18,7 +18,8 @@
 @using Hippra.Pages.MCase
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
-@using Hippra.Pages.FTDesign.Components2 
+@using Hippra.Pages.FTDesign.Components2
+@using System.Text.RegularExpressions
 
 @inject IHttpContextAccessor httpContextAccessor
 @inject IJSRuntime JSRuntime
@@ -27,6 +28,7 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
 @inject ProfileService pService
 @inject HippraService hService
+@inject IJSRuntime JSRuntime
 
 <AuthorizeView>
     <Authorized Context="AddCaseContext">
@@ -166,34 +168,60 @@
                             </div>
 
 
-                            <div class="form-group">
-                                <InputTextArea class="form-control" placeholder="Lab Values" @bind-Value="@pCase.LabValues" row="12" />
-                            </div>
-                            <div class="form-group">
-                                <InputTextArea class="form-control" placeholder="Current Stage of Disease" @bind-Value="@pCase.CurrentStageOfDisease" row="12" />
-                            </div>
-                            <div class="form-group">
-                                <InputTextArea class="form-control" placeholder="Current Treatment Administered" @bind-Value="@pCase.CurrentTreatmentAdministered" row="12" />
-                            </div>
-                            <div class="form-group">
-                                <InputTextArea class="form-control" placeholder="Treatment Outcomes" @bind-Value="@pCase.TreatmentOutcomes" row="12" />
-                            </div>
-                            <div class="mb-4">
-                                <div class="mb-4">Image</div>
-                                @*<ImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl"></ImgUpload>*@
+                                <div class="form-group">
+                                    <InputTextArea class="form-control" placeholder="Lab Values" @bind-Value="@pCase.LabValues" row="12" />
+                                </div>
+                                <div class="form-group">
+                                    <InputTextArea class="form-control" placeholder="Current Stage of Disease" @bind-Value="@pCase.CurrentStageOfDisease" row="12" />
+                                </div>
+                                <div class="form-group">
+                                    <InputTextArea class="form-control" placeholder="Current Treatment Administered" @bind-Value="@pCase.CurrentTreatmentAdministered" row="12" />
+                                </div>
+                                <div class="form-group">
+                                    <InputTextArea class="form-control" placeholder="Treatment Outcomes" @bind-Value="@pCase.TreatmentOutcomes" row="12" />
+                                </div>
+                                <div class="mb-4">
+                                    <div class="mb-3">Image</div>
+                                    @*<ImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl"></ImgUpload>*@
 
                                 <TestMultiImg @bind-fileName="fileName" @bind-imgUrl="imgUrl"></TestMultiImg>
 
+                                </div>
                             </div>
-                        </div>
-                        <div class="mx-4 d-flex justify-content-between">
-                            <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
-                            <button id="create-button" type="submit" class="btn btn-primary">Create</button>
-                        </div>
-                    </EditForm>
+                            <div class="form-group">
+                                @if (tagList != null)
+                                {
+                                    <div>
+                                        @foreach (var tag in tagList)
+                                        {
+                                            <div class="tag-item">
+                                                @tag.Tag <button class="x" @onclick="(e => { deleteTag(tag); })">
+                                                    x
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <InputText name="tagField" class="form-control" id="" placeholder="Add tag(s) to your post" @bind-Value="@newTag.Tag" aria-label="Tags" aria-describedby="Add tags" @onkeydown="@enterPressHandle" />
+                                    <div class="input-group-append">
+                                        <button id="comment-button" type="submit" class="btn btn-primary" @onclick="@addNewTag">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tag-error">
+                                @TagFieldErrorMessage
+                            </div>
+                            <div class="mx-4 d-flex justify-content-between">
+                                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                                <button id="create-button" type="submit" class="btn btn-primary" @onclick="Submitted">Create</button>
+                            </div>
 
+                        </EditForm>
+                    </div>
                 </div>
-            </div>
 
         </div>
   
@@ -266,13 +294,13 @@
                 new SelectListItem { Value = "-1", Text = "No Filters" }
                 };
 
-    private string bCategory { get; set; } = "0";
-    private string bSubCategory { get; set; } = "0";
-    private string bGender { get; set; } = "0";
-    private string bRace { get; set; } = "6";
-    private string bEthnicity { get; set; } = "3";
-
-    private string debug { get; set; } = "";
+        private string bCategory { get; set; } = "0";
+        private string bSubCategory { get; set; } = "0";
+        private string bGender { get; set; } = "0";
+        private string bRace { get; set; } = "6";
+        private string bEthnicity { get; set; } = "3";
+        private AppUser usr { get; set; }
+        private string debug { get; set; } = "";
 
     private PriorityModel priorityRadio = new PriorityModel();
     public class PriorityModel
@@ -286,6 +314,14 @@
 
     private string fileName;
     private string imgUrl;
+    private string tag = "";
+        private const int MAXTAGS = 25;
+        private bool isSubmitted = false;
+        private CaseTags newTag = new CaseTags();
+        public List<CaseTags> tagList = new List<CaseTags>();
+        private bool isDeleteTag = false;
+        private string TagFieldErrorMessage = "";
+        private bool isTagOk = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -308,16 +344,120 @@
         }
 
 
-    }
+        }
+        private async Task enterPressHandle(KeyboardEventArgs e)
+        {
+            if (e.Key == "Enter")
+            {
+                isDeleteTag = false;
+            }
+        }
+        private bool ContainsOnlyAlphaNumericCharacters(string inputString)
+        {
+            var regexItem = new Regex("^(?![0-9._])(?!.*[_]$)[a-zA-Z0-9_]+$");
+            return regexItem.IsMatch(inputString);
+        }
+        private async Task addNewTag()
+        {
 
-    private async Task Cancel()
-    {
-        NavigationManager.NavigateTo("/");
-    }
+            if (tagList.Count == MAXTAGS)
+            {
+                await displayErrorMessage("Warning: Too many tags, the limit is 25 tags");
+            }
 
-    private async Task CreateCase()
-    {
-        var usr = await UserManager.GetUserAsync(user);
+            else if (!string.IsNullOrWhiteSpace(newTag.Tag))
+            {
+
+                if (!ContainsOnlyAlphaNumericCharacters(newTag.Tag))
+                {
+                    await displayErrorMessage("Warning: A Tag should begin with a letter and can only contain letters, numbers, and underscores (_), no special characters");
+                }
+                else
+                {
+                    foreach(var item in tagList)
+                    {
+                        if(item.Tag == newTag.Tag)
+                        {
+                            string text = "Warning: Tag [" + newTag.Tag + "] already exist. Please add a different tag.";
+                            isTagOk = false;
+                            await displayErrorMessage(text);
+                            break;
+                        }
+                        else
+                        {
+                            isTagOk = true;
+                        }
+                    }
+                    if(tagList.Count ==0)
+                    {
+                        isTagOk = true;
+                    }
+                    if (isTagOk)
+                    {
+                        authState = await authenticationStateTask;
+                        user = authState.User;
+
+                        if (user.Identity.IsAuthenticated)
+                        {
+                            usr = await UserManager.GetUserAsync(user);
+                            if (usr != null)
+                            {
+                                CaseTags tagItem = new CaseTags();
+                                tagItem.ID = DateTime.Now;
+                                tagItem.CaseID = pCase.ID;
+                                tagItem.Tag = newTag.Tag;
+                                tagList.Add(tagItem);
+                            }
+                        }
+                        newTag.Tag = "";
+                        isDeleteTag = true;
+                        TagFieldErrorMessage = "";
+                        this.StateHasChanged();
+                    }
+                }
+            }
+            else
+            {
+                await displayErrorMessage("Warning: you cannot add empty tag");
+            }
+
+        }
+
+        private async Task Submitted()
+        {
+            isSubmitted = true;
+        }
+        private async Task Cancel()
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
+        private async Task deleteTag(CaseTags Tag)
+        {
+            if (tagList.Contains(Tag) && isDeleteTag)
+            {
+                tagList.Remove(Tag);
+                //await hService.DeleteTag(Tag);
+
+            }
+            else if (!isDeleteTag)
+            {
+                addNewTag();
+            }
+            isDeleteTag = true;
+
+        }
+
+        private async Task displayErrorMessage(string message)
+        {
+            TagFieldErrorMessage = message;
+            this.StateHasChanged();
+        }
+        private async Task CreateCase()
+        {
+            if (isSubmitted)
+            {
+                var usr = await UserManager.GetUserAsync(user);
 
         Case validatedCase = new Case();
 
@@ -341,6 +481,10 @@
         validatedCase.LabValues = pCase.LabValues;
         validatedCase.Status = true;
         validatedCase.imgUrl = imgUrl;
+        foreach(var tag in tagList)
+                {
+                    await hService.AddTag(tag);
+                }
 
         //v1
         //await hService.AddCase(validatedCase);
@@ -348,7 +492,8 @@
         validatedCase.ID = pCase.ID;
         await hService.CreateCase(validatedCase);
 
-        NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/");
+            }
 
     }
 
@@ -376,19 +521,20 @@
         pCase.MedicalCategory = tCase.MedicalCategory;
         pCase.PosterSpecialty = tCase.PosterSpecialty;
 
-        pCase.PatientAge = tCase.PatientAge;
-        pCase.CurrentStageOfDisease = tCase.CurrentStageOfDisease;
-        pCase.CurrentTreatmentAdministered = tCase.CurrentTreatmentAdministered;
-        pCase.TreatmentOutcomes = tCase.TreatmentOutcomes;
-        pCase.LabValues = tCase.LabValues;
-        pCase.ParsedCategory = ParseCategoryFromSub(tCase.MedicalCategory);
-        pCase.ParsedSubCategory = ParseSubCategory(tCase.MedicalCategory);
-        pCase.ParsedGender = ParseGender(tCase.Gender);
-        pCase.ParsedEthnicity = ParseEthnicity(tCase.Ethnicity);
-        pCase.Priority = ParsePriority(tCase.ResponseNeeded);
-        pCase.ParsedRace = ParseRace(tCase.Race);
-        pCase.Status = tCase.Status;
-        pCase.ParsedStatus = ParseStatus(tCase.Status);
+            pCase.PatientAge = tCase.PatientAge;
+            pCase.CurrentStageOfDisease = tCase.CurrentStageOfDisease;
+            pCase.CurrentTreatmentAdministered = tCase.CurrentTreatmentAdministered;
+            pCase.TreatmentOutcomes = tCase.TreatmentOutcomes;
+            pCase.Tags = tCase.Tags;
+            pCase.LabValues = tCase.LabValues;
+            pCase.ParsedCategory = ParseCategoryFromSub(tCase.MedicalCategory);
+            pCase.ParsedSubCategory = ParseSubCategory(tCase.MedicalCategory);
+            pCase.ParsedGender = ParseGender(tCase.Gender);
+            pCase.ParsedEthnicity = ParseEthnicity(tCase.Ethnicity);
+            pCase.Priority = ParsePriority(tCase.ResponseNeeded);
+            pCase.ParsedRace = ParseRace(tCase.Race);
+            pCase.Status = tCase.Status;
+            pCase.ParsedStatus = ParseStatus(tCase.Status);
 
         priorityRadio = new PriorityModel();
         priorityRadio.Priority = tCase.ResponseNeeded;

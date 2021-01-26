@@ -104,13 +104,33 @@
 
                             </div>
                         </div>
-                        @if (!string.IsNullOrWhiteSpace(@pCase.imgUrl))
-                        {
-                            <div class="lead">Images</div>
-                            @foreach (string url in imgUrls)
+                        <div class="lead">Tags</div>
+                        <div class="py-5 row ">
+                            <div class="col-md-2">
+                               
+                            </div>
+                            
+                            <div class="col-md-8">
+                                @if (pCase.Tags != null)
+                                {
+                                    foreach (var tag in pCase.Tags)
+                                    {
+                                        <div class="around-tag-button">
+                                            <button class="tag-button" @onclick="(e => { searchCasesContainTag(tag.Tag); })">
+                                                @tag.Tag
+                                            </button>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                            @if (!string.IsNullOrWhiteSpace(@pCase.imgUrl))
                             {
-                                <div class="py-5 row justify-content-center">
-                                    <div class="col-md-2">
+                                <div class="lead">Images</div>
+                                @foreach (string url in imgUrls)
+                                {
+                                    <div class="py-5 row justify-content-center">
+                                        <div class="col-md-2">
 
                                     </div>
                                     <div class="col-md-8">
@@ -244,6 +264,7 @@
             }
             await PopulateModel(tCase);
             pCase.Comments = await hService.GetCommentsNoTracking(caseId);
+            pCase.Tags = await hService.GetTagsNoTracking(pCase.ID);
             pCase.imgUrl = tCase.imgUrl;
             //deserialize
             if (!string.IsNullOrWhiteSpace(@pCase.imgUrl))
@@ -310,6 +331,10 @@
         bEthnicity = tCase.Ethnicity.ToString();
         bRace = tCase.Race.ToString();
 
+    }
+    private async Task searchCasesContainTag(string tag)
+    {
+        NavigationManager.NavigateTo("/tagsearch/" + caseId + "/" +tag);
     }
     private async Task UpdateSubCategoryFilter(ChangeEventArgs e)
     {

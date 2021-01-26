@@ -19,6 +19,7 @@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
 @using Hippra.Pages.FTDesign.Components2
+@using System.Text.RegularExpressions
 @inject IHttpContextAccessor httpContextAccessor
 @inject IJSRuntime JSRuntime
 @inject SignInManager<AppUser> SignInManager
@@ -206,6 +207,32 @@
                                 <TestMultiImg @bind-fileName="fileName" @bind-imgUrl="imgUrl"></TestMultiImg>
 
                             </div>
+                            <div class="form-group">
+                                @if (tagList != null)
+                                {
+                                    <div>
+                                        @foreach (var tag in tagList)
+                                        {
+                                            <div class="tag-item">
+                                                @tag.Tag <button class="x" @onclick="(e => { deleteTag(tag); })">
+                                                    x
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <InputText name="tagField" class="form-control" id="" placeholder="Add tag(s) to your post" @bind-Value="@newTag.Tag" aria-label="Tags" aria-describedby="Add tags" @onkeydown="@enterPressHandle" />
+                                    <div class="input-group-append">
+                                        <button id="comment-button" type="submit" class="btn btn-primary" @onclick="@addNewTag">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tag-error">
+                                @TagFieldErrorMessage
+                            </div>
 
                             <br />
                             <div>
@@ -232,7 +259,7 @@
                             <br />
                             <div class="mx-4 d-flex justify-content-between">
                                 <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
-                                <button id="create-button" type="submit" class="btn btn-primary">Save</button>
+                                <button id="create-button" type="submit" class="btn btn-primary" @onclick="Submitted">Save</button>
                             </div>
                         </div>
 
@@ -317,9 +344,18 @@
     private string bGender { get; set; } = "0";
     private string bRace { get; set; } = "6";
     private string bEthnicity { get; set; } = "3";
+    private AppUser usr { get; set; }
 
     private string debug { get; set; } = "";
     private Case tCase = null;
+    private const int MAXTAGS = 25;
+    private bool isSubmitted = false;
+    private CaseTags newTag = new CaseTags();
+    public List<CaseTags> tagList = new List<CaseTags>();
+    private bool isDeleteTag = false;
+    private string TagFieldErrorMessage = "";
+    private bool isTagOk = true;
+    
 
     private PriorityModel priorityRadio = new PriorityModel();
     public class PriorityModel
@@ -345,14 +381,16 @@
             await PopulateLists();
             returnUrl = returnUrl + caseId;
 
-            tCase = await hService.GetCaseNoTracking(caseId);
-            if (tCase == null)
-            {
-                // didn't find it, should flag for error
-                return;
-            }
-            await PopulateModel(tCase);
-            //pCase.Comments = await hService.GetCommentsNoTracking(caseId);
+        tCase = await hService.GetCaseNoTracking(caseId);
+        if (tCase == null)
+        {
+            // didn't find it, should flag for error
+            return;
+        }
+        await PopulateModel(tCase);
+        tagList = await hService.GetTagsNoTracking(caseId);
+        isDeleteTag = true;
+        //pCase.Comments = await hService.GetCommentsNoTracking(caseId);
 
             fileName = "c" + pCase.ID;
             imgUrl = tCase.imgUrl;
@@ -363,12 +401,115 @@
             // shouldn't get here
         }
 
+}
+private async Task enterPressHandle(KeyboardEventArgs e)
+{
+    if (e.Key == "Enter")
+    {
+        isDeleteTag = false;
+    }
+}
+private bool ContainsOnlyAlphaNumericCharacters(string inputString)
+{
+    var regexItem = new Regex("^(?![0-9._])(?!.*[_]$)[a-zA-Z0-9_]+$");
+    return regexItem.IsMatch(inputString);
+}
+private async Task addNewTag()
+{
+    if (tagList.Count == MAXTAGS)
+    {
+        await displayErrorMessage("Warning: Too many tags, the limit is 25 tags");
     }
 
-    private async Task Cancel()
+    else if (!string.IsNullOrWhiteSpace(newTag.Tag))
     {
-        NavigationManager.NavigateTo(returnUrl);
+
+        if (!ContainsOnlyAlphaNumericCharacters(newTag.Tag))
+        {
+            await displayErrorMessage("Warning: A Tag should begin with a letter and can only contain letters, numbers, and underscores (_), no special characters");
+        }
+        else
+        {
+            foreach (var item in tagList)
+            {
+                if (item.Tag == newTag.Tag)
+                {
+                    string text = "Warning: Tag [" + newTag.Tag + "] already exist. Please add a different tag.";
+                    isTagOk = false;
+                    await displayErrorMessage(text);
+                    break;
+                }
+                else
+                {
+                    isTagOk = true;
+                }
+            }
+            if (tagList.Count == 0)
+            {
+                isTagOk = true;
+            }
+            if (isTagOk)
+            {
+                authState = await authenticationStateTask;
+                user = authState.User;
+
+                if (user.Identity.IsAuthenticated)
+                {
+                    usr = await UserManager.GetUserAsync(user);
+                    if (usr != null)
+                    {
+                        CaseTags tagItem = new CaseTags();
+                        tagItem.ID = DateTime.Now;
+                        tagItem.CaseID = pCase.ID;
+                        tagItem.Tag = newTag.Tag;
+                        tagList.Add(tagItem);
+                        await hService.AddTag(tagItem);
+                    }
+                }
+                newTag.Tag = "";
+                isDeleteTag = true;
+                TagFieldErrorMessage = "";
+                this.StateHasChanged();
+            }
+        }
     }
+    else
+    {
+        await displayErrorMessage("Warning: you cannot add empty tag");
+    }
+
+}
+
+private async Task Submitted()
+{
+    isSubmitted = true;
+}
+private async Task deleteTag(CaseTags Tag)
+{
+    
+    if (tagList.Contains(Tag) && isDeleteTag)
+    {
+        tagList.Remove(Tag);
+        await hService.DeleteTag(Tag);
+
+    }
+    else if (!isDeleteTag)
+    {
+        addNewTag();
+    }
+    isDeleteTag = true;
+
+}
+
+private async Task displayErrorMessage(string message)
+{
+    TagFieldErrorMessage = message;
+    this.StateHasChanged();
+}
+private async Task Cancel()
+{
+    NavigationManager.NavigateTo(returnUrl);
+}
 
     @*private async Task UpdateImgUrl(ChangeEventArgs e)
     {
@@ -401,9 +542,11 @@
 
     }*@
 
-private async Task UpdateCase()
-{
-    var usr = await UserManager.GetUserAsync(user);
+    private async Task UpdateCase()
+    {
+        if (isSubmitted)
+        {
+            var usr = await UserManager.GetUserAsync(user);
 
     tCase.PosterName = usr.FirstName + " " + usr.LastName;
     tCase.PosterSpecialty = ParseMedicalSpecialty((MedicalSpecialtyType)usr.MedicalSpecialty);
@@ -427,8 +570,9 @@ private async Task UpdateCase()
     tCase.LabValues = pCase.LabValues;
     tCase.Status = pCase.Status;
 
-    await hService.EditCase(tCase);
-    NavigationManager.NavigateTo(returnUrl);
+            await hService.EditCase(tCase);
+            NavigationManager.NavigateTo(returnUrl);
+        }
 
 }
 

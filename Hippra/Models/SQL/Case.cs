@@ -36,7 +36,7 @@ namespace Hippra.Models.SQL
         public string CurrentTreatmentAdministered { get; set; }
         public string TreatmentOutcomes { get; set; }
         public string imgUrl { get; set; }
-
+        public List<CaseTags> Tags { get; set; }
         public List<CaseComment> Comments { get; set; }
 
         //public List<Tag> Tags { get; set; } //  many to many relations (let's use Phat's implementation for now)

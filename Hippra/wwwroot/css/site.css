@@ -370,3 +370,48 @@ input:checked ~ #caseImg {
         color: white;
         cursor: pointer;
     }
+.tag-item, .tag-button, .around-tag-button, .tag-search-item {
+    background-color: lightblue;
+    border: #1b6ec2;
+    color: darkblue;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 12px;
+    margin: 6px;
+}
+
+.x {
+    background-color: gray;
+    border: #1b6ec2;
+    color: black;
+    border-radius: 100px;
+}
+.x:hover {
+    background-color: lightpink;
+    color: red;
+    cursor: pointer;
+}
+.tag-button {
+    font-weight: bold;
+}
+.tag-search-item {
+    font-size: 3.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+.around-tag-button {
+    background-color: white;
+    margin: 0px;
+}
+.filter-label {
+    margin-right: 5px;
+}
+.tag-error {
+    color: red;
+    background-color: yellow;
+    margin-bottom: 12px;
+    border: yellow;
+}
