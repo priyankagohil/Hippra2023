@@ -9,7 +9,7 @@
 @using Hippra.Models.FTDesign
 @using Hippra.Services
 @using Hippra.Models.SQL
-@using Hippra.Models.Enums 
+@using Hippra.Models.Enums
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor httpContextAccessor
@@ -17,6 +17,7 @@
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
 @inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
+@inject HippraService hService
 @inject ProfileService pService;
 @using Microsoft.AspNetCore.Mvc.Rendering;
 @using Hippra.Extensions
@@ -26,7 +27,15 @@
     <Authorized Context="ViewProfileContext">
         @if (userId == -1)
         {
-            <FTSubHeaderBar Title="Profile" HasSeparator="false">
+            <FTSubHeaderBar HasSeparator="false">
+                <div class="btn-group-toggle" data-toggle="buttons">
+                    <label class="btn  btn-outline-dark @cssProfile" @onclick="(e => ShowProfile())">
+                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Profile
+                    </label>
+                    <label class="btn  btn-outline-dark @cssActivityLog" @onclick="(e => ShowActivityLog())">
+                        <input type="radio" name="options" id="option2" autocomplete="off"> Activity Log
+                    </label>
+                </div>
                 <div class="flex-grow-1"></div>
                 <a href="FTEditProfile">Edit</a>
             </FTSubHeaderBar>
@@ -37,47 +46,247 @@
             </FTSubHeaderBar>
 
         }
+        @if (actionOptions == 0)
+        {
+            <div class="ft-main-px">
 
-    <div class="ft-main-px">
-
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="offset-md-2 col-md-8 offset-md-2 text-center">
-                        <br />
-                        <h4 class="display-4 text-center">Profile</h4>
-                        <br />
-                        <div class="row py-2">
-                            <div class="col text-center">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="offset-md-2 col-md-8 offset-md-2 text-center">
                                 <br />
-                                <img src="/img/idea/i8s.jpg" class="ft-login-main-width" />
-                            </div>
-                            <div class="col text-left">
-                                <p class="lead">Account</p>
-                                <p class=" text-dark">@profile.FirstName @profile.LastName</p>
-                                <address>
-                                    @profile.Address<br />
-                                    @profile.City, @profile.State @profile.Zipcode <br /><br />
-
-                                    <a href="tel:+@profile.PhoneNumber">@profile.PhoneNumber</a> <br />
-                                </address>
+                                <h4 class="display-4 text-center">Profile</h4>
                                 <br />
-                                <p class="lead"> Professional Profile</p>
-                                <p class=" text-dark">National Provider Identifier Number: @profile.NPIN</p>
-                                <p class=" text-dark">Medical Specialty: @medicalSpecialty</p>
-                                <p class=" text-dark">American Board Certified: @boardCertified</p>
-                                <p class=" text-dark">Residency Hospital: @profile.ResidencyHospital</p>
-                                <p class=" text-dark">Medical School Attended: @profile.MedicalSchoolAttended</p>
-                                <p class=" text-dark">Education/Degree: @profile.EducationDegree</p>
+                                <div class="row py-2">
+                                    <div class="col text-center">
+                                        <br />
+                                        <img src="/img/idea/i8s.jpg" class="ft-login-main-width" />
+                                    </div>
+                                    <div class="col text-left">
+                                        <p class="lead">Account</p>
+                                        <p class=" text-dark">@profile.FirstName @profile.LastName</p>
+                                        <address>
+                                            @profile.Address<br />
+                                            @profile.City, @profile.State @profile.Zipcode <br /><br />
+
+                                            <a href="tel:+@profile.PhoneNumber">@profile.PhoneNumber</a> <br />
+                                        </address>
+                                        <br />
+                                        <p class="lead"> Professional Profile</p>
+                                        <p class=" text-dark">National Provider Identifier Number: @profile.NPIN</p>
+                                        <p class=" text-dark">Medical Specialty: @medicalSpecialty</p>
+                                        <p class=" text-dark">American Board Certified: @boardCertified</p>
+                                        <p class=" text-dark">Residency Hospital: @profile.ResidencyHospital</p>
+                                        <p class=" text-dark">Medical School Attended: @profile.MedicalSchoolAttended</p>
+                                        <p class=" text-dark">Education/Degree: @profile.EducationDegree</p>
+                                        <br />
+                                    </div>
+                                </div>
                                 <br />
                             </div>
                         </div>
-                        <br />
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        }
+        else
+        {
+            <div class="ft-main-px">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="offset-md-2 col-md-8 offset-md-2 text-center">
+                                <br />
+                                <h4 class="display-4 text-center">Activity Log</h4>
+                                <br />
+                                <div class="row py-2">
+                                    <div class="col">
+                                        @{ var curDate = "";}
+                                        @if (activityLog != null)
+                                        {
+
+                                            @foreach (var activity in activityLog)
+                                            {
+                                                @if (curDate == "" || activity.CreationDate.ToShortDateString() != curDate)
+                                                {
+                                                    curDate = activity.CreationDate.ToShortDateString();
+                                                    <div class="text-left">
+                                                        <h3>@activity.CreationDate.ToString("MMMM dd, yyyy")</h3>
+                                                    </div>
+
+                                                }
+
+                                                @if (activity.HistoryTypes == "searched " || activity.HistoryTypes == "edited profile"
+                                                 || activity.HistoryTypes == "joined Hippra")
+                                                {
+                                                    <div class="border border-dark rounded p-4 mb-2">
+                                                        <div class="row">
+                                                            <div class="col-md-9 align-self-center">
+                                                                <h4>@activity.UserDisplayName @activity.HistoryTypes</h4>
+                                                            </div>
+                                                        </div>
+                                                        @if (activity.HistoryTypes == "searched ")
+                                                        {
+                                                        <div class="row">
+                                                            <div class="col-md-9 align-self-center">
+                                                                <div><strong></strong>on @activity.Title</div>
+                                                                <div><strong></strong>@activity.Detail</div>
+                                                            </div>
+                                                            <div class="col-md-3 text-center">
+                                                                <span class="fa fa-search activity-log-icon"></span>
+                                                                <div>@activity.CreationDate.ToString("HH:mm")</div>
+                                                            </div>
+                                                        </div>
+
+                                                        }
+                                                        else if (activity.HistoryTypes == "edited profile")
+                                                        {
+                                                        <div class="row">
+                                                            <div class="col-md-9 align-self-center">
+                                                                <div><strong></strong>on @activity.Title</div>
+                                                                <div><strong></strong>detail: @activity.Detail</div>
+                                                            </div>
+                                                            <div class="col-md-3 text-center">
+                                                                <span class="fa fa-address-book-o activity-log-icon"></span>
+                                                                <div>@activity.CreationDate.ToString("HH:mm")</div>
+                                                            </div>
+                                                        </div>
+
+                                                        }
+                                                        else if (activity.HistoryTypes == "joined Hippra")
+                                                        {
+                                                        <div class="row">
+                                                            <div class="col-md-9 align-self-center">
+                                                                <div><strong></strong>@activity.Title</div>
+                                                                <div><strong></strong>@activity.Detail</div>
+                                                            </div>
+                                                            <div class="col-md-3 text-center">
+                                                                <span class="fa fa-user-circle-o activity-log-icon"></span>
+                                                                <div>@activity.CreationDate.ToString("HH:mm")</div>
+                                                            </div>
+                                                        </div>
+
+                                                        }
+                                                    </div>
+                                                 }
+                                                 else{
+                                                        <div class="border border-dark rounded p-4 mb-2 hover-class" @onclick="(e=>OpenViewModal(activity.PostID))">
+                                                            <div class="row">
+                                                                <div class="col-md-9 align-self-center">
+                                                                    <h4>@activity.UserDisplayName @activity.HistoryTypes</h4>
+                                                                </div>
+                                                            </div>
+                                                            @if (activity.HistoryTypes == "added a new case")
+                                                            {
+                                                                <div class="row">
+                                                                    <div class="col-md-9 align-self-center">
+                                                                        <div><strong></strong>Case Topic: @activity.Title</div>
+                                                                        <div><strong></strong>Case Description: @activity.Detail</div>
+                                                                    </div>
+                                                                    <div class="col-md-3 text-center">
+                                                                        <p><span class="fa fa-calendar-plus-o activity-log-icon"></span></p>
+                                                                        <div>@activity.CreationDate.ToString("HH:mm")</div>
+                                                                    </div>
+                                                                </div>
+
+                                                            }
+                                                            else if (activity.HistoryTypes == "closed a case")
+                                                            {
+                                                                <div class="row">
+                                                                    <div class="col-md-9 align-self-center">
+                                                                        <div><strong></strong>Case Topic: @activity.Title</div>
+                                                                        <div><strong></strong>Case Description: @activity.Detail</div>
+                                                                    </div>
+                                                                    <div class="col-md-3 text-center">
+                                                                        <p><span class="fa fa-calendar-times-o activity-log-icon"></span></p>
+                                                                        <div>@activity.CreationDate.ToString("HH:mm")</div>
+                                                                    </div>
+                                                                </div>
+
+                                                            }
+                                                            else if (activity.HistoryTypes == "edited a case")
+                                                            {
+                                                                <div class="row">
+                                                                    <div class="col-md-9 align-self-center">
+                                                                        <div><strong></strong>Case Topic: @activity.Title</div>
+                                                                        <div><strong></strong>Case Description: @activity.Detail</div>
+                                                                    </div>
+                                                                    <div class="col-md-3 text-center">
+                                                                        <p><span class="fa fa-edit activity-log-icon"></span></p>
+                                                                        <div>@activity.CreationDate.ToString("HH:mm")</div>
+                                                                    </div>
+                                                                </div>
+
+                                                            }
+                                                            else if (activity.HistoryTypes == "added a comment on a post")
+                                                            {
+                                                                <div class="row">
+                                                                    <div class="col-md-9 align-self-center">
+                                                                        <div><strong></strong>Case Topic: @activity.Title</div>
+                                                                        <div><strong></strong>Case Description: @activity.Detail</div>
+                                                                    </div>
+                                                                    <div class="col-md-3 text-center">
+                                                                        <p><span class="fa fa-commenting-o activity-log-icon"></span></p>
+                                                                        <div>@activity.CreationDate.ToString("HH:mm")</div>
+                                                                    </div>
+                                                                </div>
+
+                                                            }
+                                                            else if (activity.HistoryTypes == "updated a comment on a post")
+                                                            {
+                                                                <div class="row">
+                                                                    <div class="col-md-9 align-self-center">
+                                                                        <div><strong></strong>Case Topic: @activity.Title</div>
+                                                                        <div><strong></strong>Case Description: @activity.Detail</div>
+                                                                    </div>
+                                                                    <div class="col-md-3 text-center">
+                                                                        <div class="fa fa-comments-o activity-log-icon"></div>
+                                                                        <div>@activity.CreationDate.ToString("HH:mm")</div>
+                                                                    </div>
+                                                                </div>
+
+                                                            }
+                                                            else if (activity.HistoryTypes == "deleted a comment on a post")
+                                                            {
+                                                                <div class="row">
+                                                                    <div class="col-md-9 align-self-center">
+                                                                        <div><strong></strong>Case Topic: @activity.Title</div>
+                                                                        <div><strong></strong>Case Description: @activity.Detail</div>
+                                                                    </div>
+                                                                    <div class="col-md-3 text-center">
+                                                                        <div class="fa fa-comment-o activity-log-icon"></div>
+                                                                        <div>@activity.CreationDate.ToString("HH:mm")</div>
+                                                                    </div>
+                                                                </div>
+
+                                                            }
+                                                        </div>
+                                                }
+
+                                            }
+                                        @if (Count > PageSize)
+                                        {
+                                            <div class="mb-3 text-left">
+                                                <br />
+                                                <hr />
+                                                <br />
+                                                <FTPagination paginationData="paginationData" ChangePage="ChangePage" />
+                                                <br />
+                                            </div>
+
+                                        }
+                                        <br />
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                                            }
 
 
     </Authorized>
@@ -108,9 +317,21 @@
     private AuthenticationState authState { get; set; }
     private ClaimsPrincipal user { get; set; }
     private FTRegisterModel profile { get; set; } = new FTRegisterModel();
+    public List<FTPaginationModel> paginationData = new List<FTPaginationModel>();
+    public int PageSize { get; set; } = 10;
+    public int Count { get; set; }
+    public int CurrentPage { get; set; } = 1;
+    public int TotalPages => (int)Math.Ceiling(decimal.Divide(Count, PageSize));
 
     private string medicalSpecialty = "";
     private string boardCertified = "No";
+    private string cssProfile { get; set; } = "active";
+    private string cssActivityLog { get; set; } = "";
+    private string historyDate = "";
+    private int usrID { get; set; }
+
+    private int actionOptions { get; set; } = 0; // 0 = profile, 1 = activity log
+    List<PostHistory> activityLog = new List<PostHistory>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -122,6 +343,20 @@
             if (userId == -1)
             {
                 usr = await UserManager.GetUserAsync(user);
+                usrID = usr.PublicId;
+                await GetHistoryResults(usrID, CurrentPage);
+                if (Count > PageSize)
+                {
+                    for (int i = 1; i <= TotalPages; i++)
+                    {
+                        paginationData.Add(new FTPaginationModel()
+                        {
+                            id = i
+                        });
+                    }
+                    var pg = paginationData.FirstOrDefault(s => s.id == CurrentPage);
+                    pg.isActive = true;
+                }
             }
             else
             {
@@ -131,6 +366,7 @@
             {
                 NavigationManager.NavigateTo("/");
             }
+
         }
 
         profile = new FTRegisterModel()
@@ -244,5 +480,40 @@
                 break;
         }
     }
+    private async Task ShowProfile()
+    {
+        actionOptions = 0;
+        cssProfile = "active";
+        cssActivityLog = "";
 
+        this.StateHasChanged();
+    }
+    private async Task ShowActivityLog()
+    {
+        actionOptions = 1;
+        cssProfile = "";
+        cssActivityLog = "active";
+    }
+    private async Task ChangePage(int targetPage)
+    {
+
+        await GetHistoryResults(usrID, targetPage);
+
+        var pg = paginationData.FirstOrDefault(s => s.isActive);
+        pg.isActive = false;
+        CurrentPage = targetPage;
+        pg = paginationData.FirstOrDefault(s => s.id == CurrentPage);
+        pg.isActive = true;
+        this.StateHasChanged();
+    }
+    private async Task GetHistoryResults(int id, int targetPage)
+    {
+        var result = await hService.GetPostHistories(id, targetPage, PageSize);
+        activityLog = result.Histories;
+        Count = result.TotalCount;
+    }
+    private async Task OpenViewModal(int postID)
+    {
+        NavigationManager.NavigateTo("/viewcase/" + postID);
+    }
 }

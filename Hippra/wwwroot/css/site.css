@@ -415,3 +415,6 @@ input:checked ~ #caseImg {
     margin-bottom: 12px;
     border: yellow;
 }
+.activity-log-icon{
+    font-size: 48px;
+}

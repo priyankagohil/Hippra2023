@@ -961,11 +961,11 @@
 
 
 @code {
-    [Parameter]
-    public int userId { get; set; } = -1; // public ID
+        [Parameter]
+        public int userId { get; set; } = -1; // public ID
 
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationStateTask { get; set; }
     private AuthenticationState authState { get; set; }
     private ClaimsPrincipal user { get; set; }
     private AppUser usr { get; set; } = new AppUser();
@@ -1148,6 +1148,27 @@
                 ParsedCategory = ParseCategoryFromSub(i.MedicalCategory),
                 ParsedSubCategory = ParseSubCategory(i.MedicalCategory)
             });
+        }
+        //history stuffs
+        if (searchString != "")
+        {
+            PostHistory newHistory = new PostHistory();
+            newHistory.ID = 0;
+            newHistory.PostID = pCase.ID;
+            newHistory.CreationDate = DateTime.Now;
+            newHistory.UserID = usr.PublicId;
+            newHistory.UserDisplayName = usr.FirstName + " " + usr.LastName;
+            newHistory.Title = "Hippra";
+            newHistory.HistoryTypes = "searched ";
+            if (filters.showTagOnly)
+            {
+                newHistory.Detail = "tag [" + searchString + "]";
+            }
+            else
+            {
+                newHistory.Detail = '"' + searchString + '"';
+            }
+            await hService.AddHistory(newHistory);
         }
 
     }

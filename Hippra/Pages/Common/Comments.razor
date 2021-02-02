@@ -138,53 +138,56 @@
     public bool isOpened { get; set; }
     private CaseComment newComment = new CaseComment();
 
-                        private int EditThis = -1;
-                        private string fileName;
-                        private string imgUrl;
-                        private bool isSubmitted;
-                        private string[] imgUrls;
+    private int EditThis = -1;
+    private string fileName;
+    private string imgUrl;
+    private bool isSubmitted;
+    private string[] imgUrls;
+    private Case caseInfo = new Case();
 
-                        public async Task EditComment(int ID)
-                        {
-                            EditThis = ID;
-                            this.StateHasChanged();
-                        }
-                        public async Task DeleteComment(int ID)
-                        {
+    public async Task EditComment(int ID)
+    {
+        EditThis = ID;
+        this.StateHasChanged();
+    }
+    public async Task DeleteComment(int ID)
+    {
 
-                            isSubmitted = false;
-                            authState = await authenticationStateTask;
-                            user = authState.User;
+        isSubmitted = false;
+        authState = await authenticationStateTask;
+        user = authState.User;
 
-                            if (user.Identity.IsAuthenticated)
-                            {
-                                usr = await UserManager.GetUserAsync(user);
-                                if (usr != null)
-                                {
-                                    await hService.DeleteComment(ID);
+        if (user.Identity.IsAuthenticated)
+        {
+            usr = await UserManager.GetUserAsync(user);
+            if (usr != null)
+            {
+                await hService.DeleteComment(ID);
 
-                                    isSubmitted = true;
-                                }
-                            }
-                            CommentList = await hService.GetCommentsNoTracking(postId);
-                            this.StateHasChanged();
-                        }
-                        public async Task DeleteFile(CaseComment c)
-                        {
-                            c.imgUrl = "";
-                        }
-                        protected override async Task OnInitializedAsync()
-                        {
-                            OpenComment();
-                            authState = await authenticationStateTask;
-                            user = authState.User;
+                isSubmitted = true;
+            }
+        }
+        CommentList = await hService.GetCommentsNoTracking(postId);
+        await addToHistory("deleted a comment on a post");
+        this.StateHasChanged();
+    }
+    public async Task DeleteFile(CaseComment c)
+    {
+        c.imgUrl = "";
+    }
+    protected override async Task OnInitializedAsync()
+    {
+        OpenComment();
+        authState = await authenticationStateTask;
+        user = authState.User;
+        caseInfo = await hService.GetCase(postId);
 
-                            if (user.Identity.IsAuthenticated)
-                            {
-                                usr = await UserManager.GetUserAsync(user);
-                            }
+        if (user.Identity.IsAuthenticated)
+        {
+            usr = await UserManager.GetUserAsync(user);
+        }
 
-                        }
+    }
 
     private async Task OpenComment()
     {
@@ -218,58 +221,74 @@
 
                 await hService.AddComment(newComment);
 
-                                    isSubmitted = true;
-                                }
-                            }
-                            newComment.Comment = "";
-                            CommentList = await hService.GetCommentsNoTracking(postId);
-                            imgUrl = "";
-                            newComment.imgUrl = "";
-                            isOpened = true;
-                            this.StateHasChanged();
-                        }
-                        private async Task UpdateComment(CaseComment c)
-                        {
-                            isSubmitted = false;
-                            authState = await authenticationStateTask;
-                            user = authState.User;
+                isSubmitted = true;
+            }
+        }
+        newComment.Comment = "";
+        CommentList = await hService.GetCommentsNoTracking(postId);
+        imgUrl = "";
+        newComment.imgUrl = "";
+        isOpened = true;
+        await addToHistory("added a comment on a post");
+        this.StateHasChanged();
+    }
+    private async Task UpdateComment(CaseComment c)
+    {
+        isSubmitted = false;
+        authState = await authenticationStateTask;
+        user = authState.User;
 
-                            if (user.Identity.IsAuthenticated)
-                            {
-                                usr = await UserManager.GetUserAsync(user);
-                                if (usr != null)
-                                {
+        if (user.Identity.IsAuthenticated)
+        {
+            usr = await UserManager.GetUserAsync(user);
+            if (usr != null)
+            {
 
-                                    newComment.PostedDate = c.PostedDate;
-                                    newComment.LastUpdatedDate = newComment.PostedDate;
-                                    newComment.CaseID = postId;
-                                    newComment.ID = c.ID;
-                                    newComment.Comment = c.Comment;
+                newComment.PostedDate = c.PostedDate;
+                newComment.LastUpdatedDate = newComment.PostedDate;
+                newComment.CaseID = postId;
+                newComment.ID = c.ID;
+                newComment.Comment = c.Comment;
 
-                                    if (!string.IsNullOrWhiteSpace(imgUrl))
-                                    {
-                                        newComment.imgUrl = imgUrl;
-                                    }
-                                    else if (!string.IsNullOrWhiteSpace(c.imgUrl))
-                                    {
-                                        newComment.imgUrl = c.imgUrl;
-                                    }
+                if (!string.IsNullOrWhiteSpace(imgUrl))
+                {
+                    newComment.imgUrl = imgUrl;
+                }
+                else if (!string.IsNullOrWhiteSpace(c.imgUrl))
+                {
+                    newComment.imgUrl = c.imgUrl;
+                }
 
-                                    await hService.EditComment(newComment);
+                await hService.EditComment(newComment);
 
-                                    isSubmitted = true;
-                                }
-                            }
-                            EditThis = -1;
-                            newComment.Comment = "";
-                            CommentList = await hService.GetCommentsNoTracking(postId);
-                            imgUrl = "";
-                            newComment.imgUrl = "";
-                            isOpened = true;
-                            this.StateHasChanged();
-                        }
-                        private string ParseMedicalSpecialty(MedicalSpecialtyType MedicalSpecialty)
-                        {
+                isSubmitted = true;
+            }
+        }
+        EditThis = -1;
+        newComment.Comment = "";
+        CommentList = await hService.GetCommentsNoTracking(postId);
+        imgUrl = "";
+        newComment.imgUrl = "";
+        isOpened = true;
+        await addToHistory("updated a comment on a post");
+        this.StateHasChanged();
+    }
+    private async Task addToHistory(string historyType)
+    {
+        //history stuffs
+        PostHistory newHistory = new PostHistory();
+        newHistory.ID = 0;
+        newHistory.PostID = postId;
+        newHistory.CreationDate = DateTime.Now;
+        newHistory.UserID = usr.PublicId;
+        newHistory.UserDisplayName = usr.FirstName + " " + usr.LastName;
+        newHistory.Title = caseInfo.Topic;
+        newHistory.Detail = caseInfo.Description;
+        newHistory.HistoryTypes = historyType;
+        await hService.AddHistory(newHistory);
+    }
+    private string ParseMedicalSpecialty(MedicalSpecialtyType MedicalSpecialty)
+    {
 
         string medicalSpecialty = "";
         switch (MedicalSpecialty)

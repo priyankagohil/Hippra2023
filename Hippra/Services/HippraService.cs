@@ -78,6 +78,8 @@ namespace Hippra.Services
             Case tempCase = new Case();
             int count = 0;
             //cases = await _context.Cases.ToListAsync();
+            int begin = (CurrentPage - 1) * PageSize;
+            int end = begin + PageSize;
 
             if (SubCategory == -1)
             {
@@ -99,8 +101,6 @@ namespace Hippra.Services
                                             cases.Add(tempCase);
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
                                 }
                                 else
                                 {
@@ -116,10 +116,19 @@ namespace Hippra.Services
                                         }
                                         
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.Topic.Contains(searchString) && s.PosterID == id).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.Topic.Contains(searchString) && s.PosterID == id);
+                                }
+                                cases.OrderByDescending(s => s.DateCreated);
+                                count = cases.Count;
+                                if (count > end)
+                                {
+                                    cases = cases.GetRange(begin, end);
+                                }
+                                else
+                                {
+                                    cases = cases.GetRange(begin, count);
                                 }
                             }
                             else
@@ -185,8 +194,7 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.Topic.Contains(searchString) && s.Status).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.Topic.Contains(searchString) && s.Status);
                                 }
@@ -203,10 +211,19 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.Topic.Contains(searchString) && s.Status && s.PosterID == id).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.Topic.Contains(searchString) && s.Status && s.PosterID == id);
+                                }
+                                cases.OrderByDescending(s => s.DateCreated);
+                                count = cases.Count;
+                                if (count > end)
+                                {
+                                    cases = cases.GetRange(begin, end);
+                                }
+                                else
+                                {
+                                    cases = cases.GetRange(begin, count);
                                 }
                             }
                             else
@@ -275,8 +292,6 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.Topic.Contains(searchString) && s.ResponseNeeded == Priority).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.Topic.Contains(searchString));
                                 }
@@ -293,10 +308,19 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.Topic.Contains(searchString) && s.PosterID == id && s.ResponseNeeded == Priority).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.Topic.Contains(searchString) && s.PosterID == id);
+                                }
+                                cases.OrderByDescending(s => s.DateCreated);
+                                count = cases.Count;
+                                if (count > end)
+                                {
+                                    cases = cases.GetRange(begin, end);
+                                }
+                                else
+                                {
+                                    cases = cases.GetRange(begin, count);
                                 }
                             }
                             else
@@ -363,8 +387,7 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.Topic.Contains(searchString) && s.Status && s.ResponseNeeded == Priority).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.Topic.Contains(searchString) && s.Status);
                                 }
@@ -381,10 +404,19 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.Topic.Contains(searchString) && s.Status && s.PosterID == id && s.ResponseNeeded == Priority).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.Topic.Contains(searchString) && s.Status && s.PosterID == id);
+                                }
+                                cases.OrderByDescending(s => s.DateCreated);
+                                count = cases.Count;
+                                if (count > end)
+                                {
+                                    cases = cases.GetRange(begin, end);
+                                }
+                                else
+                                {
+                                    cases = cases.GetRange(begin, count);
                                 }
                             }
                             else
@@ -456,8 +488,6 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString)).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString));
                                 }
@@ -474,10 +504,19 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.PosterID == id).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.PosterID == id);
+                                }
+                                cases.OrderByDescending(s => s.DateCreated);
+                                count = cases.Count;
+                                if (count > end)
+                                {
+                                    cases = cases.GetRange(begin, end);
+                                }
+                                else
+                                {
+                                    cases = cases.GetRange(begin, count);
                                 }
                             }
                             else
@@ -543,8 +582,7 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.Status).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.Status);
                                 }
@@ -561,10 +599,19 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.Status && s.PosterID == id).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.Status && s.PosterID == id);
+                                }
+                                cases.OrderByDescending(s => s.DateCreated);
+                                count = cases.Count;
+                                if (count > end)
+                                {
+                                    cases = cases.GetRange(begin, end);
+                                }
+                                else
+                                {
+                                    cases = cases.GetRange(begin, count);
                                 }
                             }
                             else
@@ -633,8 +680,7 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.ResponseNeeded == Priority).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString));
                                 }
@@ -651,10 +697,19 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.PosterID == id && s.ResponseNeeded == Priority).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.PosterID == id);
+                                }
+                                cases.OrderByDescending(s => s.DateCreated);
+                                count = cases.Count;
+                                if (count > end)
+                                {
+                                    cases = cases.GetRange(begin, end);
+                                }
+                                else
+                                {
+                                    cases = cases.GetRange(begin, count);
                                 }
                             }
                             else
@@ -720,8 +775,7 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.Status).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.Status);
                                 }
@@ -738,10 +792,19 @@ namespace Hippra.Services
                                             }
                                         }
                                     }
-                                    cases.OrderByDescending(s => s.DateCreated);
-                                    count = cases.Count;
+                                    
                                     //cases = await _context.Cases.AsNoTracking().Where(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.Status && s.PosterID == id).OrderByDescending(s => s.DateCreated).Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToListAsync();
                                     //count = await _context.Cases.AsNoTracking().CountAsync(s => s.MedicalCategory == SubCategory && s.Topic.Contains(searchString) && s.Status && s.PosterID == id);
+                                }
+                                cases.OrderByDescending(s => s.DateCreated);
+                                count = cases.Count;
+                                if (count > end)
+                                {
+                                    cases = cases.GetRange(begin, end);
+                                }
+                                else
+                                {
+                                    cases = cases.GetRange(begin, count);
                                 }
                             }
                             else
@@ -798,9 +861,9 @@ namespace Hippra.Services
             return result;
         }
 
-        public async Task<Case> GetCase(int caseCaseId)
+        public async Task<Case> GetCase(int CaseId)
         {
-            var result = await _context.Cases.FirstOrDefaultAsync(c => c.ID == caseCaseId);
+            var result = await _context.Cases.FirstOrDefaultAsync(c => c.ID == CaseId);
             return result;
         }
         public async Task<Case> GetCaseNoTracking(int caseCaseId)
@@ -1101,6 +1164,23 @@ namespace Hippra.Services
             }
             return false;
         }
+        // history type
+        public async Task<bool> AddHistory(PostHistory newHistory)
+        {
+            _context.PostHistories.Add(newHistory);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<HistoryResultModel> GetPostHistories(int userID, int targetPage, int PageSize)
+        {
+            List<PostHistory> histories = await _context.PostHistories.Where(c => c.UserID == userID).OrderByDescending(s => s.CreationDate).Skip((targetPage - 1) * PageSize).Take(PageSize).ToListAsync();
+            //var h = histories.OrderByDescending(h => h.CreationDate);
+            HistoryResultModel result = new HistoryResultModel();
+            result.Histories = histories;
+            result.TotalCount = await _context.PostHistories.AsNoTracking().CountAsync(s => s.UserID == userID);
+            return result;
+        }
+        
 
         // image upload
         public async Task<string> UploadImgToAzureAsync(Stream fileStream, string fileName)

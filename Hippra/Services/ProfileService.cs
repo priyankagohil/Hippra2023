@@ -105,7 +105,11 @@ namespace Hippra.Services
         {
             await UserManagerExtensions.BanAccount(_userManager, id);
         }
-
+        public async Task<int> GetUserIdByEmail(string email)
+        {
+            var user = await UserManagerExtensions.FindByEmail(_userManager,email);
+            return user.PublicId;
+        }
         public async Task<int> RegisterAccount(FTRegisterModel Input, string urlStr)
         {
             //var user = new AppUser { UserName = Input.Email, Email = Input.Email };

@@ -17,6 +17,7 @@
 @inject UserManager<AppUser> UserManager
 @inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
 @inject ProfileService pService;
+@inject HippraService hService
 @using Microsoft.AspNetCore.Mvc.Rendering;
 @using Hippra.Extensions
 
@@ -45,9 +46,9 @@
                                     <div class="offset-md-3 col-md-6 offset-md-3 text-left">
 
                                         @*<div class="mb-3">
-                                        <label for="Email">Username</label>
-                                        <InputText disabled class="form-control" id="Username" type="text" required placeholder="Enter Username" @bind-Value="@inputModel.UserName" aria-label="Username" aria-describedby="Username" />
-                                    </div>*@
+                                                <label for="Email">Username</label>
+                                                <InputText disabled class="form-control" id="Username" type="text" required placeholder="Enter Username" @bind-Value="@inputModel.UserName" aria-label="Username" aria-describedby="Username" />
+                                            </div>*@
 
 
                                         <div class=" mb-3">
@@ -65,19 +66,19 @@
                                             <InputText disabled class="form-control" id="Email" type="email" required placeholder="Enter Email" @bind-Value="@inputModel.Email" aria-label="Email" aria-describedby="Email" />
                                         </div>
                                         <div class="mb-3">
-                                        <label for="Password">Password</label>
-                                        <InputText class="form-control" id="Password" type="password" required placeholder="Enter Password" @bind-Value="@inputModel.Password" aria-label="Password" aria-describedby="Password" />
-                                        <div class="small text-muted">
-                                            8+ characters, Uppercase, Lowercase, Number, Special characters. You can change this later
+                                            <label for="Password">Password</label>
+                                            <InputText class="form-control" id="Password" type="password" required placeholder="Enter Password" @bind-Value="@inputModel.Password" aria-label="Password" aria-describedby="Password" />
+                                            <div class="small text-muted">
+                                                8+ characters, Uppercase, Lowercase, Number, Special characters. You can change this later
+                                            </div>
                                         </div>
-                                    </div>
-                                    @*<div class="mb-3">
-                                        <label for="ConfirmPassword">Confirm Password</label>
-                                        <InputText class="form-control" id="ConfirmPassword" type="password" required placeholder="Confirm Password" @bind-Value="@inputModel.ConfirmPassword" aria-label="Confirm Password" aria-describedby="Confirm Password" />
-                                        <div class="small text-muted">
-                                            You can change this later
-                                        </div>
-                                    </div>*@
+                                        @*<div class="mb-3">
+                                                <label for="ConfirmPassword">Confirm Password</label>
+                                                <InputText class="form-control" id="ConfirmPassword" type="password" required placeholder="Confirm Password" @bind-Value="@inputModel.ConfirmPassword" aria-label="Confirm Password" aria-describedby="Confirm Password" />
+                                                <div class="small text-muted">
+                                                    You can change this later
+                                                </div>
+                                            </div>*@
                                         <br />
 
                                     </div>
@@ -112,17 +113,17 @@
                                         </div>
                                         <div class=" mb-3">
                                             <label for="Residency">Residency Hospital</label>
-                                            <InputText class="form-control" id="Residency"  placeholder="Residency Hospital" @bind-Value="@inputModel.ResidencyHospital" aria-label="Residency" aria-describedby="Residency" />
+                                            <InputText class="form-control" id="Residency" placeholder="Residency Hospital" @bind-Value="@inputModel.ResidencyHospital" aria-label="Residency" aria-describedby="Residency" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="MedicalSchool">Medical School Attended</label>
-                                            <InputText class="form-control" id="MedicalSchool"  placeholder="Medical School Attended" @bind-Value="@inputModel.MedicalSchoolAttended" aria-label="MedicalSchool" aria-describedby="MedicalSchool" />
+                                            <InputText class="form-control" id="MedicalSchool" placeholder="Medical School Attended" @bind-Value="@inputModel.MedicalSchoolAttended" aria-label="MedicalSchool" aria-describedby="MedicalSchool" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="Education">Education/Degree</label>
-                                            <InputText class="form-control" id="Education"  placeholder="Education/Degree" @bind-Value="@inputModel.EducationDegree" aria-label="Education" aria-describedby="Education" />
+                                            <InputText class="form-control" id="Education" placeholder="Education/Degree" @bind-Value="@inputModel.EducationDegree" aria-label="Education" aria-describedby="Education" />
 
                                         </div>
                                         <br />
@@ -139,27 +140,27 @@
 
                                         <div class=" mb-3">
                                             <label for="Address">Address</label>
-                                            <InputText class="form-control" id="Address"  placeholder="Address" @bind-Value="@inputModel.Address" aria-label="Address" aria-describedby="Address" />
+                                            <InputText class="form-control" id="Address" placeholder="Address" @bind-Value="@inputModel.Address" aria-label="Address" aria-describedby="Address" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="City">City</label>
-                                            <InputText class="form-control" id="City"  placeholder="City" @bind-Value="@inputModel.City" aria-label="City" aria-describedby="City" />
+                                            <InputText class="form-control" id="City" placeholder="City" @bind-Value="@inputModel.City" aria-label="City" aria-describedby="City" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="State">State</label>
-                                            <InputText class="form-control" id="State"  placeholder="State" @bind-Value="@inputModel.State" aria-label="State" aria-describedby="State" />
+                                            <InputText class="form-control" id="State" placeholder="State" @bind-Value="@inputModel.State" aria-label="State" aria-describedby="State" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="Zipcode">Zipcode</label>
-                                            <InputText class="form-control" id="Zipcode"  placeholder="Zipcode" @bind-Value="@inputModel.Zipcode" aria-label="Zipcode" aria-describedby="Zipcode" />
+                                            <InputText class="form-control" id="Zipcode" placeholder="Zipcode" @bind-Value="@inputModel.Zipcode" aria-label="Zipcode" aria-describedby="Zipcode" />
 
                                         </div>
                                         <div class=" mb-3">
                                             <label for="PhoneNumber">Phone Number</label>
-                                            <InputText class="form-control" id="PhoneNumber"  placeholder="Phone Number" @bind-Value="@inputModel.PhoneNumber" aria-label="PhoneNumber" aria-describedby="PhoneNumber" />
+                                            <InputText class="form-control" id="PhoneNumber" placeholder="Phone Number" @bind-Value="@inputModel.PhoneNumber" aria-label="PhoneNumber" aria-describedby="PhoneNumber" />
 
                                         </div>
                                         <br />
@@ -460,7 +461,7 @@
             usr.Zipcode = inputModel.Zipcode;
             usr.State = inputModel.State;
             usr.City = inputModel.City;
-            usr.PhoneNumber = inputModel.PhoneNumber; // check this 
+            usr.PhoneNumber = inputModel.PhoneNumber; // check this
 
             try
             {
@@ -473,6 +474,16 @@
                 return;
             }
             status = 1;
+            PostHistory newHistory = new PostHistory();
+            newHistory.ID = 0;
+            newHistory.PostID = -1;
+            newHistory.CreationDate = DateTime.Now;
+            newHistory.UserID = usr.PublicId;
+            newHistory.UserDisplayName = usr.FirstName + " " + usr.LastName;
+            newHistory.Title = "Hippra";
+            newHistory.Detail = "Profile updated";
+            newHistory.HistoryTypes = "edited profile";
+            await hService.AddHistory(newHistory);
             this.StateHasChanged();
             return;
         }
