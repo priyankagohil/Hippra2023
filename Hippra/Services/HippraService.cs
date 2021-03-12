@@ -1228,18 +1228,58 @@ namespace Hippra.Services
             await _context.SaveChangesAsync();
             return true;
         }
-        public async Task<bool> CheckConnection(int my_Id, int f_Id)
+        public async Task<bool> ChangeConnectionStatus(int userId, int friendId)
         {
-            var conn = await _context.Connections.FirstOrDefaultAsync(c => c.UserID == my_Id && c.FriendID == f_Id);
+            var conn = await _context.Connections.FirstOrDefaultAsync(c => c.UserID == userId && c.FriendID == friendId);
+
+            if (conn == null)
+            {
+                return false;
+            }
+
+            conn.Status = 1;
+            try
+            {
+                _context.Update(conn);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ConnectionExists(conn.ID))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return true;
+        }
+        private bool ConnectionExists(int id)
+        {
+            return _context.Connections.AsNoTracking().Any(n => n.ID == id);
+        }
+        public async Task<string> CheckConnection(int my_Id, int f_Id)
+        {
+            var conn = await _context.Connections.FirstOrDefaultAsync(c => (c.UserID == my_Id && c.FriendID == f_Id) || (c.UserID == f_Id && c.FriendID == my_Id));
             if(conn != null)
             {
-                return true;
+                if(conn.Status == -1)
+                {
+                    return "P";
+                }
+                else
+                {
+                    return "C";
+                }
             }
-            return false;
+            return "NC";
         }
         public async Task<List<Connection>> GetAllConnections(int my_Id)
         {
-            List<Connection> conn = await _context.Connections.Where(c => c.UserID == my_Id || c.FriendID == my_Id).ToListAsync();
+            List<Connection> conn = await _context.Connections.Where(c => (c.UserID == my_Id || c.FriendID == my_Id) && c.Status == 1).ToListAsync();
             return conn;
         }
 

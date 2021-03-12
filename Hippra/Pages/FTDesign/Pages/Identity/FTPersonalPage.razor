@@ -83,13 +83,17 @@
                                 }
                                 @if (usr.PublicId != userId)
                                 {
-                                    @if (isConnected)
+                                    @if (connectStatus == "C")
                                     {
                                         <button class="prof-c-btn" @onclick="@RemoveConnection">Connected</button>
                                     }
-                                    else
+                                    else if (connectStatus == "NC")
                                     {
                                         <button class="prof-c-btn" @onclick="@SendAnInvitation">Connect+</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="prof-c-btn" @onclick="@RemoveConnection">Pending</button>
                                     }
                                     @if (isFollowed)
                                     {
@@ -99,7 +103,7 @@
                                     {
                                         <button class="prof-f-btn" @onclick="@AddToFollowerList">Follow+</button>
                                     }
-                                    
+
                                 }
                             </div>
 
@@ -294,7 +298,7 @@
     private string bio = "";
     private bool editBio = false;
     private bool isSubmitted = false;
-    private bool isConnected = false;
+    private string connectStatus = "";
     private bool isFollowed = false;
     private int lastHistoryID = -1;
 
@@ -343,7 +347,7 @@
         medicalSpecialty = getMedicalSpeciality(profile.MedicalSpecialty);
         if(usr.PublicId != userId)
         {
-            isConnected = await hService.CheckConnection(usr.PublicId, userId);
+            connectStatus = await hService.CheckConnection(usr.PublicId, userId);
             isFollowed = await hService.CheckFollower(usr.PublicId, userId);
         }
         connList = await hService.GetAllConnections(userId);
@@ -794,7 +798,7 @@ private async Task Submitted()
 private async Task RemoveConnection()
 {
     await hService.RemoveConnection(usr.PublicId, userId);
-    isConnected = false;
+    connectStatus = "NC";
     await addToHistory("disconnected with");
     connList = await hService.GetAllConnections(userId);
     StateHasChanged();
@@ -807,6 +811,13 @@ private async Task viewPage(int id)
 }
 private async Task SendAnInvitation()
 {
+    Connection newConn = new Connection();
+    newConn.ID = 0;
+    newConn.UserID = usr.PublicId;
+    newConn.FriendID = userId;
+    newConn.Status = -1;
+    connectStatus = "P";
+    await hService.AddConnection(newConn);
     await addToHistory("invited");
     await Notify(1);
     StateHasChanged();

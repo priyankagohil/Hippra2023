@@ -1027,11 +1027,7 @@
     private async Task AddToConnection(PostHistory p)
     {
         p.Detail = "invite accepted";
-        Connection newConn = new Connection();
-        newConn.ID = 0;
-        newConn.UserID = p.PosterID;
-        newConn.FriendID = usrID;
-        await hService.AddConnection(newConn);
+        await hService.ChangeConnectionStatus(p.PosterID, usrID);
         await addToHistory("connected with", p);
         await Notify(-1, p.PosterID);
         await hService.NotificationRead(p.NotificationID);
