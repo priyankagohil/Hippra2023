@@ -1,4 +1,19 @@
-﻿<nav class="navbar navbar-expand @NavCssClass navbar-light @NavbarCustomCssClass box-shadow py-2">
+﻿@using Hippra.Models.SQL
+@using Hippra.Models.POCO
+@using Hippra.Services
+@using Hippra.Pages.FTDesign.Features
+@using Hippra.Models.Enums
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Options
+@using System.Security.Claims
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@inject IOptions<AppSettings> settings
+@inject HippraService hService
+@inject ProfileService pService
+@inject IJSRuntime JSRuntime
+@inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
+<nav class="navbar navbar-expand @NavCssClass navbar-light @NavbarCustomCssClass box-shadow py-2">
     <div class="container-fluid nav-pady">
         @if (HasNavBrand)
         {
@@ -17,12 +32,12 @@
                 // customization
                 <a class="navbar-brand ft-nav-brand-container" href="/">
                     <img src="/img/hippra/Hippra_logo_imgtext.png" @TextColorCustomCssClass width="100" height="40" />
-                    
+
                     <br />
                 </a>
 
-               /* <a href="/About" class="btn my-1 btn-outline"> About </a>
-                <a href="https://docs.google.com/forms/d/1ik_NYNBlVAsAK1LwQYJ0gZn-im1Z_oCdJbhuQ9jwMAo/edit?usp=sharing" class="btn my-1 btn-outline"> Survey </a>*/
+                /* <a href="/About" class="btn my-1 btn-outline"> About </a>
+                 <a href="https://docs.google.com/forms/d/1ik_NYNBlVAsAK1LwQYJ0gZn-im1Z_oCdJbhuQ9jwMAo/edit?usp=sharing" class="btn my-1 btn-outline"> Survey </a>*/
                 <a href="https://jrmwriter.wordpress.com" class="btn my-1 btn-outline"> Blog </a>
 
             }
@@ -114,11 +129,11 @@
 
 
                 @*<li class="nav-item d-none d-sm-block">
-                    <a class="nav-link @TextColorCustomCssClass" href="/About">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link @TextColorCustomCssClass" href="/FTContact">Contact Us</a>
-                </li>*@
+                        <a class="nav-link @TextColorCustomCssClass" href="/About">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @TextColorCustomCssClass" href="/FTContact">Contact Us</a>
+                    </li>*@
             }
 
         </ul>
@@ -132,8 +147,26 @@
                 }
                 else
                 {
-                    //customization
                     <FTLoginDisplay HasContactsPanel="true" />
+                    //customization
+                    @if (userId != -1)
+                    {
+                        @if (unreadNotification > 0 && unreadNotification <= 99)
+                        {
+                            <button class="nav-btn" @onclick="@viewNotificationPage"><span class="far fa-bell"></span></button><span class="counter counter-lg notif-label">@unreadNotification</span>
+                        }
+                        else if (unreadNotification > 99)
+                        {
+                            <button class="nav-btn" @onclick="@viewNotificationPage"><span class="far fa-bell"></span></button><span class="counter counter-lg notif-label">99+</span>
+                        }
+                        else
+                        {
+                            <button class="nav-btn" @onclick="@viewNotificationPage"><span class="far fa-bell"></span></button>
+                        }
+
+                        <button class="circle-pic-personal circle-badge" style="background-image:url('@DisplayProfileUrl') ;background-size: 100%; margin-left: 10px" @onclick="(e => { viewPage(userId); })"></button>
+                    }
+
                 }
 
             }
@@ -148,22 +181,52 @@
     public bool IsFixTop { get; set; } = true;
     [Parameter]
     public bool HasTopControls { get; set; } = true;
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    private AuthenticationState authState { get; set; }
+    private ClaimsPrincipal user { get; set; }
+    private AppUser usr { get; set; }
+    private Profile profile { get; set; } = new Profile();
 
     // customization
     private string NavCssClass { get; set; } = "";
     private bool HasNavBrand { get; set; } = true;
 
-    [CascadingParameter(Name="DEMO_MODE")]
+    [CascadingParameter(Name = "DEMO_MODE")]
     public bool ISDemoMode { get; set; }
 
-    [CascadingParameter(Name="FT_THEME")]
+    [CascadingParameter(Name = "FT_THEME")]
     public ThemeOption themeOption { get; set; } = ThemeOption.LIGHT;
     private string BtnCustomCssClass { get; set; } = "";
     private string TextColorCustomCssClass { get; set; } = "";
     private string NavbarCustomCssClass { get; set; } = "";
+    private string DisplayProfileUrl = "";
+    private int userId = -1;
+    private int unreadNotification = 0;
 
     protected override async Task OnInitializedAsync()
     {
+        authState = await authenticationStateTask;
+        user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            usr = await UserManager.GetUserAsync(user);
+            if (usr != null)
+            {
+                profile = new Profile();
+                profile = await pService.GetProfile(usr.PublicId);
+                if (profile.ProfileUrl != null)
+                {
+                    DisplayProfileUrl = profile.ProfileUrl;
+                }
+                else
+                {
+                    DisplayProfileUrl = "/img/hippra/blank-profile.png";
+                }
+                userId = profile.PublicId;
+            }
+        }
         if (IsFixTop)
         {
             NavCssClass = "sticky-top";
@@ -176,7 +239,7 @@
                 NavbarCustomCssClass = "navbar-light bg-light";
                 break;
             case ThemeOption.FT_LIGHT:
-                BtnCustomCssClass  = "ft-btn-light";
+                BtnCustomCssClass = "ft-btn-light";
                 TextColorCustomCssClass = "text-dark";
                 NavbarCustomCssClass = "ft-navbar-light  ft-bg-light";
                 break;
@@ -192,6 +255,24 @@
                 NavbarCustomCssClass = "navbar-dark bg-dark";
                 break;
         }
+        await updateNotification();
 
+
+    }
+    private async Task viewPage(int id)
+    {
+        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/PersonalPage/" + id);
+
+    }
+    private async Task viewNotificationPage()
+    {
+        NavigationManager.NavigateTo("/FTProfile/" + -1 +"/"+ 2);
+
+    }
+    public async Task updateNotification()
+    {
+        unreadNotification = await hService.CountMyNotification(userId);
+        StateHasChanged();
     }
 }

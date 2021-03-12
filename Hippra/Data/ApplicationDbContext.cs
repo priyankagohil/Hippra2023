@@ -24,5 +24,15 @@ namespace Hippra.Data
         public DbSet<CaseTags> CaseTags { get; set; }
 
         public DbSet<PostHistory> PostHistories { get; set; }
+
+        public DbSet<Vote> Votes { get; set; }
+
+        public DbSet<Connection> Connections { get; set; }
+
+        public DbSet<BioMoreInfo> BioMoreInfos { get; set; }
+
+        public DbSet<Notification> Notifications { get; set; }
+
+        public DbSet<Follow> Follows { get; set; }
     }
 }

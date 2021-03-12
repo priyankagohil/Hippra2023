@@ -88,6 +88,9 @@ namespace Hippra.Models.SQL
         public UserOnlineStatus Status { get; set; }
         // admin
         public bool isApproved { get; set; }
+        public string ProfileUrl { get; set; }
+        public string BackgroundUrl { get; set; }
+        public string Bio { get; set; }
 
     }
 }

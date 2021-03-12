@@ -607,7 +607,7 @@ private async Task Cancel()
         newHistory.ID = 0;
         newHistory.PostID = caseId;
         newHistory.CreationDate = DateTime.Now;
-        newHistory.UserID = usr.PublicId;
+        newHistory.PosterID = usr.PublicId;
         newHistory.UserDisplayName = usr.FirstName + " " + usr.LastName;
         newHistory.Title = pCase.Topic;
         newHistory.Detail = pCase.Description;

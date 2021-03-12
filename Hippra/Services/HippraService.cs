@@ -1116,7 +1116,7 @@ namespace Hippra.Services
             
             return true;
         }
-        public async Task<bool> EditComment(CaseComment EditedCaseComment)
+        public async Task<bool> EditComment(CaseComment EditedCaseComment,int type)
         {
             var CaseComment = await _context.CaseComments.FirstOrDefaultAsync(m => m.ID == EditedCaseComment.ID);
 
@@ -1125,9 +1125,20 @@ namespace Hippra.Services
                 return false;
             }
             CaseComment.Comment = EditedCaseComment.Comment;
-            CaseComment.LastUpdatedDate = DateTime.Now;
             CaseComment.imgUrl = EditedCaseComment.imgUrl;
-
+            CaseComment.ProfileUrl = EditedCaseComment.ProfileUrl;
+            if (type == -2)
+            {
+                CaseComment.LastUpdatedDate = DateTime.Now;
+            }
+            else if(type == -3)
+            {
+                CaseComment.VoteUp = EditedCaseComment.VoteUp;
+            }
+            else
+            {
+                CaseComment.VoteDown = EditedCaseComment.VoteDown;
+            }
             try
             {
                 _context.Update(CaseComment);
@@ -1165,23 +1176,181 @@ namespace Hippra.Services
             return false;
         }
         // history type
-        public async Task<bool> AddHistory(PostHistory newHistory)
+        public async Task<int> AddHistory(PostHistory newHistory)
         {
             _context.PostHistories.Add(newHistory);
             await _context.SaveChangesAsync();
-            return true;
+            return newHistory.ID;
         }
-        public async Task<HistoryResultModel> GetPostHistories(int userID, int targetPage, int PageSize)
+        public async Task<HistoryResultModel> GetPostHistories(int posterID, int targetPage, int PageSize)
         {
-            List<PostHistory> histories = await _context.PostHistories.Where(c => c.UserID == userID).OrderByDescending(s => s.CreationDate).Skip((targetPage - 1) * PageSize).Take(PageSize).ToListAsync();
+            List<PostHistory> histories = await _context.PostHistories.Where(c => c.PosterID == posterID).OrderByDescending(s => s.CreationDate).Skip((targetPage - 1) * PageSize).Take(PageSize).ToListAsync();
             //var h = histories.OrderByDescending(h => h.CreationDate);
             HistoryResultModel result = new HistoryResultModel();
             result.Histories = histories;
-            result.TotalCount = await _context.PostHistories.AsNoTracking().CountAsync(s => s.UserID == userID);
+            result.TotalCount = await _context.PostHistories.AsNoTracking().CountAsync(s => s.PosterID == posterID);
             return result;
         }
-        
+        public async Task<PostHistory> GetHistoryByIDs(int id)
+        {
+            PostHistory h = await _context.PostHistories.FirstOrDefaultAsync(h => h.ID == id);
+            return h;
+        }
+        //Vote
+        public async Task<bool> AddVote(Vote newVote)
+        {
+            _context.Votes.Add(newVote);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> CheckVoter(int postId, int voterId, int cID)
+        {
+            var vote = await _context.Votes.FirstOrDefaultAsync(v => v.PosterID == postId && v.VoterID == voterId && v.CID == cID);
+            if(vote != null)
+            {
+                return true;
+            }
+            return false;
+        }
+        //Stats
+        public async Task<Stats> GetStats(int postId)
+        {
+            Stats stats = new Stats();
+            stats.UpVote = await _context.Votes.AsNoTracking().CountAsync(v => v.PosterID == postId);
+            stats.Votes = await _context.Votes.AsNoTracking().CountAsync(v => v.VoterID == postId);
+            stats.Answers = await _context.CaseComments.AsNoTracking().CountAsync(c => c.PosterId == postId && c.PosterId != c.Case.PosterID);
+            return stats;
+        }
+        //Connections
+        public async Task<bool> AddConnection(Connection conn)
+        {
+            _context.Connections.Add(conn);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> CheckConnection(int my_Id, int f_Id)
+        {
+            var conn = await _context.Connections.FirstOrDefaultAsync(c => c.UserID == my_Id && c.FriendID == f_Id);
+            if(conn != null)
+            {
+                return true;
+            }
+            return false;
+        }
+        public async Task<List<Connection>> GetAllConnections(int my_Id)
+        {
+            List<Connection> conn = await _context.Connections.Where(c => c.UserID == my_Id || c.FriendID == my_Id).ToListAsync();
+            return conn;
+        }
 
+        public async Task<bool> RemoveConnection(int userId, int fID)
+        {
+            Connection conn = await _context.Connections.FirstOrDefaultAsync(c => c.UserID == userId && c.FriendID == fID);
+            if(conn != null)
+            {
+               _context.Connections.Remove(conn);
+               await _context.SaveChangesAsync();
+               return true;
+            }
+            return false;
+        }
+        //Notification
+        public async Task<bool> AddNotification(Notification notif)
+        {
+            _context.Notifications.Add(notif);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<NotificationResultModel> GetAllNotifications(int userID, int targetPage, int PageSize)
+        {
+            List<Notification> ListNotifs = await _context.Notifications.Where(n => n.ReceiverID == userID).OrderByDescending(n => n.CreationDate).Skip((targetPage - 1) * PageSize).Take(PageSize).ToListAsync();
+            //var h = histories.OrderByDescending(h => h.CreationDate);
+            NotificationResultModel result = new NotificationResultModel();
+            result.Notifications = ListNotifs;
+            result.TotalCount = await _context.Notifications.AsNoTracking().CountAsync(s => s.ReceiverID == userID);
+            return result;
+        }
+        public async Task<int> CountMyNotification(int userID)
+        {
+            int count = await _context.Notifications.AsNoTracking().CountAsync(s => s.ReceiverID == userID && s.IsRead == -1);
+            return count;
+        }
+        public async Task<bool> DeleteNotification(int nID)
+        {
+            Notification notif = await _context.Notifications.FirstOrDefaultAsync(n => n.NotificationID == nID);
+            if (notif != null)
+            {
+                _context.Notifications.Remove(notif);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+        public async Task<bool> NotificationRead(int id)
+        {
+            var notif = await _context.Notifications.FirstOrDefaultAsync(n => n.ID == id);
+
+            if (notif == null)
+            {
+                return false;
+            }
+            
+            notif.IsRead = 2;
+            try
+            {
+                _context.Update(notif);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!NotificationExists(notif.ID))
+                {
+                    return false;
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return true;
+        }
+        private bool NotificationExists(int id)
+        {
+            return _context.Notifications.AsNoTracking().Any(n => n.ID == id);
+        }
+        //Follow
+        public async Task<bool> AddFollower(Follow newFollower)
+        {
+            _context.Follows.Add(newFollower);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> RemoveFollower(int follower, int following)
+        {
+            Follow f = await _context.Follows.FirstOrDefaultAsync(f => f.FollowerUserID == follower && f.FollowingUserID == following);
+            if (f != null)
+            {
+                _context.Follows.Remove(f);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+        public async Task<List<Follow>> GetAllFollowers(int my_Id)
+        {
+            List<Follow> followers = await _context.Follows.Where(c => c.FollowingUserID == my_Id).ToListAsync();
+            return followers;
+        }
+        public async Task<bool> CheckFollower(int my_Id, int f_Id)
+        {
+            var follow = await _context.Follows.FirstOrDefaultAsync(f => f.FollowerUserID == my_Id && f.FollowingUserID == f_Id);
+            if (follow != null)
+            {
+                return true;
+            }
+            return false;
+        }
         // image upload
         public async Task<string> UploadImgToAzureAsync(Stream fileStream, string fileName)
         {

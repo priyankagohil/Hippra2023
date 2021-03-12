@@ -435,7 +435,7 @@
                 newHistory.ID = 0;
                 newHistory.PostID = -1;
                 newHistory.CreationDate = DateTime.Now;
-                newHistory.UserID = await pService.GetUserIdByEmail(inputModel.Email);
+                newHistory.PosterID = await pService.GetUserIdByEmail(inputModel.Email);
                 newHistory.UserDisplayName = inputModel.FirstName + " " + inputModel.LastName;
                 newHistory.Title = "Welcome to Hippra!";
                 newHistory.Detail = "Account created on " + newHistory.CreationDate.ToShortDateString();

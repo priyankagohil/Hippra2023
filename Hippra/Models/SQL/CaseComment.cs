@@ -18,6 +18,9 @@ namespace Hippra.Models.SQL
         public string imgUrl { get; set; }
  /*       public string commentGUID { get; set; }*/
         public int CaseID { get; set; }
+        public int VoteUp { get; set; }
+        public int VoteDown { get; set; }
+        public string ProfileUrl = "";
         public Case Case { get; set; }
     }
 }

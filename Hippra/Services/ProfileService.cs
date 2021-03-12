@@ -77,8 +77,11 @@ namespace Hippra.Services
                     State = user.State,
                     City = user.City,
                     PhoneNumber = user.PhoneNumber,
-                    DateJoined = user.DateJoined.ToString("MMMM dd, yyyy", CultureInfo.CreateSpecificCulture("en-US"))
-
+                    DateJoined = user.DateJoined.ToString("MMMM dd, yyyy", CultureInfo.CreateSpecificCulture("en-US")),
+                    PublicId = user.PublicId,
+                    ProfileUrl = user.ProfileUrl,
+                    BackgroundUrl = user.BackgroundUrl,
+                    Bio = user.Bio
                 };
 
             }

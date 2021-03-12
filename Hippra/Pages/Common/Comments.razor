@@ -11,6 +11,8 @@
 @inject IOptions<AppSettings> settings
 @inject HippraService hService
 @inject IJSRuntime JSRuntime
+@inject ProfileService pService
+@inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
 
 <div class="m-2">
     @if (CommentList == null || CommentList.Count == 0)
@@ -31,41 +33,65 @@
             {
                 if (c.ID != EditThis)
                 {
-                    <div class="p-2 mb-2 bg-light rounded">
-                        <div class="">
-                            <strong> @c.PosterName </strong> <span class="text-black-50">( @c.posterSpeciality )</span>
+                    <div class="row">
+                        <div class="col vote-bar">
+                            <div class="row-md-1 wrap-button-up">
+                                <button class="btn vote-button-up bg-light" @onclick="(e => { UpdateComment(c, -3); })"><span class="fa fa-caret-square-o-up"></span></button>
+                                <div class="up-content"><p>This answer is useful.</p></div>
+                            </div>
+                            <div class="row-md-1" style="color:red">
+                                @c.VoteUp
+                            </div>
+                            <div class="row-md-1" style="color:black">
+                                @c.VoteDown
+                            </div>
+                            <div class="row-md-1 wrap-button-down">
+                                <button class="btn vote-button-down bg-light" @onclick="(e => { UpdateComment(c, -4); })"><span class="fa fa-caret-square-o-down"></span></button>
+                                <div class="down-content">This answer is not useful.</div>
+                            </div>
                         </div>
-                        <div class="px-4">
-                            @c.Comment
-                        </div>
-                        <div class="px-4">
-                            @if (!string.IsNullOrWhiteSpace(c.imgUrl))
-                            {
-                                <label class="label-img">
-                                    <input type="checkbox">
-                                    <img id="caseImg" src="@c.imgUrl" width="20%" height="20%" />
-                                </label>
-                            }
-                        </div>
-                        <div class="text-right text-black-50">
-                            <small>@c.LastUpdatedDate</small>
+                        <div class="col justify-content-start" style="margin-bottom:90px;">
+                            <div class="p-4 mb-4 bg-light rounded">
+                                <div style="margin-bottom: 10px;">
+                                    <button class="circle-pic-personal circle-badge" style="background-image:url('@c.ProfileUrl') ;background-size: 100%;" @onclick="(e => { viewPage(c.PosterId); })"></button>
+                                    <strong class="comment-pic-item"> @c.PosterName </strong> <span class="text-black-50 comment-pic-item">( @c.posterSpeciality )</span>
+                                </div>
+                                <div class="px-4">
+                                    @c.Comment
+                                </div>
+                                <div class="px-4">
+                                    @if (!string.IsNullOrWhiteSpace(c.imgUrl))
+                                    {
+                                        <label class="label-img">
+                                            <input type="checkbox">
+                                            <img id="caseImg" src="@c.imgUrl" width="20%" height="20%" />
+                                        </label>
+                                    }
+                                </div>
+                                <div class="text-right text-black-50">
+                                    <small>@c.LastUpdatedDate</small>
+                                </div>
+                            </div>
+
+                            <div>
+                                @if (c.PosterId == usr.PublicId)
+                                {
+                                    <button class="comment-button" @onclick="(e => { EditComment(c.ID); })">Edit</button>
+                                    <button class="comment-button" @onclick="(e => { DeleteComment(c); })">Delete</button>
+                                }
+                            </div>
+
                         </div>
                     </div>
-                    if (c.PosterId == usr.PublicId)
-                    {
-                        <div>
-                            <button class="comment-button" @onclick="(e => { EditComment(c.ID); })">Edit</button>
-                            <button class="comment-button" @onclick="(e => { DeleteComment(c.ID); })">Delete</button>
-                        </div>
-                    }
+
                 }
                 else
                 {
                     <div class="p-2 mb-2 bg-warning rounded">
-                        
+
                         <div style="color: Black">New Comment:</div>
                         <div>
-                            <EditForm Model="@newComment" OnValidSubmit="(e => { UpdateComment(c); })">
+                            <EditForm Model="@newComment" OnValidSubmit="(e => { UpdateComment(c,-2); })">
                                 <DataAnnotationsValidator />
                                 <ValidationSummary />
                                 <div class="input-group mb-3">
@@ -94,30 +120,30 @@
 
                             </EditForm>
                         </div>
-                     </div>
-                        }
-                        }
-                        }
-                        else
-                        {
-                        <div class="d-block text-right text-black-50 mb-2" @onclick="OpenComment">
-                            @CommentList.Count Comments
-                        </div>
-                        }
-                        }
-                        <div>
-                            <EditForm Model="@newComment" OnValidSubmit="@AddComment">
-                                <DataAnnotationsValidator />
-                                <ValidationSummary />
-                                <div class="input-group mb-3">
-                                    <InputText class="form-control" id="" required placeholder="Write a Comment" @bind-Value="@newComment.Comment" aria-label="Comment" aria-describedby="Write a Comment" />
-                                    <div class="input-group-append">
-                                        <button id="comment-button" type="submit" class="btn btn-primary">Comment</button>
-                                    </div>
-                                </div>
-                                <div class="border">
-                                    <CmtImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl" @bind-isSubmitted="isSubmitted"></CmtImgUpload>
-                                </div>
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <div class="d-block text-right text-black-50 mb-2" @onclick="OpenComment">
+                @CommentList.Count Comments
+            </div>
+        }
+    }
+    <div>
+        <EditForm Model="@newComment" OnValidSubmit="@AddComment">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+            <div class="input-group mb-3">
+                <InputText class="form-control" id="" required placeholder="Write a Comment" @bind-Value="@newComment.Comment" aria-label="Comment" aria-describedby="Write a Comment" />
+                <div class="input-group-append">
+                    <button id="comment-button" type="submit" class="btn btn-primary">Comment</button>
+                </div>
+            </div>
+            <div class="border">
+                <CmtImgUpload @bind-fileName="fileName" @bind-imgUrl="imgUrl" @bind-isSubmitted="isSubmitted"></CmtImgUpload>
+            </div>
 
         </EditForm>
     </div>
@@ -137,6 +163,7 @@
     [Parameter]
     public bool isOpened { get; set; }
     private CaseComment newComment = new CaseComment();
+    private Profile profile { get; set; } = new Profile();
 
     private int EditThis = -1;
     private string fileName;
@@ -144,13 +171,14 @@
     private bool isSubmitted;
     private string[] imgUrls;
     private Case caseInfo = new Case();
+    private int lastHistoryID = -1;
 
     public async Task EditComment(int ID)
     {
         EditThis = ID;
         this.StateHasChanged();
     }
-    public async Task DeleteComment(int ID)
+    public async Task DeleteComment(CaseComment c)
     {
 
         isSubmitted = false;
@@ -162,13 +190,15 @@
             usr = await UserManager.GetUserAsync(user);
             if (usr != null)
             {
-                await hService.DeleteComment(ID);
+                await hService.DeleteComment(c.ID);
 
                 isSubmitted = true;
             }
         }
         CommentList = await hService.GetCommentsNoTracking(postId);
-        await addToHistory("deleted a comment on a post");
+        await getProfilePic();
+        await addToHistory("deleted a comment on", c);
+        await addNotification();
         this.StateHasChanged();
     }
     public async Task DeleteFile(CaseComment c)
@@ -186,6 +216,7 @@
         {
             usr = await UserManager.GetUserAsync(user);
         }
+        await getProfilePic();
 
     }
 
@@ -200,92 +231,176 @@
         isSubmitted = false;
         authState = await authenticationStateTask;
         user = authState.User;
-
+        CaseComment addComment = new CaseComment();
         if (user.Identity.IsAuthenticated)
         {
             usr = await UserManager.GetUserAsync(user);
             if (usr != null)
             {
-                newComment.PosterId = usr.PublicId;
-                newComment.PosterName = usr.FirstName + " " + usr.LastName;
-                newComment.PostedDate = DateTime.Now;
-                newComment.LastUpdatedDate = newComment.PostedDate;
-                newComment.posterSpeciality = ParseMedicalSpecialty((MedicalSpecialtyType)usr.MedicalSpecialty);
-                newComment.CaseID = postId;
-                newComment.ID = 0;
-
+                addComment.PosterId = usr.PublicId;
+                addComment.PosterName = usr.FirstName + " " + usr.LastName;
+                addComment.PostedDate = DateTime.Now;
+                addComment.LastUpdatedDate = newComment.PostedDate;
+                addComment.posterSpeciality = ParseMedicalSpecialty((MedicalSpecialtyType)usr.MedicalSpecialty);
+                addComment.CaseID = postId;
+                addComment.ID = 0;
+                addComment.Comment = newComment.Comment;
+                if (profile.ProfileUrl != null)
+                {
+                    addComment.ProfileUrl = profile.ProfileUrl;
+                }
+                else
+                {
+                    addComment.ProfileUrl = "/img/hippra/blank-profile.png";
+                }
                 if (!string.IsNullOrWhiteSpace(imgUrl))
                 {
-                    newComment.imgUrl = imgUrl;
+                    addComment.imgUrl = imgUrl;
                 }
 
-                await hService.AddComment(newComment);
+                await hService.AddComment(addComment);
 
                 isSubmitted = true;
             }
         }
         newComment.Comment = "";
         CommentList = await hService.GetCommentsNoTracking(postId);
+        await getProfilePic();
         imgUrl = "";
         newComment.imgUrl = "";
         isOpened = true;
-        await addToHistory("added a comment on a post");
+        await addToHistory("added a comment on", newComment);
+        await addNotification();
         this.StateHasChanged();
     }
-    private async Task UpdateComment(CaseComment c)
+    private async Task UpdateComment(CaseComment c, int updateType)
     {
         isSubmitted = false;
         authState = await authenticationStateTask;
         user = authState.User;
-
+        CaseComment addComment = new CaseComment();
         if (user.Identity.IsAuthenticated)
         {
             usr = await UserManager.GetUserAsync(user);
             if (usr != null)
             {
-
-                newComment.PostedDate = c.PostedDate;
-                newComment.LastUpdatedDate = newComment.PostedDate;
-                newComment.CaseID = postId;
-                newComment.ID = c.ID;
-                newComment.Comment = c.Comment;
-
+                addComment.ID = c.ID;
+                addComment.Comment = c.Comment;
+                addComment.ProfileUrl = c.ProfileUrl;
                 if (!string.IsNullOrWhiteSpace(imgUrl))
                 {
-                    newComment.imgUrl = imgUrl;
+                    addComment.imgUrl = imgUrl;
                 }
                 else if (!string.IsNullOrWhiteSpace(c.imgUrl))
                 {
-                    newComment.imgUrl = c.imgUrl;
+                    addComment.imgUrl = c.imgUrl;
                 }
+                if (updateType == -2)
+                {
+                    addComment.PostedDate = c.PostedDate;
+                    addComment.LastUpdatedDate = newComment.PostedDate;
+                    addComment.CaseID = postId;
+                    addComment.VoteUp = c.VoteUp;
+                    addComment.VoteDown = c.VoteDown;
+                    await addToHistory("updated a comment on", c);
+                    await addNotification();
+                    await hService.EditComment(addComment, updateType);
+                }
+                else if ((updateType == -3 || updateType == -4) && usr.PublicId != c.PosterId)
+                {
+                    bool isVoted = await hService.CheckVoter(c.PosterId, usr.PublicId, c.ID);
+                    if (!isVoted)
+                    {
+                        if (updateType == -3)
+                        {
+                            addComment.VoteUp = c.VoteUp + 1;
+                            await addToHistory("added an up vote on", c);
+                            await addNotification();
+                        }
+                        else
+                        {
+                            addComment.VoteDown = c.VoteDown + 1;
+                            await addToHistory("added a down vote on", c);
+                            await addNotification();
+                        }
+                        Vote newVote = new Vote();
+                        newVote.ID = 0;
+                        newVote.CID = c.ID;
+                        newVote.VoteType = updateType;
+                        newVote.PosterID = c.PosterId;
+                        newVote.VoterID = usr.PublicId;
+                        newVote.VoteDate = DateTime.Now;
+                        await hService.AddVote(newVote);
+                        await hService.EditComment(addComment, updateType);
+                    }
 
-                await hService.EditComment(newComment);
-
+                }
                 isSubmitted = true;
             }
         }
         EditThis = -1;
         newComment.Comment = "";
         CommentList = await hService.GetCommentsNoTracking(postId);
+        await getProfilePic();
         imgUrl = "";
         newComment.imgUrl = "";
+        newComment.ProfileUrl = "";
         isOpened = true;
-        await addToHistory("updated a comment on a post");
         this.StateHasChanged();
     }
-    private async Task addToHistory(string historyType)
+    private async Task addToHistory(string historyType, CaseComment c)
     {
         //history stuffs
         PostHistory newHistory = new PostHistory();
         newHistory.ID = 0;
         newHistory.PostID = postId;
+        newHistory.UserID = c.PosterId;
         newHistory.CreationDate = DateTime.Now;
-        newHistory.UserID = usr.PublicId;
+        newHistory.PosterID = usr.PublicId;
         newHistory.UserDisplayName = usr.FirstName + " " + usr.LastName;
+        newHistory.UserDisplayName2 = c.PosterName;
         newHistory.Title = caseInfo.Topic;
         newHistory.Detail = caseInfo.Description;
         newHistory.HistoryTypes = historyType;
-        await hService.AddHistory(newHistory);
+        lastHistoryID = await hService.AddHistory(newHistory);
+    }
+    private async Task addNotification()
+    {
+        bool hasPoster = false;
+        List<Follow> followerList = new List<Follow>();
+        followerList = await hService.GetAllFollowers(usr.PublicId);
+        foreach (var follower in followerList)
+        {
+            if(follower.FollowerUserID == caseInfo.PosterID || usr.PublicId != caseInfo.PosterID)
+            {
+                hasPoster = true;
+            }
+            Notification newNotifs = new Notification();
+            newNotifs.ID = 0;
+            newNotifs.SenderID = follower.FollowingUserID;
+            newNotifs.ReceiverID = follower.FollowerUserID;
+            newNotifs.NotificationID = lastHistoryID;
+            newNotifs.IsRead = -1;
+            newNotifs.IsResponseNeeded = -1;
+            newNotifs.CreationDate = DateTime.Now;
+            await hService.AddNotification(newNotifs);
+        }
+        if (!hasPoster && usr.PublicId != caseInfo.PosterID)
+        {
+            Notification newNotifs = new Notification();
+            newNotifs.ID = 0;
+            newNotifs.SenderID = usr.PublicId;
+            newNotifs.ReceiverID = caseInfo.PosterID;
+            newNotifs.NotificationID = lastHistoryID;
+            newNotifs.IsRead = -1;
+            newNotifs.IsResponseNeeded = -1;
+            newNotifs.CreationDate = DateTime.Now;
+            await hService.AddNotification(newNotifs);
+        }
+    }
+    private async Task viewPage(int id)
+    {
+        NavigationManager.NavigateTo("/PersonalPage/" + id);
     }
     private string ParseMedicalSpecialty(MedicalSpecialtyType MedicalSpecialty)
     {
@@ -378,5 +493,22 @@
                 break;
         }
         return medicalSpecialty;
+    }
+    private async Task getProfilePic()
+    {
+        foreach (var c in CommentList)
+        {
+            profile = new Profile();
+            profile = await pService.GetProfile(c.PosterId);
+            if (profile.ProfileUrl != null)
+            {
+                c.ProfileUrl = profile.ProfileUrl;
+            }
+            else
+            {
+                c.ProfileUrl = "/img/hippra/blank-profile.png";
+            }
+        }
+
     }
 }

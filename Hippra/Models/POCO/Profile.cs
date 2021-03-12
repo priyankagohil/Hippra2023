@@ -59,5 +59,8 @@ namespace Hippra.Models.POCO
         public int PublicId { get; set; }
         public string DateJoined { get; set; }
         public UserOnlineStatus Status { get; set; }
+        public string ProfileUrl { get; set; }
+        public string BackgroundUrl { get; set; }
+        public string Bio { get; set; }
     }
 }

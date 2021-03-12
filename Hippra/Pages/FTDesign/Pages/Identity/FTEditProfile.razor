@@ -26,7 +26,7 @@
     <Authorized Context="SaveProfileContext">
         <FTSubHeaderBar Title="Edit Profile" HasSeparator="false">
             <div class="flex-grow-1"></div>
-            <a href="FTProfile/-1">View</a>
+            <a href="FTProfile/-1/0">View</a>
         </FTSubHeaderBar>
         <div class="ft-main-px">
             <div class="card">
@@ -478,7 +478,7 @@
             newHistory.ID = 0;
             newHistory.PostID = -1;
             newHistory.CreationDate = DateTime.Now;
-            newHistory.UserID = usr.PublicId;
+            newHistory.PosterID = usr.PublicId;
             newHistory.UserDisplayName = usr.FirstName + " " + usr.LastName;
             newHistory.Title = "Hippra";
             newHistory.Detail = "Profile updated";

@@ -461,6 +461,8 @@
 
             Case validatedCase = new Case();
             PostHistory newHistory = new PostHistory();
+            List<Follow> followerList = new List<Follow>();
+            int lastHistoryId = -1;
 
             // case stuffs
             validatedCase.DateCreated = DateTime.Now;
@@ -499,17 +501,30 @@
         newHistory.ID = 0;
         newHistory.PostID = pCase.ID;
         newHistory.CreationDate = DateTime.Now;
-        newHistory.UserID = usr.PublicId;
+        newHistory.PosterID = usr.PublicId;
         newHistory.UserDisplayName = usr.FirstName + " " + usr.LastName;
         newHistory.Title = pCase.Topic;
         newHistory.Detail = pCase.Description;
         newHistory.HistoryTypes = "added a new case";
-        await hService.AddHistory(newHistory);
-
-        NavigationManager.NavigateTo("/");
+        lastHistoryId = await hService.AddHistory(newHistory);
+        //follow
+        followerList = await hService.GetAllFollowers(usr.PublicId);
+        foreach(var follower in followerList)
+        {
+            Notification newNotifs = new Notification();
+            newNotifs.ID = 0;
+            newNotifs.SenderID = follower.FollowingUserID;
+            newNotifs.ReceiverID = follower.FollowerUserID;
+            newNotifs.NotificationID = lastHistoryId;
+            newNotifs.IsRead = -1;
+            newNotifs.IsResponseNeeded = -1;
+            newNotifs.CreationDate = DateTime.Now;
+            await hService.AddNotification(newNotifs);
         }
-
+        NavigationManager.NavigateTo("/");
     }
+
+}
 
 
 

@@ -418,3 +418,377 @@ input:checked ~ #caseImg {
 .activity-log-icon{
     font-size: 48px;
 }
+.vote-bar {
+    vertical-align: middle;
+    font-size: 18px;
+    text-align: center;
+    max-width: 12%;
+    ba
+}
+.vote-button-up, .vote-button-down{
+    font-size: 37px;
+    padding: 0px;
+    color: darkgray;
+}
+.wrap-button-up, .wrap-button-down {
+    position: relative;
+}
+.wrap-button-up .up-content {
+    display: none;
+    width: 200px;
+    position: absolute;
+    bottom: 0%;
+    left: 90%;
+    margin: 5px;
+    background-color: #fff;
+    padding: .5em;
+    border-radius: 16px;
+    box-shadow: 0px 0px 35px -16px rgba(0, 0, 0, 0.75);
+    z-index: 1;
+}
+.wrap-button-down .down-content {
+    display: none;
+    width: 200px;
+    position: absolute;
+    bottom: 0%;
+    left: 90%;
+    margin: 7px;
+    background-color: #fff;
+    padding: .5em;
+    border-radius: 16px;
+    box-shadow: 0px 0px 35px -16px rgba(0, 0, 0, 0.75);
+    z-index: 1;
+}
+
+.wrap-button-up:hover .up-content {
+    display: block;
+}
+.wrap-button-down:hover .down-content {
+    display: block;
+}
+.vote-button-up:hover{
+    color: green;
+}
+.vote-button-down:hover{
+    color: red;
+}
+.personal-card{
+    background-color: lightgrey;
+}
+.profile-col{
+  float: left;
+  padding: 10px;
+  height: 300px;
+  font-size: 2vw;
+}
+.side,  .mid-top-bar, .wrap{
+
+min-width: 200px;
+position: sticky;
+top:0;
+border: 1px solid #c3c3c3;
+border-radius: 16px;
+background: darkgrey;
+}
+
+.mid, .mid-top-bar{
+min-width: 50%;
+height: 900px;
+}
+.mid-top-bar{
+height:150px;
+}
+.mid-top-bar:hover .upload-bg{
+    display:block;
+}
+.col-space{
+width: 1.5%;
+}
+.p-body{
+min-width: 863px;
+background: lightgrey;
+}
+
+
+.circle-pic, .square-pic{
+    height: 120px;
+    width: 120px;
+    border: 1px solid #c3c3c3;
+    border-radius: 50%;
+    background: none;
+    position: absolute;
+    bottom: 35%;
+    left: 7%;
+    background: lightgrey;
+}
+.circle-pic:hover .upload-bg{
+    display: block;
+}
+.upload-bg:focus {
+    outline: 0;
+}
+.circle-pic:focus{
+    outline: 0;
+}
+.square-pic{
+height: 190px;
+width: 190px;
+bottom: 25%;
+border-radius: 16px;
+left:2%;
+}
+.square-pic:focus {
+    outline: 0;
+}
+.circle-pic-personal {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background: lightgrey;
+}
+.circle-pic-personal:focus {
+    outline: 0;
+}
+.square-pic-rank {
+    height: 130px;
+    width: 130px;
+    bottom: 36%;
+    border-radius: 16px;
+    left: 16%;
+    z-index: 1;
+    position: absolute;
+}
+.square-pic-rank:focus {
+    outline: 0;
+}
+.wrap {
+    position: relative;
+    background: white;
+    padding-bottom: 165px;
+    border: 1px solid #c3c3c3;
+    border-radius: 16px;
+    z-index: 1;
+}
+.upload-bg{
+display: none;
+z-index: 2;
+font-size: 16px;
+float: right;
+margin: 10px;
+height: 30px;
+width: 30px;
+border-radius: 50%;
+}
+.usr-title, .usr-loc, .usr-name{
+position: absolute;
+bottom:13%;
+left: 5%;
+}
+.usr-loc{
+bottom: 4%;
+}
+.usr-name{
+bottom:22%;
+ 
+}
+.prof-c-btn, .prof-f-btn {
+    font-size: 16px;
+    padding: 4px;
+    border-radius: 16px;
+    background: royalblue;
+    color: white;
+    position: absolute;
+    bottom: 38%;
+    right: 20%;
+}
+.prof-f-btn{
+right: 5%;
+}
+.prof-f-btn:focus {
+    outline: 0;
+}
+.prof-c-btn:focus {
+    outline: 0;
+}
+
+.filter-bar, .profile-tab {
+    background: white;
+    display: flex;
+    justify-content: center;
+    padding: 8px;
+    font-size: 20px;
+    border-radius: 16px;
+    margin-bottom: 2px;
+}
+.bar-btn{
+padding: 10px;
+padding-left:35px;
+padding-right:35px;
+border: none;
+background: white;
+border-radius: 16px;
+margin:1px;
+}
+.bar-btn:after{
+	display:block;
+  	content: '';
+  	border-bottom: solid 3px #019fb6;  
+  	transform: scaleX(0);  
+  	transition: transform 450ms ease-in-out;
+}
+.bar-btn:hover:after { transform: scaleX(1); 
+}
+.bar-btn:hover{
+background: lightgrey;
+}
+.pf-top{
+position: sticky;
+top:0;
+}
+.stats{
+border-bottom: solid 1px lightgrey;
+text-align: center;
+margin: 5px;
+margin-bottom: 20px;
+}
+.circle-badge{
+bottom:3%;
+left: 19%;
+z-index:2;
+}
+.badge-pic {
+    bottom: 13%;
+    left: 3%;
+    z-index: 2;
+    height: 175px;
+    width: 185px;
+    border-radius: inherit;
+    border: none;
+    background: none;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.image-upload > input {
+    display: none;
+}
+
+.image-upload span {
+    cursor: pointer;
+}
+.vote-label {
+    margin-left: 5px;
+    margin-bottom: 0px;
+    font-size: 22px;
+}
+.comment-pic-item{
+    vertical-align: super;
+}
+.p-case-detail{
+    font-size: 1rem;
+}
+.badge-pic-diamon {
+    bottom: -5%;
+    left: -12%;
+    z-index: 2;
+    height: 245px;
+    width: 255px;
+    border-radius: inherit;
+    border: none;
+    background: none;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.profile-tab {
+    justify-content: space-between;
+    display: block;
+}
+.bio-edit{
+    display: none;
+    z-index: 2;
+    font-size: 20px;
+    float: right;
+    margin: -20px;
+    height: 40px;
+    width: 40px;
+    border: none;
+    position: absolute;
+    right: 3%;
+    background: transparent;
+}
+.show-bio {
+    padding: 8px;
+    border-radius: 16px;
+    font-size: medium;
+    width: 45vw;
+    text-align: justify;
+    padding: 20px;
+    min-width: 400px;
+}
+.show-bio:hover .bio-edit{
+    display: block;
+    
+}
+.show-bio:hover {
+       background: linen;
+}
+.nav-btn {
+    font-size: 19px;
+    height: 40px;
+    width: 40px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    color: #212529;
+}
+.nav-btn:hover {
+    background: #E0E0E0;
+   
+}
+.notif-label {
+    position: relative;
+    display: inline-table;
+    left: auto;
+    background: red;
+    padding: 1px 7px;
+    font-size: 8px;
+    color: white;
+    margin-left: -23px;
+    border-radius: 10em
+}
+.nav-btn:focus {
+    outline: 0;
+}
+.clear-notif {
+    display: none;
+    margin-top: -17px;
+    margin-right: 2px;
+    z-index: 2;
+    font-size: 20px;
+    float: right;
+    height: 40px;
+    width: 40px;
+    border: none;
+    border-radius: 50%;
+    position: absolute;
+    right: 3%;
+    background: red;
+    opacity: 0.6;
+    transition: 1s;
+}
+.notif-card:hover .clear-notif{
+    display: block;
+}
+.clear-notif:hover {
+    opacity: 1;
+}
+.notif-btn-a, .notif-btn-d, .notif-btn-v {
+    border-radius: 16px;
+    background: forestgreen;
+    margin: 1px;
+}
+.notif-btn-d {
+    background: tomato;  
+}
+.notif-btn-v {
+    background: skyblue;
+}
