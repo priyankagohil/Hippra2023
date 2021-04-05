@@ -92,8 +92,14 @@ namespace Hippra.Pages.FTDesign.Pages.Identity
 
             if (ModelState.IsValid)
             {
+                var validateResult = await UserManagerExtensions.ValidateAccountExist(_userManager, Input.Email);
+                if (!validateResult)
+                {
+                    ModelState.AddModelError(string.Empty, "Account Does NOT exist!");
+                    return Page();
+                }
                 // check for validation first
-                var validateResult = await UserManagerExtensions.ValidateAccountApproval(_userManager, Input.Email);
+                validateResult = await UserManagerExtensions.ValidateAccountApproval(_userManager, Input.Email);
                 if (!validateResult)
                 {
                     ModelState.AddModelError(string.Empty, "Pending Account Approval");

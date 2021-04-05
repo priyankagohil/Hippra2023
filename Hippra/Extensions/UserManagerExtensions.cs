@@ -73,6 +73,18 @@ namespace Hippra.Extensions
                 return lastItem.PublicId;
             }
         }
+        public static async Task<bool> ValidateAccountExist(this UserManager<AppUser> um, string emailAccount)
+        {
+            var account = await um?.Users.AsNoTracking().FirstOrDefaultAsync(x => x.NormalizedEmail == emailAccount.ToUpper());
+            if (account != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public static async Task<bool> ValidateAccountApproval(this UserManager<AppUser> um, string emailAccount)
         {
             var account = await um?.Users.AsNoTracking().FirstOrDefaultAsync(x => x.NormalizedEmail == emailAccount.ToUpper());
