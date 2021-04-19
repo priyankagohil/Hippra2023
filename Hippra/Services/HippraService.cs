@@ -1277,10 +1277,13 @@ namespace Hippra.Services
             }
             return "NC";
         }
-        public async Task<List<Connection>> GetAllConnections(int my_Id)
+        public async Task<ConnResultModel> GetAllConnections(int my_Id, int targetPage, int PageSize)
         {
-            List<Connection> conn = await _context.Connections.Where(c => (c.UserID == my_Id || c.FriendID == my_Id) && c.Status == 1).ToListAsync();
-            return conn;
+            List<Connection> conn = await _context.Connections.Where(c => (c.UserID == my_Id || c.FriendID == my_Id) && c.Status == 1).OrderByDescending(s => s.ID).Skip((targetPage - 1) * PageSize).Take(PageSize).ToListAsync(); ;
+            ConnResultModel result = new ConnResultModel();
+            result.Connections = conn;
+            result.TotalCount = await _context.Connections.AsNoTracking().CountAsync(c => (c.UserID == my_Id || c.FriendID == my_Id) && c.Status == 1);
+            return result;
         }
 
         public async Task<bool> RemoveConnection(int userId, int fID)

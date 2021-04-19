@@ -423,7 +423,6 @@ input:checked ~ #caseImg {
     font-size: 18px;
     text-align: center;
     max-width: 12%;
-    ba
 }
 .vote-button-up, .vote-button-down{
     font-size: 37px;
@@ -492,8 +491,8 @@ background: darkgrey;
 }
 
 .mid, .mid-top-bar{
-min-width: 50%;
-height: 900px;
+min-width: 65%;
+
 }
 .mid-top-bar{
 height:150px;
@@ -504,9 +503,10 @@ height:150px;
 .col-space{
 width: 1.5%;
 }
-.p-body{
-min-width: 863px;
-background: lightgrey;
+.p-body {
+    min-width: 500px;
+    min-height: 2100px;
+    background: lightgrey;
 }
 
 
@@ -719,7 +719,6 @@ z-index:2;
     padding: 8px;
     border-radius: 16px;
     font-size: medium;
-    width: 45vw;
     text-align: justify;
     padding: 20px;
     min-width: 400px;
@@ -791,4 +790,38 @@ z-index:2;
 }
 .notif-btn-v {
     background: skyblue;
+}
+.container {
+    display: flex;
+}
+#item1 {order:1;}
+#item2 {order: 2;}
+#item3 {order: 3;}
+@media only screen and (max-width: 1200px) {
+    .container {
+        flex-flow: row wrap;
+    }
+    .side{
+        margin: 0px;
+    }
+    .mid {
+        min-width: 50%;
+    }
+}
+@media only screen and (max-width: 780px) {
+    .side {
+        display: none;
+    }
+    .mid {
+        min-width: 90%;
+    }
+}
+@media only screen and (max-width: 700px) {
+
+   
+    .mid {
+        position: relative;
+        left: -7%;
+        min-width: 580px;
+    }
 }

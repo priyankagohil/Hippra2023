@@ -28,232 +28,246 @@
         <div class="card-body p-body">
             <div class="p-body">
                 <div class="row" style="justify-content: center">
-                    <div class="profile-col side col-xs-1 right-col" style="background-color: @DisplayHonorbg">
+                    <div class="container">
+                        <div id="item1" class="profile-col side col-xs-1 right-col" style="background-color: @DisplayHonorbg">
 
-                        <button class="circle-pic @badgeType" style="background-image:url('@DisplayBadgeUrl'); @ResidencyPosition">
-                        </button>
-                        <button class="square-pic bb" style="background:@DisplayRankBg;">
-                        </button>
-                        <button class="square-pic-rank bb" style="background-image:url('@DisplayRankUrl') ;background-size: 100%;">
-                        </button>
-                    </div>
-                    <div class="profile-col mid">
-                        <div class="pf-top">
-                            <div class="wrap">
-                                <div class="mid-top-bar" style="background-image:url('@DisplayBackgroundUrl') ;background-size: 100%;">
-                                    @if (usr.PublicId == userId)
-                                    {
-                                        <button class="image-upload upload-bg">
-                                            <label for="file-input-bg">
-                                                <span class="fa fa-photo"></span>
-                                            </label>
-
-                                            <InputFile id="file-input-bg" type="file" OnChange="@HandleUploadBg" />
-                                        </button>
-                                    }
-                                </div>
-                                <div class="image-upload circle-pic" style="background-image: url('@DisplayProfileUrl');background-size: 100%;">
-                                    @if (usr.PublicId == userId)
-                                    {
-                                        <button class="image-upload upload-bg">
-                                            <label for="file-input-prof">
-                                                <span class="fa fa-photo"></span>
-                                            </label>
-
-                                            <InputFile id="file-input-prof" type="file" OnChange="@HandleUploadProf" />
-                                        </button>
-                                    }
-                                </div>
-                                <h4 class="usr-name">@profile.FirstName @profile.LastName</h4>
-                                @if (@profile.ResidencyHospital != null)
-                                {
-                                    <h6 class="usr-loc">@medicalSpecialty at @profile.ResidencyHospital</h6>
-                                }
-                                else
-                                {
-                                    <h6 class="usr-loc">@medicalSpecialty</h6>
-                                }
-                                @if (@profile.EducationDegree != null && @profile.MedicalSchoolAttended != null)
-                                {
-                                    <h6 class="usr-title">@profile.EducationDegree - @profile.MedicalSchoolAttended</h6>
-                                }
-                                else
-                                {
-                                    <h6 class="usr-title">@profile.EducationDegree @profile.MedicalSchoolAttended</h6>
-                                }
-                                @if (usr.PublicId != userId)
-                                {
-                                    @if (connectStatus == "C")
-                                    {
-                                        <button class="prof-c-btn" @onclick="@RemoveConnection">Connected</button>
-                                    }
-                                    else if (connectStatus == "NC")
-                                    {
-                                        <button class="prof-c-btn" @onclick="@SendAnInvitation">Connect+</button>
-                                    }
-                                    else
-                                    {
-                                        <button class="prof-c-btn" @onclick="@RemoveConnection">Pending</button>
-                                    }
-                                    @if (isFollowed)
-                                    {
-                                        <button class="prof-f-btn" @onclick="@RemoveFromFollowerList">Followed</button>
-                                    }
-                                    else
-                                    {
-                                        <button class="prof-f-btn" @onclick="@AddToFollowerList">Follow+</button>
-                                    }
-
-                                }
-                            </div>
-
-                            <div class="filter-bar">
-                                <button class="bar-btn & @cssAbout" @onclick="(e => ShowAboutTab())">About</button>
-                                <button class="bar-btn @cssPost" @onclick="(e => ShowPostTab())">Post</button>
-                                <button class="bar-btn @cssConn" @onclick="(e => ShowConnTab())">Connection</button>
-                            </div>
-                            @if (actionOptions == 0)
-                            {
-                                <div class="profile-tab">
-                                    <p class=" text-dark"> Biography</p>
-
-                                    <div>
-                                        @if (editBio)
+                            <button class="circle-pic @badgeType" style="background-image:url('@DisplayBadgeUrl'); @ResidencyPosition">
+                            </button>
+                            <button class="square-pic bb" style="background:@DisplayRankBg;">
+                            </button>
+                            <button class="square-pic-rank bb" style="background-image:url('@DisplayRankUrl') ;background-size: 100%;">
+                            </button>
+                        </div>
+                        <div id="item2" class="profile-col mid">
+                            <div class="pf-top">
+                                <div class="wrap">
+                                    <div class="mid-top-bar" style="background-image:url('@DisplayBackgroundUrl') ;background-size: 100%;">
+                                        @if (usr.PublicId == userId)
                                         {
-                                            <EditForm Model="@profile" OnValidSubmit="@SaveBio">
-                                                <div class="">
-                                                    <div class="">
-                                                        <InputTextArea class="form-control" required placeholder="About me..." @bind-Value="@profile.Bio" />
-                                                        <hr />
-                                                        <div class="mx-4 d-flex justify-content-between">
-                                                            <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
-                                                            <button id="create-button" type="submit" class="btn btn-primary" @onclick="Submitted">Save</button>
-                                                        </div>
-                                                    </div>
+                                            <button class="image-upload upload-bg">
+                                                <label for="file-input-bg">
+                                                    <span class="fa fa-photo"></span>
+                                                </label>
 
-                                                </div>
-                                            </EditForm>
+                                                <InputFile id="file-input-bg" type="file" OnChange="@HandleUploadBg" />
+                                            </button>
+                                        }
+                                    </div>
+                                    <div class="image-upload circle-pic" style="background-image: url('@DisplayProfileUrl');background-size: 100%;">
+                                        @if (usr.PublicId == userId)
+                                        {
+                                            <button class="image-upload upload-bg">
+                                                <label for="file-input-prof">
+                                                    <span class="fa fa-photo"></span>
+                                                </label>
 
+                                                <InputFile id="file-input-prof" type="file" OnChange="@HandleUploadProf" />
+                                            </button>
+                                        }
+                                    </div>
+                                    <h4 class="usr-name">@profile.FirstName @profile.LastName</h4>
+                                    @if (@profile.ResidencyHospital != null)
+                                    {
+                                        <h6 class="usr-loc">@medicalSpecialty at @profile.ResidencyHospital</h6>
+                                    }
+                                    else
+                                    {
+                                        <h6 class="usr-loc">@medicalSpecialty</h6>
+                                    }
+                                    @if (@profile.EducationDegree != null && @profile.MedicalSchoolAttended != null)
+                                    {
+                                        <h6 class="usr-title">@profile.EducationDegree - @profile.MedicalSchoolAttended</h6>
+                                    }
+                                    else
+                                    {
+                                        <h6 class="usr-title">@profile.EducationDegree @profile.MedicalSchoolAttended</h6>
+                                    }
+                                    @if (usr.PublicId != userId)
+                                    {
+                                        @if (connectStatus == "C")
+                                        {
+                                            <button class="prof-c-btn" @onclick="@RemoveConnection">Connected</button>
+                                        }
+                                        else if (connectStatus == "NC")
+                                        {
+                                            <button class="prof-c-btn" @onclick="@SendAnInvitation">Connect+</button>
                                         }
                                         else
                                         {
-                                            @if (usr.PublicId != userId)
-                                            {
-                                                @if (@profile.Bio == null)
-                                                {
-                                                    <div class="show-bio">This user has not added biography to their Hippra profile yet.</div>
+                                            <button class="prof-c-btn" @onclick="@RemoveConnection">Pending</button>
+                                        }
+                                        @if (isFollowed)
+                                        {
+                                            <button class="prof-f-btn" @onclick="@RemoveFromFollowerList">Followed</button>
+                                        }
+                                        else
+                                        {
+                                            <button class="prof-f-btn" @onclick="@AddToFollowerList">Follow+</button>
+                                        }
 
-                                                }
-                                                else
-                                                {
-                                                    <div class="show-bio">
-                                                        <p>@profile.Bio</p>
+                                    }
+                                </div>
+
+                                <div class="filter-bar">
+                                    <button class="bar-btn & @cssAbout" @onclick="(e => ShowAboutTab())">About</button>
+                                    <button class="bar-btn @cssPost" @onclick="(e => ShowPostTab())">Post</button>
+                                    <button class="bar-btn @cssConn" @onclick="(e => ShowConnTab())">Connection</button>
+                                </div>
+                                @if (actionOptions == 0)
+                                {
+                                    <div class="profile-tab">
+                                        <p class=" text-dark"> Biography</p>
+
+                                        <div>
+                                            @if (editBio)
+                                            {
+                                                <EditForm Model="@profile" OnValidSubmit="@SaveBio">
+                                                    <div class="">
+                                                        <div class="">
+                                                            <InputTextArea class="form-control" required placeholder="About me..." @bind-Value="@profile.Bio" />
+                                                            <hr />
+                                                            <div class="mx-4 d-flex justify-content-between">
+                                                                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                                                                <button id="create-button" type="submit" class="btn btn-primary" @onclick="Submitted">Save</button>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
-                                                }
+                                                </EditForm>
+
                                             }
                                             else
                                             {
-                                                @if (@profile.Bio == null)
+                                                @if (usr.PublicId != userId)
                                                 {
-                                                    <div class="show-bio">
-                                                        <button class="bio-edit" @onclick="@EditBio"><span class="fa fa-edit"></span></button>
-                                                        Let other people know about your story...
-                                                    </div>
+                                                    @if (@profile.Bio == null)
+                                                    {
+                                                        <div class="show-bio">This user has not added biography to their Hippra profile yet.</div>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="show-bio">
+                                                            <p>@profile.Bio</p>
+                                                        </div>
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    <div class="show-bio">
-                                                        <button class="bio-edit" @onclick="@EditBio"><span class="fa fa-edit"></span></button>
-                                                        <p>@profile.Bio</p>
-                                                    </div>
+                                                    @if (@profile.Bio == null)
+                                                    {
+                                                        <div class="show-bio">
+                                                            <button class="bio-edit" @onclick="@EditBio"><span class="fa fa-edit"></span></button>
+                                                            Let other people know about your story...
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="show-bio">
+                                                            <button class="bio-edit" @onclick="@EditBio"><span class="fa fa-edit"></span></button>
+                                                            <p>@profile.Bio</p>
+                                                        </div>
+                                                    }
                                                 }
-                                            }
 
+
+                                            }
+                                        </div>
+                                    </div>
+
+
+                                }
+                                else if (actionOptions == 1)
+                                {
+                                    @if (stats.NumCase > 0)
+                                    {
+
+                                        foreach (var c in SearchResults)
+                                        {
+                                            <div class="border rounded p-4 mb-2 hover-class bg-white" @onclick="(e => OpenViewModal(c.ID))">
+                                                <div class="row">
+                                                    <div class="col-md-9 align-self-center">
+                                                        <h4 class="">@c.Topic</h4>
+
+                                                        <hr />
+                                                    </div>
+                                                    <div class="col-md-3 text-right">
+
+                                                        <div class="p-case-detail">Priority: @c.Priority</div>
+                                                        <div class="p-case-detail">@c.DateCreated</div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        @*<div class=""><strong>Category: </strong> @c.ParsedCategory · @c.ParsedSubCategory</div>*@
+                                                        <div class="p-case-detail"><strong>Description:</strong> @c.Description.Left(200)</div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
 
                                         }
-                                    </div>
-                                </div>
-
-
-                            }
-                            else if (actionOptions == 1)
-                            {
-                                @if (stats.NumCase > 0)
-                                {
-
-                                    foreach (var c in SearchResults)
+                                    }
+                                    else
                                     {
-                                        <div class="border rounded p-4 mb-2 hover-class bg-white" @onclick="(e => OpenViewModal(c.ID))">
-                                            <div class="row">
-                                                <div class="col-md-9 align-self-center">
-                                                    <h4 class="">@c.Topic</h4>
-
-                                                    <hr />
-                                                </div>
-                                                <div class="col-md-3 text-right">
-
-                                                    <div class="p-case-detail">Priority: @c.Priority</div>
-                                                    <div class="p-case-detail">@c.DateCreated</div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col">
-                                                    @*<div class=""><strong>Category: </strong> @c.ParsedCategory · @c.ParsedSubCategory</div>*@
-                                                    <div class="p-case-detail"><strong>Description:</strong> @c.Description.Left(200)</div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-
+                                        <div class="profile-tab">No Case.</div>
                                     }
                                 }
                                 else
                                 {
-                                    <div class="profile-tab">No Case.</div>
-                                }
-                            }
-                            else
-                            {
-                                @if (connList.Count != 0)
-                                {
-                                    @foreach (var c in connList)
+                                    @if (connList.Count != 0)
                                     {
-                                        <div class="profile-tab" style="margin-bottom: 3px; padding: 20px;">
-                                            <button class="circle-pic-personal circle-badge" style="background-image:url('@c.FProfileUrl') ;background-size: 100%;" @onclick="(e => { viewPage(c.FriendID); })"></button>
-                                            <strong class="comment-pic-item"> @c.FullName </strong>
-                                            <div>
-                                                @c.CurrentPosition
+                                        @foreach (var c in connList)
+                                        {
+                                            <div class="profile-tab" style="margin-bottom: 3px; padding: 20px;">
+                                                <button class="circle-pic-personal circle-badge" style="background-image:url('@c.FProfileUrl') ;background-size: 100%;" @onclick="(e => { viewPage(c.FriendID); })"></button>
+                                                <strong class="comment-pic-item"> @c.FullName </strong>
+                                                <div>
+                                                    @c.CurrentPosition
+                                                </div>
+                                                <div>
+                                                    @c.Location
+                                                </div>
+                                                <hr />
                                             </div>
-                                            <div>
-                                                @c.Location
+
+                                        }
+                                        @if (CountConn > PageSize)
+                                        {
+                                            <div class="mb-3 text-left">
+                                                <br />
+                                                <hr />
+                                                <br />
+                                                <FTPagination paginationData="paginationConnData" ChangePage="ChangePageConn" />
+                                                <br />
                                             </div>
-                                            <hr />
+
+                                        }
+                                        <br />
+                                    }
+                                    else
+                                    {
+                                        <div class="profile-tab">
+                                            No Connection yet.
                                         </div>
-                                        
                                     }
                                 }
-                                else
-                                {
-                                    <div class="profile-tab">
-                                        No Connection yet.
-                                    </div>
-                                }
-                                }
+                            </div>
+
                         </div>
+                        <div id="item3" class="profile-col side">
+                            <div class="">
+                                <h5 class="stats">Stats:</h5>
 
-                    </div>
-                    <div class="profile-col side">
-                        <div class="">
-                            <h5 class="stats">Stats:</h5>
+                                <h6><span class="fa fa-newspaper-o"></span> Cases: @stats.NumCase</h6>
+                                <h6><span class="fa fa-comments-o"></span> Answers: @stats.Answers</h6>
+                                <h6><span class="fa fa-thumbs-o-up"></span> Up Vote: @stats.UpVote</h6>
+                                <h6><span class="fa fa-unsorted"></span> Votes: @stats.Votes</h6>
+                                <h6><span class="fa fa-users"></span> Reputation: @stats.Reputation</h6>
+                                <h6><span class="fa fa-user-md"></span> Rank: @stats.Rank</h6>
+                                <h6><span class="fa fa-trophy"></span> badge: @stats.Badge</h6>
 
-                            <h6><span class="fa fa-newspaper-o"></span> Cases: @stats.NumCase</h6>
-                            <h6><span class="fa fa-comments-o"></span> Answers: @stats.Answers</h6>
-                            <h6><span class="fa fa-thumbs-o-up"></span> Up Vote: @stats.UpVote</h6>
-                            <h6><span class="fa fa-unsorted"></span> Votes: @stats.Votes</h6>
-                            <h6><span class="fa fa-users"></span> Reputation: @stats.Reputation</h6>
-                            <h6><span class="fa fa-user-md"></span> Rank: @stats.Rank</h6>
-                            <h6><span class="fa fa-trophy"></span> badge: @stats.Badge</h6>
-
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -275,6 +289,11 @@
     private List<ParsedCase> SearchResults { get; set; } = new List<ParsedCase>();
     private List<Case> cases { get; set; } = new List<Case>();
     private List<Connection> connList { get; set; } = new List<Connection>();
+    public List<FTPaginationModel> paginationConnData = new List<FTPaginationModel>();
+    public int PageSize { get; set; } = 10;
+    public int CountConn { get; set; }
+    public int TotalConnPages => (int)Math.Ceiling(decimal.Divide(CountConn, PageSize));
+    public int CurrentConnPage { get; set; } = 1;
     private string fileName = "";
     private string imgUrl = "";
     private string savedImgUrl = "";
@@ -350,8 +369,20 @@
             connectStatus = await hService.CheckConnection(usr.PublicId, userId);
             isFollowed = await hService.CheckFollower(usr.PublicId, userId);
         }
-        connList = await hService.GetAllConnections(userId);
-        foreach(var c in connList)
+        await GetConnResults(userId, CurrentConnPage);
+        if (CountConn > PageSize)
+        {
+            for (int i = 1; i <= TotalConnPages; i++)
+            {
+                paginationConnData.Add(new FTPaginationModel()
+                {
+                    id = i
+                });
+            }
+            var pg = paginationConnData.FirstOrDefault(s => s.id == CurrentConnPage);
+            pg.isActive = true;
+        }
+        foreach (var c in connList)
         {
             Profile prof = new Profile();
             if(c.FriendID == profile.PublicId)
@@ -800,7 +831,7 @@ private async Task RemoveConnection()
     await hService.RemoveConnection(usr.PublicId, userId);
     connectStatus = "NC";
     await addToHistory("disconnected with");
-    connList = await hService.GetAllConnections(userId);
+    await GetConnResults(userId, CurrentConnPage);
     StateHasChanged();
 }
 private async Task viewPage(int id)
@@ -860,6 +891,24 @@ private async Task Notify(int type)
     }
     newNotifs.CreationDate = DateTime.Now;
     await hService.AddNotification(newNotifs);
+}
+private async Task ChangePageConn(int targetPage)
+{
+
+    await GetConnResults(userId, targetPage);
+
+    var pg = paginationConnData.FirstOrDefault(s => s.isActive);
+    pg.isActive = false;
+    CurrentConnPage = targetPage;
+    pg = paginationConnData.FirstOrDefault(s => s.id == CurrentConnPage);
+    pg.isActive = true;
+    this.StateHasChanged();
+}
+private async Task GetConnResults(int id, int targetPage)
+{
+    var result = await hService.GetAllConnections(id, targetPage, PageSize);
+    connList = result.Connections;
+    CountConn = result.TotalCount;
 }
 }
 
