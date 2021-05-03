@@ -1111,9 +1111,14 @@ namespace Hippra.Services
         }
         public async Task<bool> AddComment(CaseComment CaseComment)
         {
-            _context.CaseComments.Add(CaseComment);
-            await _context.SaveChangesAsync();
-            
+            if (CaseComment != null)
+            {
+                CaseComment.LastUpdatedDate = DateTime.Now;
+                CaseComment.PostedDate = CaseComment.LastUpdatedDate;
+                _context.CaseComments.Add(CaseComment);
+                await _context.SaveChangesAsync();
+            }
+           
             return true;
         }
         public async Task<bool> EditComment(CaseComment EditedCaseComment,int type)
