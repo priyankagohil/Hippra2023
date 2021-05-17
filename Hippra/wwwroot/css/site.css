@@ -803,13 +803,13 @@ z-index:2;
 #item3 {
     order: 3;
 }
-/*
-.container {
-    display: flex;
+
+.Personal-page-display {
+    display: contents;
 }
 
 @media only screen and (max-width: 1200px) {
-    .container {
+    .Personal-page-display {
         flex-flow: row wrap;
     }
     .side{
@@ -819,20 +819,19 @@ z-index:2;
         min-width: 50%;
     }
 }
-@media only screen and (max-width: 780px) {
+@media only screen and (max-width: 900px){
+    #item3 {
+        order: 1;
+    }
+}
+@media only screen and (max-width: 800px) {
     .side {
         display: none;
     }
     .mid {
         min-width: 90%;
-    }
-}
-@media only screen and (max-width: 700px) {
-
-   
-    .mid {
-        position: relative;
+        position: initial;
         left: -7%;
         min-width: 580px;
     }
-}*/
+}
