@@ -51,19 +51,30 @@ namespace Hippra
 
             if (isWindows)
             {
+                services.AddDbContextFactory<ApplicationDbContext>(options =>
+                {
+                    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                });
+                
+
                 // for production
-                services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(
-                        Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
+                // services.AddDbContext<ApplicationDbContext>(options =>
+                //     options.UseSqlServer(
+                //         Configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
             }
             else
             {
 
-                services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlite(Configuration.GetConnectionString("DefaultSQLiteConnection")), ServiceLifetime.Transient);
+                // services.AddDbContext<ApplicationDbContext>(options =>
+                    // options.UseSqlite(Configuration.GetConnectionString("DefaultSQLiteConnection")), ServiceLifetime.Transient);
+                services.AddDbContextFactory<ApplicationDbContext>(opt =>
+                    opt.UseSqlite(Configuration.GetConnectionString("DefaultSQLiteConnection")));
+            
             }
 
-
+            services.AddTransient<ApplicationDbContext>(p => 
+                    p.GetRequiredService<IDbContextFactory<ApplicationDbContext>>()
+                    .CreateDbContext());
 
 
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)

@@ -211,7 +211,7 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            usr = await UserManager.GetUserAsync(user);
+            @*usr = await UserManager.GetUserAsync(user);
             if (usr != null)
             {
                 profile = new Profile();
@@ -225,7 +225,7 @@
                     DisplayProfileUrl = "/img/hippra/blank-profile.png";
                 }
                 userId = profile.PublicId;
-            }
+            }*@
         }
         if (IsFixTop)
         {
@@ -255,14 +255,15 @@
                 NavbarCustomCssClass = "navbar-dark bg-dark";
                 break;
         }
-        await updateNotification();
+        @*await updateNotification();*@
 
 
     }
     private async Task viewPage(int id)
     {
-        NavigationManager.NavigateTo("/");
-        NavigationManager.NavigateTo("/PersonalPage/" + id);
+        @*NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/PersonalPage/" + id);*@
+        NavigationManager.NavigateTo("/PersonalPage");
 
     }
     private async Task viewNotificationPage()

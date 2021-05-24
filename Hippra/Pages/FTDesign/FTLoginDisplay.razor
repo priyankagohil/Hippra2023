@@ -6,7 +6,7 @@
 @inject UserManager<AppUser> UserManager
 @inject IOptions<AppSettings> settings
 @using System.Security.Claims
-
+@inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
 <AuthorizeView>
     <Authorized>
         <ul class="navbar-nav">
@@ -35,8 +35,8 @@
             {
                 <FTTopbarPanel />
             }
-
-
+            <button class="nav-btn" @onclick="@viewNotificationPage"><span class="far fa-bell"></span></button>
+            <button class="nav-btn" @onclick="@viewPage"><i class="ms-Icon ms-Icon--Contact" aria-hidden="true"></i></button>
         </ul>
         @*@{
 
@@ -130,6 +130,15 @@
 
 
     }
+    private async Task viewPage()
+    {
+        NavigationManager.NavigateTo("/PersonalPage");
 
+    }
+    private async Task viewNotificationPage()
+    {
+        NavigationManager.NavigateTo("/FTProfile/" + -1 +"/"+ 2);
+
+    }
 
 }

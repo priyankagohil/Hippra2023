@@ -32,35 +32,45 @@ namespace Hippra.Services
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
 
-        private readonly ApplicationDbContext _context;
+        // private readonly ApplicationDbContext _context;
         private AppSettings AppSettings { get; set; }
 
         private AzureStorage Storage;
         private ImageHelper ImageHelper;
+        private IDbContextFactory<ApplicationDbContext> DbFactory;
         public HippraService(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             ApplicationDbContext context,
-            IOptions<AppSettings> settings)
+            IOptions<AppSettings> settings, 
+            IDbContextFactory<ApplicationDbContext>  dbFactory)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             AppSettings = settings?.Value;
-            _context = context;
+            // _context = context;
             Storage = new AzureStorage(settings);
             ImageHelper = new ImageHelper(Storage);
+            DbFactory = dbFactory;
         }
 
         public async Task<int> GetCaseCount()
         {
+
+            using var _context = DbFactory.CreateDbContext();
+
             return _context.Cases.AsNoTracking().Count();
         }
         public async Task<int> GetMyCaseCount(int profileId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             return _context.Cases.AsNoTracking().Where(s=>s.PosterID == profileId).Count();
         }
         public async Task<List<Case>> GetCases(int CurrentPage, int PageSize, int id)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             List<Case> cases = null;
             if (id == -1)
             {
@@ -74,6 +84,8 @@ namespace Hippra.Services
         }
         public async Task<SearchResultModel> GetCasesNoTracking(string searchString, bool showClosed, bool showTagOnly, int SubCategory, int Priority, int CurrentPage, int PageSize, int id, List<int> caseIDs)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             List<Case> cases = new List<Case>();
             Case tempCase = new Case();
             int count = 0;
@@ -863,16 +875,22 @@ namespace Hippra.Services
 
         public async Task<Case> GetCase(int CaseId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var result = await _context.Cases.FirstOrDefaultAsync(c => c.ID == CaseId);
             return result;
         }
         public async Task<Case> GetCaseNoTracking(int caseCaseId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var result = await _context.Cases.AsNoTracking().FirstOrDefaultAsync(c => c.ID == caseCaseId);
             return result;
         }
         public async Task<bool> AddCase(Case Case)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             _context.Cases.Add(Case);
             await _context.SaveChangesAsync();
 
@@ -881,6 +899,8 @@ namespace Hippra.Services
 
         public async Task<int> CreateEmptyCase(int userId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             string key = $"{Guid.NewGuid().ToString()}";
             int id = -1;
 
@@ -905,6 +925,8 @@ namespace Hippra.Services
 
         public async Task<bool> CreateCase(Case EditedCase)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var Case = await _context.Cases.FirstOrDefaultAsync(m => m.ID == EditedCase.ID);
 
             if (Case == null)
@@ -955,6 +977,8 @@ namespace Hippra.Services
 
         public async Task<bool> EditCase(Case EditedCase)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var Case = await _context.Cases.FirstOrDefaultAsync(m => m.ID == EditedCase.ID);
 
             if (Case == null)
@@ -1006,6 +1030,8 @@ namespace Hippra.Services
         
         public async Task<bool> CloseCase(int CaseId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var Case = await _context.Cases.FirstOrDefaultAsync(m => m.ID == CaseId);
 
             if (Case == null)
@@ -1036,10 +1062,14 @@ namespace Hippra.Services
         }
         private bool CaseExists(int id)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             return _context.Cases.AsNoTracking().Any(e => e.ID == id);
         }
         public async Task<bool> DeleteCase(int caseCaseId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var Case = await _context.Cases.FindAsync(caseCaseId);
 
             if (Case != null)
@@ -1053,6 +1083,8 @@ namespace Hippra.Services
         // Tags
         public async Task<bool> AddTag(CaseTags Tag)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             _context.CaseTags.Add(Tag);
             await _context.SaveChangesAsync();
 
@@ -1060,12 +1092,16 @@ namespace Hippra.Services
         }
         public async Task<List<CaseTags>> GetTagsNoTracking(int caseId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var result = await _context.CaseTags.AsNoTracking().Where(c => c.CaseID == caseId).ToListAsync();
             return result;
 
         }
         public async Task<bool> DeleteTag(CaseTags tag)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var CaseTag = await _context.CaseTags.FirstOrDefaultAsync(t => t.ID == tag.ID && t.Tag == tag.Tag);
 
             if (CaseTag != null)
@@ -1078,6 +1114,8 @@ namespace Hippra.Services
         }
         public async Task<List<int>> GetCasesIdByTag(string tag)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var CaseTag = await _context.CaseTags.AsNoTracking().Where(t => t.Tag == tag).ToListAsync();
             List<int> result = new List<int>();
             if (CaseTag != null)
@@ -1094,23 +1132,33 @@ namespace Hippra.Services
         // comments
         public async Task<List<CaseComment>> GetComments(int caseId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             return await _context.CaseComments.Where(c => c.CaseID== caseId).ToListAsync();
         }
         public async Task<List<CaseComment>> GetCommentsNoTracking(int caseId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var result = await _context.CaseComments.AsNoTracking().Where(c => c.CaseID == caseId).ToListAsync();
             return result;
         }
         public async Task<CaseComment> GetComment(int caseCommentId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             return await _context.CaseComments.FirstOrDefaultAsync(c => c.ID == caseCommentId);
         }
         public async Task<CaseComment> GetCommentNoTracking(int caseCommentId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             return await _context.CaseComments.AsNoTracking().FirstOrDefaultAsync(c => c.ID == caseCommentId);
         }
         public async Task<bool> AddComment(CaseComment CaseComment)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             if (CaseComment != null)
             {
                 CaseComment.LastUpdatedDate = DateTime.Now;
@@ -1123,6 +1171,8 @@ namespace Hippra.Services
         }
         public async Task<bool> EditComment(CaseComment EditedCaseComment,int type)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var CaseComment = await _context.CaseComments.FirstOrDefaultAsync(m => m.ID == EditedCaseComment.ID);
 
             if (CaseComment == null)
@@ -1165,11 +1215,15 @@ namespace Hippra.Services
         }
         private bool CaseCommentExists(int id)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             return _context.CaseComments.AsNoTracking().Any(e => e.ID == id);
         }
 
         public async Task<bool> DeleteComment(int caseCommentId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var CaseComment = await _context.CaseComments.FindAsync(caseCommentId);
 
             if (CaseComment != null)
@@ -1183,12 +1237,16 @@ namespace Hippra.Services
         // history type
         public async Task<int> AddHistory(PostHistory newHistory)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             _context.PostHistories.Add(newHistory);
             await _context.SaveChangesAsync();
             return newHistory.ID;
         }
         public async Task<HistoryResultModel> GetPostHistories(int posterID, int targetPage, int PageSize)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             List<PostHistory> histories = await _context.PostHistories.Where(c => c.PosterID == posterID).OrderByDescending(s => s.CreationDate).Skip((targetPage - 1) * PageSize).Take(PageSize).ToListAsync();
             //var h = histories.OrderByDescending(h => h.CreationDate);
             HistoryResultModel result = new HistoryResultModel();
@@ -1198,18 +1256,24 @@ namespace Hippra.Services
         }
         public async Task<PostHistory> GetHistoryByIDs(int id)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             PostHistory h = await _context.PostHistories.FirstOrDefaultAsync(h => h.ID == id);
             return h;
         }
         //Vote
         public async Task<bool> AddVote(Vote newVote)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             _context.Votes.Add(newVote);
             await _context.SaveChangesAsync();
             return true;
         }
         public async Task<bool> CheckVoter(int postId, int voterId, int cID)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var vote = await _context.Votes.FirstOrDefaultAsync(v => v.PosterID == postId && v.VoterID == voterId && v.CID == cID);
             if(vote != null)
             {
@@ -1220,6 +1284,8 @@ namespace Hippra.Services
         //Stats
         public async Task<Stats> GetStats(int postId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             Stats stats = new Stats();
             stats.UpVote = await _context.Votes.AsNoTracking().CountAsync(v => v.PosterID == postId);
             stats.Votes = await _context.Votes.AsNoTracking().CountAsync(v => v.VoterID == postId);
@@ -1229,12 +1295,16 @@ namespace Hippra.Services
         //Connections
         public async Task<bool> AddConnection(Connection conn)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             _context.Connections.Add(conn);
             await _context.SaveChangesAsync();
             return true;
         }
         public async Task<bool> ChangeConnectionStatus(int userId, int friendId)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var conn = await _context.Connections.FirstOrDefaultAsync(c => c.UserID == userId && c.FriendID == friendId);
 
             if (conn == null)
@@ -1264,10 +1334,14 @@ namespace Hippra.Services
         }
         private bool ConnectionExists(int id)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             return _context.Connections.AsNoTracking().Any(n => n.ID == id);
         }
         public async Task<string> CheckConnection(int my_Id, int f_Id)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var conn = await _context.Connections.FirstOrDefaultAsync(c => (c.UserID == my_Id && c.FriendID == f_Id) || (c.UserID == f_Id && c.FriendID == my_Id));
             if(conn != null)
             {
@@ -1284,6 +1358,8 @@ namespace Hippra.Services
         }
         public async Task<ConnResultModel> GetAllConnections(int my_Id, int targetPage, int PageSize)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             List<Connection> conn = await _context.Connections.Where(c => (c.UserID == my_Id || c.FriendID == my_Id) && c.Status == 1).OrderByDescending(s => s.ID).Skip((targetPage - 1) * PageSize).Take(PageSize).ToListAsync(); ;
             ConnResultModel result = new ConnResultModel();
             result.Connections = conn;
@@ -1293,6 +1369,8 @@ namespace Hippra.Services
 
         public async Task<bool> RemoveConnection(int userId, int fID)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             Connection conn = await _context.Connections.FirstOrDefaultAsync(c => c.UserID == userId && c.FriendID == fID);
             if(conn != null)
             {
@@ -1305,12 +1383,16 @@ namespace Hippra.Services
         //Notification
         public async Task<bool> AddNotification(Notification notif)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             _context.Notifications.Add(notif);
             await _context.SaveChangesAsync();
             return true;
         }
         public async Task<NotificationResultModel> GetAllNotifications(int userID, int targetPage, int PageSize)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             List<Notification> ListNotifs = await _context.Notifications.Where(n => n.ReceiverID == userID).OrderByDescending(n => n.CreationDate).Skip((targetPage - 1) * PageSize).Take(PageSize).ToListAsync();
             //var h = histories.OrderByDescending(h => h.CreationDate);
             NotificationResultModel result = new NotificationResultModel();
@@ -1320,11 +1402,15 @@ namespace Hippra.Services
         }
         public async Task<int> CountMyNotification(int userID)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             int count = await _context.Notifications.AsNoTracking().CountAsync(s => s.ReceiverID == userID && s.IsRead == -1);
             return count;
         }
         public async Task<bool> DeleteNotification(int nID)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             Notification notif = await _context.Notifications.FirstOrDefaultAsync(n => n.NotificationID == nID);
             if (notif != null)
             {
@@ -1336,6 +1422,8 @@ namespace Hippra.Services
         }
         public async Task<bool> NotificationRead(int id)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var notif = await _context.Notifications.FirstOrDefaultAsync(n => n.ID == id);
 
             if (notif == null)
@@ -1365,17 +1453,23 @@ namespace Hippra.Services
         }
         private bool NotificationExists(int id)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             return _context.Notifications.AsNoTracking().Any(n => n.ID == id);
         }
         //Follow
         public async Task<bool> AddFollower(Follow newFollower)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             _context.Follows.Add(newFollower);
             await _context.SaveChangesAsync();
             return true;
         }
         public async Task<bool> RemoveFollower(int follower, int following)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             Follow f = await _context.Follows.FirstOrDefaultAsync(f => f.FollowerUserID == follower && f.FollowingUserID == following);
             if (f != null)
             {
@@ -1387,11 +1481,15 @@ namespace Hippra.Services
         }
         public async Task<List<Follow>> GetAllFollowers(int my_Id)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             List<Follow> followers = await _context.Follows.Where(c => c.FollowingUserID == my_Id).ToListAsync();
             return followers;
         }
         public async Task<bool> CheckFollower(int my_Id, int f_Id)
         {
+            using var _context = DbFactory.CreateDbContext();
+
             var follow = await _context.Follows.FirstOrDefaultAsync(f => f.FollowerUserID == my_Id && f.FollowingUserID == f_Id);
             if (follow != null)
             {
