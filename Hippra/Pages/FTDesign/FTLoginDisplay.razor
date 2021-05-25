@@ -132,13 +132,13 @@
     }
     private async Task viewPage()
     {
-        NavigationManager.NavigateTo("/PersonalPage");
+        NavigationManager.NavigateTo("/PersonalPage/-1" );
 
     }
     private async Task viewNotificationPage()
     {
-        NavigationManager.NavigateTo("/FTProfile/" + -1 +"/"+ 2);
-
+        @*NavigationManager.NavigateTo("/FTProfile/" + -1 +"/"+ 2);*@
+        NavigationManager.NavigateTo("/Notification");
     }
 
 }

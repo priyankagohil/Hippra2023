@@ -74,7 +74,7 @@
                             </div>
 
                             <div>
-                                @if (c.PosterId == usr.PublicId)
+                                @if (dataReady && c.PosterId == usr.PublicId)
                                 {
                                     <button class="comment-button" @onclick="(e => { EditComment(c.ID); })">Edit</button>
                                     <button class="comment-button" @onclick="(e => { DeleteComment(c); })">Delete</button>
@@ -172,6 +172,7 @@
     private string[] imgUrls;
     private Case caseInfo = new Case();
     private int lastHistoryID = -1;
+    private bool dataReady = false;
 
     public async Task EditComment(int ID)
     {
@@ -207,7 +208,7 @@
     }
     protected override async Task OnInitializedAsync()
     {
-        OpenComment();
+        
         authState = await authenticationStateTask;
         user = authState.User;
         caseInfo = await hService.GetCase(postId);
@@ -217,7 +218,8 @@
             usr = await UserManager.GetUserAsync(user);
         }
         await getProfilePic();
-
+        dataReady = true;
+        OpenComment();
     }
 
     private async Task OpenComment()

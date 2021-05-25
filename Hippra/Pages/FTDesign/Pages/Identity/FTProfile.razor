@@ -28,16 +28,21 @@
         @if (userId == -1)
         {
             <FTSubHeaderBar HasSeparator="false">
+
+                
                 <div class="btn-group-toggle" data-toggle="buttons">
-                    <label class="btn  btn-outline-dark @cssProfile" @onclick="(e => ShowProfile())">
-                        <input type="radio" name="options" id="option1" autocomplete="off" checked> Profile
-                    </label>
-                    <label class="btn  btn-outline-dark @cssActivityLog" @onclick="(e => ShowActivityLog())">
-                        <input type="radio" name="options" id="option2" autocomplete="off"> Activity Log
-                    </label>
-                    <label class="btn  btn-outline-dark @cssNotification" @onclick="(e => ShowNotification())">
-                        <input type="radio" name="options" id="option3" autocomplete="off"> Notifications
-                    </label>
+                    
+                        <label class="btn  btn-outline-dark @cssProfile" @onclick="(e => ShowProfile())">
+                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Profile
+                        </label>
+                        <label class="btn  btn-outline-dark @cssActivityLog" @onclick="(e => ShowActivityLog())">
+                            <input type="radio" name="options" id="option2" autocomplete="off"> Activity Log
+                        </label>
+  @*                      <label class="btn  btn-outline-dark @cssNotification" @onclick="(e => ShowNotification())">
+                            <input type="radio" name="options" id="option3" autocomplete="off"> Notifications
+                        </label>*@
+     
+                    
                 </div>
                 <div class="flex-grow-1"></div>
                 <a href="FTEditProfile">Edit</a>
@@ -924,6 +929,10 @@
                 break;
             default:
                 break;
+        }
+
+        if(actionOptions==2){
+            ShowNotification();
         }
     }
     private async Task ShowProfile()
