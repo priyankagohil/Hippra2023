@@ -289,7 +289,7 @@ namespace Hippra.Services
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-            var callbackUrl = "https://hippra.azurewebsites.net/Identity/Account/ConfirmEmail?userId=" + user.Id + "&code=" + code;
+            var callbackUrl = "https://www.hippra.com/Identity/Account/ConfirmEmail?userId=" + user.Id + "&code=" + code;
 
             await _emailSender.SendEmailAsync(
                 email,
