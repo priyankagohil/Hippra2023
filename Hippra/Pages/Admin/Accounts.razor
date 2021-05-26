@@ -7,11 +7,13 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using System.Security.Claims
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
+@*@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager*@
 @inject IOptions<AppSettings> settings
 @inject ProfileService pService
 @inject IJSRuntime JSRuntime
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 <AuthorizeView>
     <Authorized>
@@ -103,13 +105,20 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            var usr = await UserManager.GetUserAsync(user);
-            if (usr.NormalizedEmail == settings.Value.FTManagerUsr.ToUpper())
+            var claimEmail = user.Claims.FirstOrDefault(s => s.Type == "NormalizedEmail")?.Value;
+            if (claimEmail == settings.Value.FTManagerUsr.ToUpper())
             {
                 isAdmin = true;
                 notApprovedUserList = await pService.GetProfiles();
 
             }
+            @*var usr = await UserManager.GetUserAsync(user);
+            if (usr.NormalizedEmail == settings.Value.FTManagerUsr.ToUpper())
+            {
+                isAdmin = true;
+                notApprovedUserList = await pService.GetProfiles();
+
+            }*@
         }
     }
 

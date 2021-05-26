@@ -8,10 +8,12 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using System.Security.Claims
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
+@*@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager*@
 @inject IOptions<AppSettings> settings
 @inject IJSRuntime JSRuntime
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 <div class="container">
 
@@ -75,7 +77,19 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            var usr = await UserManager.GetUserAsync(user);
+            var claimEmail = user.Claims.FirstOrDefault(s => s.Type == "NormalizedEmail")?.Value;
+            if (claimEmail == settings.Value.FTManagerUsr.ToUpper())
+            {
+                isAdmin = true;
+                MenuItems = new List<MenuItem>()
+                {
+                    new MenuItem{ Name="Account", ID=0},
+                    new MenuItem{ Name="Analytics", ID=1 }
+                };
+
+                TabSelected = 0;
+            }
+            @*var usr = await UserManager.GetUserAsync(user);
             if (usr.NormalizedEmail == settings.Value.FTManagerUsr.ToUpper())
             {
                 isAdmin = true;
@@ -87,7 +101,7 @@
 
                 TabSelected = 0;
 
-            }
+            }*@
         }
 
 

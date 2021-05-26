@@ -10,12 +10,13 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
 @inject ProfileService pService;
 @using Hippra.Models.SQL;
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
+@*@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager*@
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor httpContextAccessor
 @inject IJSRuntime JSRuntime
+@inject IAuthorizationService AuthorizationService
 
 <AuthorizeView>
     <Authorized Context="DeleteAccountContext">
@@ -119,7 +120,7 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            var usr = await UserManager.GetUserAsync(user);
+            @*var usr = await UserManager.GetUserAsync(user);*@
         }
     }
 
@@ -133,8 +134,19 @@
         user = authState.User;
         if (user.Identity.IsAuthenticated)
         {
-            var usr = await UserManager.GetUserAsync(user);
-            var result = await pService.DeleteAccount(usr, inputModel.password);
+            @*var usr = await UserManager.GetUserAsync(user);*@
+            int userId = -1;
+            try
+            {
+              
+                userId = Int32.Parse( user.Claims.FirstOrDefault(s => s.Type == "PublicId")?.Value );
+           
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            var result = await pService.DeleteAccount(userId, inputModel.password);
             if (result == -1)
             {
                 hasError = true;

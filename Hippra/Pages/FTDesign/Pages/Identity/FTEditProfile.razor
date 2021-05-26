@@ -37,8 +37,9 @@
                             <br />
                             <h4 class="display-4 text-center">Edit Profile</h4>
                             <br />
-
-                            <EditForm Model="@inputModel" OnValidSubmit="@SaveProfile">
+                            @if(dataReady)
+                            {
+                                                        <EditForm Model="@inputModel" OnValidSubmit="@SaveProfile">
                                 <DataAnnotationsValidator />
                                 <ValidationSummary />
 
@@ -182,12 +183,17 @@
                                     {
                                         <div class="alert alert-danger">Something went wrong. Please try again.</div>
                                     }
-
+                                    @if (status == 1)
+                                    {
+                                        <div class="alert alert-success">Saved.</div>
+                                    }
                                 </div>
 
 
 
                             </EditForm>
+                            }
+
 
                         </div>
                     </div>
@@ -237,9 +243,9 @@
     private bool hasError { get; set; } = false;
     private bool sentVerification { get; set; } = false;
     private int status { get; set; } = 0;
+    private bool dataReady =  false;
 
-
-    private FTEditProfileModel inputModel { get; set; }
+    private FTEditProfileModel inputModel { get; set; } = new FTEditProfileModel();
 
     public class FTEditProfileModel : FTEditModel
     {
@@ -326,7 +332,8 @@
                 new SelectListItem { Value = "25", Text = "Thoracic Surgery" },
                 new SelectListItem { Value = "26", Text = "Urology" }
         };
-
+        dataReady = true;
+        StateHasChanged();
 
     }
     private string ParseMedicalSpecialty(MedicalSpecialtyType MedicalSpecialty)

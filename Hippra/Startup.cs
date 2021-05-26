@@ -87,7 +87,7 @@ namespace Hippra
             })
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
+            services.AddScoped<IUserClaimsPrincipalFactory<AppUser>, AdditionalUserClaimsPrincipalFactory>();
 
             services.AddAutoMapper(typeof(Startup));
             

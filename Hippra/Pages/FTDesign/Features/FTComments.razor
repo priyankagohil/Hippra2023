@@ -6,11 +6,13 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using System.Security.Claims
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
+@*@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager*@
 @inject IOptions<AppSettings> settings
 @inject HippraService hService
 @inject IJSRuntime JSRuntime
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 <div class="m-2">
     @if (CommentList == null || CommentList.Count == 0)
@@ -73,7 +75,7 @@
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     private AuthenticationState authState { get; set; }
     private ClaimsPrincipal user { get; set; }
-    private AppUser usr { get; set; }
+    @*private AppUser usr { get; set; }*@
     [Parameter]
     public List<CaseComment> CommentList { get; set; }
     [Parameter]
@@ -94,12 +96,31 @@
     }
     private async Task AddComment()
     {
-        authState = await authenticationStateTask;
-        user = authState.User;
+         user = (await authenticationStateTask).User;
 
         if (user.Identity.IsAuthenticated)
         {
-            usr = await UserManager.GetUserAsync(user);
+            try
+            {
+              
+                newComment.PosterId = Int32.Parse( user.Claims.FirstOrDefault(s => s.Type == "PublicId")?.Value );
+                newComment.posterSpeciality = ParseMedicalSpecialty((MedicalSpecialtyType) Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "MedicalSpecialty")?.Value));
+                
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+                newComment.PosterName = user.Claims.FirstOrDefault(s => s.Type == "FirstName")?.Value + " " + user.Claims.FirstOrDefault(s => s.Type == "LastName")?.Value; 
+                newComment.PostedDate = DateTime.Now;
+                newComment.LastUpdatedDate = newComment.PostedDate;
+                newComment.CaseID = postId;
+                newComment.ID = 0;
+
+                await hService.AddComment(newComment);
+
+            @*usr = await UserManager.GetUserAsync(user);
             if (usr != null)
             {
                 newComment.PosterId = usr.PublicId;
@@ -111,7 +132,7 @@
                 newComment.ID = 0;
 
                 await hService.AddComment(newComment);
-            }
+            }*@
         }
         newComment.Comment = "";
         CommentList = await hService.GetCommentsNoTracking(postId);

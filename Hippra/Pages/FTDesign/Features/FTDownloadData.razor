@@ -10,11 +10,12 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
 @inject ProfileService pService;
 @using Hippra.Models.SQL;
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
+@*@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager*@
 @using System.Security.Claims
 @using Newtonsoft.Json;
-
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 <AuthorizeView>
     <Authorized Context="DeleteAccountContext">
@@ -133,7 +134,7 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            var usr = await UserManager.GetUserAsync(user);
+            @*var usr = await UserManager.GetUserAsync(user);*@
 
         }
 
@@ -148,10 +149,16 @@
         hasDownloadData = true;
         if (user.Identity.IsAuthenticated)
         {
-            var usr = await UserManager.GetUserAsync(user);
-
-            //downloadData = await pService.DownloadPersonalData(usr);
-
+            @*var usr = await UserManager.GetUserAsync(user);*@
+            try
+            {
+                int numVal = Int32.Parse( user.Claims.FirstOrDefault(s => s.Type == "PublicId")?.Value );
+                downloadData = await pService.DownloadPersonalData(numVal);
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+            }
 
             this.StateHasChanged();
             return;

@@ -10,10 +10,11 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
 @inject ProfileService pService;
 @using Hippra.Models.SQL;
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
+@*@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager*@
 @using System.Security.Claims
-
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 
 <AuthorizeView>
@@ -141,10 +142,18 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            var usr = await UserManager.GetUserAsync(user);
+            inputModel.Email = user.Claims.FirstOrDefault(s => s.Type == "Email")?.Value;
+            if(user.Claims.FirstOrDefault(s => s.Type == "EmailConfirmed")?.Value == "1"){
+                inputModel.IsEmailConfirmed = true;
+            }
+            else
+            {
+                inputModel.IsEmailConfirmed = false;
+            }
+            @*var usr = await UserManager.GetUserAsync(user);
 
             inputModel.Email = usr.Email;
-            inputModel.IsEmailConfirmed = usr.EmailConfirmed;
+            inputModel.IsEmailConfirmed = usr.EmailConfirmed;*@
 
         }
 

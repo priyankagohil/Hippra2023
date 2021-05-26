@@ -6,13 +6,16 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Options
 @using System.Security.Claims
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
+@*@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager*@
 @inject IOptions<AppSettings> settings
 @inject HippraService hService
 @inject ProfileService pService
 @inject IJSRuntime JSRuntime
 @inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
 <nav class="navbar navbar-expand @NavCssClass navbar-light @NavbarCustomCssClass box-shadow py-2">
     <div class="container-fluid nav-pady">
         @if (HasNavBrand)

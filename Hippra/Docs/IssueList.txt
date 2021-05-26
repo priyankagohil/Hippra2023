@@ -1,6 +1,6 @@
 ﻿2/13/2020
--login mobile page layout issue (done)
--main page the 4 image description layout issue (done)
--contact page mobile layout (done)
+
 -create case drop down too long for mobile devices !!!
 
+5/26/2021
+-FTProfile, FTEditProfile, FTPersonalPage uses UserManager. Microsoft says they don't support UserManager in Razor Components. 

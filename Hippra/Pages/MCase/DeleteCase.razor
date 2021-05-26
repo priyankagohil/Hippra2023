@@ -17,11 +17,12 @@
 
 @inject IHttpContextAccessor httpContextAccessor
 @inject IJSRuntime JSRuntime
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
+@*@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager*@
 @inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
 @inject ProfileService pService
 @inject HippraService hService
+@inject IAuthorizationService AuthorizationService
 
 <AuthorizeView>
     <Authorized Context="DeleteCaseContext">
@@ -74,7 +75,7 @@
     private Task<AuthenticationState> authenticationStateTask { get; set; }
     private AuthenticationState authState { get; set; }
     private ClaimsPrincipal user { get; set; }
-    private AppUser userInfo { get; set; } = new AppUser();
+    @*private AppUser userInfo { get; set; } = new AppUser();*@
 
     private bool hasError { get; set; } = false;
     private int status { get; set; } = 0;
@@ -90,10 +91,21 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            userInfo = await UserManager.GetUserAsync(user);
+            @*userInfo = await UserManager.GetUserAsync(user);*@
+            int userId = -1;
+            try
+            {
+              
+                userId = Int32.Parse( user.Claims.FirstOrDefault(s => s.Type == "PublicId")?.Value );
+           
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e.Message);
+            }
             var InputModel = await hService.GetCaseNoTracking(caseId);
 
-            if (InputModel != null && InputModel.PosterID == userInfo.PublicId)
+            if (InputModel != null && InputModel.PosterID == userId)
             {
                 isOwner = true;
             }

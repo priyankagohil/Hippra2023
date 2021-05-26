@@ -346,8 +346,52 @@ namespace Hippra.Services
 
         }
 
-        public async Task<string> DownloadPersonalData(AppUser user)
+        public async Task<int> UpdatePassword(int userId, string oldPassword, string newPassword)
         {
+            var user = await UserManagerExtensions.FindByPublicIDNoTrackAsync(_userManager, userId);
+
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                //foreach (var error in changePasswordResult.Errors)
+                //{
+                //    ModelState.AddModelError(string.Empty, error.Description);
+                //}
+                return -1;
+            }
+            // NOTE: THIS WILL FAIL AS OF ASPNETCORE 3.1 blazor due to fact that cannot update cookie directly
+            //await _signInManager.RefreshSignInAsync(user);
+            //await _signInManager.SignOutAsync();
+
+            //StatusMessage = "Your password has been changed.";
+            return 1;
+
+        }
+
+        //public async Task<string> DownloadPersonalData(AppUser user)
+        //{
+        //    if (user == null)
+        //    {
+        //        return "";
+        //    }
+
+        //    // Only include personal data for download
+        //    var personalData = new Dictionary<string, string>();
+        //    var personalDataProps = typeof(AppUser).GetProperties().Where(
+        //                    prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
+        //    foreach (var p in personalDataProps)
+        //    {
+        //        personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
+        //    }
+
+        //    //Response.Headers.Add("Content-Disposition", "attachment; filename=PersonalData.json");
+        //    return JsonConvert.SerializeObject(personalData);
+        //}
+
+        public async Task<string> DownloadPersonalData(int userId)
+        {
+            var user = await UserManagerExtensions.FindByPublicIDNoTrackAsync(_userManager, userId);
+
             if (user == null)
             {
                 return "";
@@ -366,8 +410,34 @@ namespace Hippra.Services
             return JsonConvert.SerializeObject(personalData);
         }
 
-        public async Task<int> DeleteAccount(AppUser user, string password)
+        //public async Task<int> DeleteAccount(AppUser user, string password)
+        //{
+
+        //    var RequirePassword = await _userManager.HasPasswordAsync(user);
+        //    if (RequirePassword)
+        //    {
+        //        if (!await _userManager.CheckPasswordAsync(user, password))
+        //        {
+        //            return -1;
+        //        }
+        //    }
+
+        //    var result = await _userManager.DeleteAsync(user);
+        //    var userId = await _userManager.GetUserIdAsync(user);
+        //    if (!result.Succeeded)
+        //    {
+        //        return -1;
+        //    }
+
+        //    return 0;
+
+        //    //await _signInManager.SignOutAsync();
+        //    //return Redirect("~/");
+
+        //}
+        public async Task<int> DeleteAccount(int userId, string password)
         {
+            var user = await UserManagerExtensions.FindByPublicIDNoTrackAsync(_userManager, userId);
 
             var RequirePassword = await _userManager.HasPasswordAsync(user);
             if (RequirePassword)
@@ -379,7 +449,7 @@ namespace Hippra.Services
             }
 
             var result = await _userManager.DeleteAsync(user);
-            var userId = await _userManager.GetUserIdAsync(user);
+            var userId2 = await _userManager.GetUserIdAsync(user);
             if (!result.Succeeded)
             {
                 return -1;
@@ -417,5 +487,11 @@ namespace Hippra.Services
         {
             return await Hippra.Extensions.UserManagerExtensions.GetAllUsersName(_userManager);
         }
+
+        public async Task UpdateUserProfile(ClaimsPrincipal cpUser, AppUser usr)
+        {
+            await Hippra.Extensions.UserManagerExtensions.UpdateUserProfile(_userManager, cpUser, usr);
+        }
+
     }
 }
