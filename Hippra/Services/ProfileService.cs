@@ -490,7 +490,32 @@ namespace Hippra.Services
 
         public async Task UpdateUserProfile(ClaimsPrincipal cpUser, AppUser usr)
         {
-            await Hippra.Extensions.UserManagerExtensions.UpdateUserProfile(_userManager, cpUser, usr);
+            var user = await Hippra.Extensions.UserManagerExtensions.FindByPublicIDNoTrackAsync(_userManager, usr.PublicId);
+
+            if (user != null)
+            {
+                user.FirstName = usr.FirstName;
+                user.LastName = usr.LastName;
+                user.NPIN = usr.NPIN;
+                user.MedicalSpecialty = usr.MedicalSpecialty;
+                user.AmericanBoardCertified = usr.AmericanBoardCertified;
+
+                user.ResidencyHospital = usr.ResidencyHospital;
+                user.MedicalSchoolAttended = usr.MedicalSchoolAttended;
+                user.EducationDegree = usr.EducationDegree;
+                user.Address = usr.Address;
+                user.Zipcode = usr.Zipcode;
+                user.State = usr.State;
+                user.City = usr.City;
+                user.PhoneNumber = usr.PhoneNumber; // check this
+
+                user.ProfileUrl = usr.ProfileUrl;
+                user.BackgroundUrl = usr.BackgroundUrl;
+                user.Bio = usr.Bio;
+
+                await Hippra.Extensions.UserManagerExtensions.UpdateUserProfile(_userManager, cpUser, user);
+            }
+         
         }
 
     }

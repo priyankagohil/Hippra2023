@@ -1,4 +1,4 @@
-﻿@page "/PersonalPage/{userId:int}"
+﻿@page "/PersonalPage/{userId:int?}"
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
@@ -15,19 +15,20 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor httpContextAccessor
 @inject IJSRuntime JSRuntime
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
+@*@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager*@
 @inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
 @inject HippraService hService
 @inject ProfileService pService;
 @using Microsoft.AspNetCore.Mvc.Rendering;
 @using Hippra.Extensions
+@inject IAuthorizationService AuthorizationService
 
 
 <AuthorizeView>
 	<Authorized Context="ViewPPageContext">
 
-				<div class="ft-main-px">
+		<div class="ft-main-px">
 
 			<div class="card">
 				<div class="card-body p-body">
@@ -47,7 +48,7 @@
 									<div class="pf-top">
 										<div class="wrap">
 											<div class="mid-top-bar" style="background-image:url('@DisplayBackgroundUrl') ;background-size: 100%;">
-												@if (usr  !=  null && usr.PublicId == userId)
+												@if (profile != null && usrID == userId)
 				{
 			<button class="image-upload upload-bg">
 			 <label for="file-input-bg">
@@ -59,7 +60,7 @@
 												}
 											</div>
 											<div class="image-upload circle-pic" style="background-image: url('@DisplayProfileUrl');background-size: 100%;">
-												@if (usr  !=  null && usr.PublicId == userId)
+												@if (profile != null && usrID == userId)
 				{
 			<button class="image-upload upload-bg">
 			 <label for="file-input-prof">
@@ -87,7 +88,7 @@
 				{
 		   <h6 class="usr-title">@profile.EducationDegree @profile.MedicalSchoolAttended</h6>
 											}
-											@if (usr  !=  null && usr.PublicId != userId)
+											@if (profile != null && usrID != userId)
 				{
 											@if (connectStatus == "C")
 											{
@@ -143,7 +144,7 @@
 												}
 												else
 												{
-													@if (usr  !=  null && usr.PublicId != userId)
+													@if (profile != null && usrID != userId)
 													{
 														@if (@profile.Bio == null)
 														{
@@ -279,7 +280,7 @@
 					</div>
 				</div>
 			</div>
-				</div>
+		</div>
 	</Authorized>
 	<NotAuthorized>
 		<div class="ft-main-px">
@@ -308,7 +309,7 @@
 	private Task<AuthenticationState> authenticationStateTask { get; set; }
 	private AuthenticationState authState { get; set; }
 	private ClaimsPrincipal user { get; set; }
-	private AppUser usr { get; set; }
+	@*private AppUser usr { get; set; }*@
 	private Stats stats = new Stats();
 	private List<ParsedCase> SearchResults { get; set; } = new List<ParsedCase>();
 	private List<Case> cases { get; set; } = new List<Case>();
@@ -358,31 +359,62 @@
 
 	}
 
+	private int usrID { get; set; }
+    private int posterSpeciality = 0;
+	private int NPIN = 0;
+	private bool AmericanBoardCertified = false;
+	private string fullName = "";
+
 	protected override async Task OnInitializedAsync()
 	{
 
-			authState = await authenticationStateTask;
-			user = authState.User;
-			if (user.Identity.IsAuthenticated)
+		authState = await authenticationStateTask;
+		user = authState.User;
+		if (user.Identity.IsAuthenticated)
+		{
+			@*usr = await UserManager.GetUserAsync(user);*@
+
+			try
 			{
-				usr = await UserManager.GetUserAsync(user);
-				if(userId == -1){
-					if (usr != null)
-					{
-						profile = new Profile();
-						profile = await pService.GetProfile(usr.PublicId);
 
-						userId = profile.PublicId;
-					}
-					else
-					{
-						NavigationManager.NavigateTo("/");
-					}
-				}
-
-				savedImgUrl = hService.GetImgStorageUrl() + "img";
-
+				usrID = Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "PublicId")?.Value);
+				posterSpeciality = Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "MedicalSpecialty")?.Value);
+				NPIN = Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "NPIN")?.Value);
 			}
+			catch (FormatException e)
+			{
+				Console.WriteLine(e.Message);
+			}
+			fullName = user.Claims.FirstOrDefault(s => s.Type == "FirstName")?.Value + " " + user.Claims.FirstOrDefault(s => s.Type == "LastName")?.Value;
+			if (user.Claims.FirstOrDefault(s => s.Type == "AmericanBoardCertified")?.Value == "1")
+			{
+				AmericanBoardCertified = true;
+			}
+
+			if (userId == -1)
+			{
+				profile = new Profile();
+				profile = await pService.GetProfile(usrID);
+
+				userId = profile.PublicId;
+
+
+				@*if (usr != null)
+				{
+					profile = new Profile();
+					profile = await pService.GetProfile(usr.PublicId);
+
+					userId = profile.PublicId;
+				}
+				else
+				{
+					NavigationManager.NavigateTo("/");
+				}*@
+			}
+
+			savedImgUrl = hService.GetImgStorageUrl() + "img";
+
+		}
 
 		await GetStats(userId);
 		//profile
@@ -405,10 +437,10 @@
 			DisplayBackgroundUrl = "/img/hippra/blank-background.jpg";
 		}
 		medicalSpecialty = getMedicalSpeciality(profile.MedicalSpecialty);
-		if  (usr.PublicId != userId)
+		if (usrID != userId)
 		{
-			connectStatus = await hService.CheckConnection(usr.PublicId, userId);
-			isFollowed = await hService.CheckFollower(usr.PublicId, userId);
+			connectStatus = await hService.CheckConnection(usrID, userId);
+			isFollowed = await hService.CheckFollower(usrID, userId);
 		}
 		await GetConnResults(userId, CurrentConnPage);
 		if (CountConn > PageSize)
@@ -426,7 +458,7 @@
 		foreach (var c in connList)
 		{
 			Profile prof = new Profile();
-			if  (c.FriendID == profile.PublicId)
+			if (c.FriendID == profile.PublicId)
 			{
 				prof = await pService.GetProfile(c.UserID);
 			}
@@ -453,29 +485,50 @@
 	}
 
 	protected override async Task OnParametersSetAsync()
-    {
-        authState = await authenticationStateTask;
-			user = authState.User;
-			if (user.Identity.IsAuthenticated)
+	{
+		authState = await authenticationStateTask;
+		user = authState.User;
+		if (user.Identity.IsAuthenticated)
+		{
+			@*usr = await UserManager.GetUserAsync(user);*@
+			try
 			{
-				usr = await UserManager.GetUserAsync(user);
-				if(userId == -1){
-					if (usr != null)
-					{
-						profile = new Profile();
-						profile = await pService.GetProfile(usr.PublicId);
 
-						userId = profile.PublicId;
-					}
-					else
-					{
-						NavigationManager.NavigateTo("/");
-					}
-				}
-
-				savedImgUrl = hService.GetImgStorageUrl() + "img";
-
+				usrID = Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "PublicId")?.Value);
+				posterSpeciality = Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "MedicalSpecialty")?.Value);
+				NPIN = Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "NPIN")?.Value);
 			}
+			catch (FormatException e)
+			{
+				Console.WriteLine(e.Message);
+			}
+			fullName = user.Claims.FirstOrDefault(s => s.Type == "FirstName")?.Value + " " + user.Claims.FirstOrDefault(s => s.Type == "LastName")?.Value;
+			if (user.Claims.FirstOrDefault(s => s.Type == "AmericanBoardCertified")?.Value == "1")
+			{
+				AmericanBoardCertified = true;
+			}
+			if (userId == -1)
+			{
+				profile = new Profile();
+				profile = await pService.GetProfile(usrID);
+
+				userId = profile.PublicId;
+				@*if (usr != null)
+				{
+					profile = new Profile();
+					profile = await pService.GetProfile(usr.PublicId);
+
+					userId = profile.PublicId;
+				}
+				else
+				{
+					NavigationManager.NavigateTo("/");
+				}*@
+			}
+
+			savedImgUrl = hService.GetImgStorageUrl() + "img";
+
+		}
 
 		await GetStats(userId);
 		//profile
@@ -498,10 +551,10 @@
 			DisplayBackgroundUrl = "/img/hippra/blank-background.jpg";
 		}
 		medicalSpecialty = getMedicalSpeciality(profile.MedicalSpecialty);
-		if  (usr.PublicId != userId)
+		if (usrID != userId)
 		{
-			connectStatus = await hService.CheckConnection(usr.PublicId, userId);
-			isFollowed = await hService.CheckFollower(usr.PublicId, userId);
+			connectStatus = await hService.CheckConnection(usrID, userId);
+			isFollowed = await hService.CheckFollower(usrID, userId);
 		}
 		await GetConnResults(userId, CurrentConnPage);
 		if (CountConn > PageSize)
@@ -519,7 +572,7 @@
 		foreach (var c in connList)
 		{
 			Profile prof = new Profile();
-			if  (c.FriendID == profile.PublicId)
+			if (c.FriendID == profile.PublicId)
 			{
 				prof = await pService.GetProfile(c.UserID);
 			}
@@ -539,7 +592,7 @@
 				c.FProfileUrl = "/img/hippra/blank-profile.png";
 			}
 		}
-    }
+	}
 
 
 	private async Task GetStats(int userId)
@@ -716,6 +769,9 @@
 	}
 	private async Task SaveProfile()
 	{
+		AppUser usr = new AppUser();
+		usr.PublicId = usrID;
+
 		usr.FirstName = profile.FirstName;
 		usr.LastName = profile.LastName;
 		usr.NPIN = profile.NPIN;
@@ -735,7 +791,8 @@
 		usr.Bio = profile.Bio;
 		try
 		{
-			await UserManagerExtensions.UpdateUserProfile(UserManager, user, usr);
+			@*await UserManagerExtensions.UpdateUserProfile(UserManager, user, usr);*@
+			await pService.UpdateUserProfile( user, usr);
 		}
 		catch (Exception e)
 		{
@@ -755,13 +812,14 @@
 			newHistory.HistoryTypes = "edited profile";
 			await hService.AddHistory(newHistory);*@
 		editBio = false;
+		NavigationManager.NavigateTo("FTRefreshSignIn?returnUrl=PersonalPage/-1", true);
 		this.StateHasChanged();
 		return;
 
-		}
+	}
 
-		public async Task DeleteFile()
-		{
+	public async Task DeleteFile()
+	{
 		var response = await hService.DeleteImage(fileName);
 		if (response)
 		{
@@ -770,37 +828,37 @@
 			displayImgUrl = "";
 		}
 		StateHasChanged();
-		}
-		private async Task ShowAboutTab()
-		{
+	}
+	private async Task ShowAboutTab()
+	{
 		actionOptions = 0;
 		cssAbout = "active";
 		cssPost = "";
 		cssConn = "";
 		this.StateHasChanged();
-		}
-		private async Task ShowPostTab()
-		{
+	}
+	private async Task ShowPostTab()
+	{
 		actionOptions = 1;
 		cssAbout = "";
 		cssPost = "active";
 		cssConn = "";
 		this.StateHasChanged();
-		}
-		private async Task ShowConnTab()
-		{
+	}
+	private async Task ShowConnTab()
+	{
 		actionOptions = 2;
 		cssAbout = "";
 		cssPost = "";
 		cssConn = "active";
 		this.StateHasChanged();
-		}
-		private async Task OpenViewModal(int i)
-		{
+	}
+	private async Task OpenViewModal(int i)
+	{
 		NavigationManager.NavigateTo("/viewcase/" + i);
-		}
-		private string getMedicalSpeciality(int usr)
-		{
+	}
+	private string getMedicalSpeciality(int usr)
+	{
 		string medicalSpecialty = "";
 		switch ((MedicalSpecialtyType)usr)
 		{
@@ -890,11 +948,11 @@
 				break;
 		}
 		return medicalSpecialty;
-		}
+	}
 
 
-		private string ParsePriority(int priority)
-		{
+	private string ParsePriority(int priority)
+	{
 		string rValue = "";
 		switch (priority)
 		{
@@ -909,17 +967,17 @@
 				break;
 		}
 		return rValue;
-		}
-		private async Task addToHistory(string historyType)
-		{
+	}
+	private async Task addToHistory(string historyType)
+	{
 		//history stuffs
 		PostHistory newHistory = new PostHistory();
 		newHistory.ID = 0;
 		newHistory.PostID = userId;
 		newHistory.CreationDate = DateTime.Now;
-		newHistory.PosterID = usr.PublicId;
+		newHistory.PosterID = usrID;
 		newHistory.UserID = userId;
-		newHistory.UserDisplayName = usr.FirstName + " " + usr.LastName;
+		newHistory.UserDisplayName = fullName;
 		newHistory.UserDisplayName2 = profile.FirstName + " " + profile.LastName;
 		if (historyType == "Invited")
 		{
@@ -927,59 +985,59 @@
 		}
 		else
 		{
-			newHistory.Title = "on " + usr.FirstName + " " + usr.LastName + "'s Hippra page";
+			newHistory.Title = "on " + fullName + "'s Hippra page";
 		}
 
 		newHistory.Detail = "";
 		newHistory.HistoryTypes = historyType;
 		lastHistoryID = await hService.AddHistory(newHistory);
-		}
-		private async Task EditBio()
-		{
+	}
+	private async Task EditBio()
+	{
 		editBio = true;
 		StateHasChanged();
-		}
-		private async Task SaveBio()
-		{
+	}
+	private async Task SaveBio()
+	{
 		if (isSubmitted)
 		{
 			await addToHistory("updated biography");
 			SaveProfile();
 		}
-		}
-		private async Task AddToBio()
-		{
+	}
+	private async Task AddToBio()
+	{
 
-		}
-		private async Task Cancel()
-		{
+	}
+	private async Task Cancel()
+	{
 		editBio = false;
 		StateHasChanged();
-		}
-		private async Task Submitted()
-		{
+	}
+	private async Task Submitted()
+	{
 		isSubmitted = true;
-		}
+	}
 
-		private async Task RemoveConnection()
-		{
-		await hService.RemoveConnection(usr.PublicId, userId);
+	private async Task RemoveConnection()
+	{
+		await hService.RemoveConnection(usrID, userId);
 		connectStatus = "NC";
 		await addToHistory("disconnected with");
 		await GetConnResults(userId, CurrentConnPage);
 		StateHasChanged();
-		}
-		private async Task viewPage(int id)
-		{
+	}
+	private async Task viewPage(int id)
+	{
 		NavigationManager.NavigateTo("/");
 		NavigationManager.NavigateTo("/PersonalPage/" + id);
 
-		}
-		private async Task SendAnInvitation()
-		{
+	}
+	private async Task SendAnInvitation()
+	{
 		Connection newConn = new Connection();
 		newConn.ID = 0;
-		newConn.UserID = usr.PublicId;
+		newConn.UserID = usrID;
 		newConn.FriendID = userId;
 		newConn.Status = -1;
 		connectStatus = "P";
@@ -987,36 +1045,36 @@
 		await addToHistory("invited");
 		await Notify(1);
 		StateHasChanged();
-		}
-		private async Task AddToFollowerList()
-		{
+	}
+	private async Task AddToFollowerList()
+	{
 		Follow newF = new Follow();
 		newF.ID = 0;
-		newF.FollowerUserID = usr.PublicId;
+		newF.FollowerUserID = usrID;
 		newF.FollowingUserID = userId;
 		await hService.AddFollower(newF);
 		isFollowed = true;
 		await addToHistory("followed");
 		await Notify(-1);
 		StateHasChanged();
-		}
-		private async Task RemoveFromFollowerList()
-		{
-		await hService.RemoveFollower(usr.PublicId, userId);
+	}
+	private async Task RemoveFromFollowerList()
+	{
+		await hService.RemoveFollower(usrID, userId);
 		isFollowed = false;
 		await addToHistory("unfollowed");
 		StateHasChanged();
-		}
-		private async Task Notify(int type)
-		{
+	}
+	private async Task Notify(int type)
+	{
 		//    int id = await hService.GetHistoryID(userId, usr.PublicId);
 		Notification newNotifs = new Notification();
 		newNotifs.ID = 0;
-		newNotifs.SenderID = usr.PublicId;
+		newNotifs.SenderID = usrID;
 		newNotifs.ReceiverID = userId;
 		newNotifs.NotificationID = lastHistoryID;
 		newNotifs.IsRead = -1;
-		if  (type == 1)
+		if (type == 1)
 		{
 			newNotifs.IsResponseNeeded = 1;
 		}
@@ -1026,9 +1084,9 @@
 		}
 		newNotifs.CreationDate = DateTime.Now;
 		await hService.AddNotification(newNotifs);
-		}
-		private async Task ChangePageConn(int targetPage)
-		{
+	}
+	private async Task ChangePageConn(int targetPage)
+	{
 
 		await GetConnResults(userId, targetPage);
 
@@ -1038,12 +1096,12 @@
 		pg = paginationConnData.FirstOrDefault(s => s.id == CurrentConnPage);
 		pg.isActive = true;
 		this.StateHasChanged();
-		}
-		private async Task GetConnResults(int id, int targetPage)
-		{
+	}
+	private async Task GetConnResults(int id, int targetPage)
+	{
 		var result = await hService.GetAllConnections(id, targetPage, PageSize);
 		connList = result.Connections;
 		CountConn = result.TotalCount;
-		}
+	}
 }
 

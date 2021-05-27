@@ -45,6 +45,11 @@ namespace Hippra.Extensions
             user.City = usr.City;
             user.PhoneNumber = usr.PhoneNumber; // check this 
 
+            user.ProfileUrl = usr.ProfileUrl;
+            user.BackgroundUrl = usr.BackgroundUrl;
+            user.Bio = usr.Bio;
+
+
             // save
             await um.UpdateAsync(user);
             return;

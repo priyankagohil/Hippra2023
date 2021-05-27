@@ -13,14 +13,14 @@
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor httpContextAccessor
 @inject IJSRuntime JSRuntime
-@inject SignInManager<AppUser> SignInManager
-@inject UserManager<AppUser> UserManager
+@*@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager*@
 @inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
 @inject ProfileService pService;
 @inject HippraService hService
 @using Microsoft.AspNetCore.Mvc.Rendering;
 @using Hippra.Extensions
-
+@inject IAuthorizationService AuthorizationService
 
 <AuthorizeView>
     <Authorized Context="SaveProfileContext">
@@ -265,6 +265,12 @@
 
     private List<SelectListItem> specialtyList { get; set; }
 
+    private int usrID { get; set; }
+    private int posterSpeciality = 0;
+	private int NPIN = 0;
+	private bool AmericanBoardCertified = false;
+	private string fullName = "";
+
     protected override async Task OnInitializedAsync()
     {
         authState = await authenticationStateTask;
@@ -272,30 +278,53 @@
         AppUser usr;
         if (user.Identity.IsAuthenticated)
         {
-            usr = await UserManager.GetUserAsync(user);
+            @*usr = await UserManager.GetUserAsync(user);*@
+            try
+			{
+
+				usrID = Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "PublicId")?.Value);
+				posterSpeciality = Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "MedicalSpecialty")?.Value);
+				NPIN = Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "NPIN")?.Value);
+			}
+			catch (FormatException e)
+			{
+				Console.WriteLine(e.Message);
+			}
+			fullName = user.Claims.FirstOrDefault(s => s.Type == "FirstName")?.Value + " " + user.Claims.FirstOrDefault(s => s.Type == "LastName")?.Value;
+			if (user.Claims.FirstOrDefault(s => s.Type == "AmericanBoardCertified")?.Value == "1")
+			{
+				AmericanBoardCertified = true;
+			}
+
         }
-        else
+       @* else
         {
             usr = await Hippra.Extensions.UserManagerExtensions.FindByPublicIDNoTrackAsync(UserManager, userId);
-        }
+        }*@
 
         inputModel = new FTEditProfileModel()
         {
-            UserName = usr.UserName,
-            Email = usr.Email,
-            mSpecialty = usr.MedicalSpecialty.ToString(),
-            FirstName = usr.FirstName,
-            LastName = usr.LastName,
-            NPIN = usr.NPIN,
-            AmericanBoardCertified = usr.AmericanBoardCertified,
-            ResidencyHospital = usr.ResidencyHospital,
-            MedicalSchoolAttended = usr.MedicalSchoolAttended,
-            EducationDegree = usr.EducationDegree,
-            Address = usr.Address,
-            Zipcode = usr.Zipcode,
-            State = usr.State,
-            City = usr.City,
-            PhoneNumber = usr.PhoneNumber
+            UserName = user.Claims.FirstOrDefault(s => s.Type == "UserName")?.Value,
+			Email = user.Claims.FirstOrDefault(s => s.Type == "Email")?.Value,
+
+			FirstName = user.Claims.FirstOrDefault(s => s.Type == "FirstName")?.Value,
+			LastName = user.Claims.FirstOrDefault(s => s.Type == "LastName")?.Value,
+			NPIN = NPIN,
+			@*MedicalSpecialty = posterSpeciality,*@
+    AmericanBoardCertified = AmericanBoardCertified,
+			ResidencyHospital = user.Claims.FirstOrDefault(s => s.Type == "ResidencyHospital")?.Value,// usr.ResidencyHospital,
+			MedicalSchoolAttended = user.Claims.FirstOrDefault(s => s.Type == "MedicalSchoolAttended")?.Value,//usr.MedicalSchoolAttended,
+			EducationDegree = user.Claims.FirstOrDefault(s => s.Type == "EducationDegree")?.Value,//usr.EducationDegree,
+			Address = user.Claims.FirstOrDefault(s => s.Type == "Address")?.Value,//usr.Address,
+			Zipcode = user.Claims.FirstOrDefault(s => s.Type == "Zipcode")?.Value,//usr.Zipcode,
+			State = user.Claims.FirstOrDefault(s => s.Type == "State")?.Value,//usr.State,
+			City = user.Claims.FirstOrDefault(s => s.Type == "City")?.Value,//usr.City,
+			PhoneNumber = user.Claims.FirstOrDefault(s => s.Type == "PhoneNumber")?.Value,//usr.PhoneNumber
+
+
+  
+            mSpecialty = posterSpeciality.ToString()
+
         };
 
         specialtyList = new List<SelectListItem> {
@@ -453,7 +482,9 @@
         user = authState.User;
         if (user.Identity.IsAuthenticated)
         {
-            var usr = await UserManager.GetUserAsync(user);
+            @*var usr = await UserManager.GetUserAsync(user);*@
+            AppUser usr = new AppUser();
+            usr.PublicId = usrID;
 
             usr.FirstName = inputModel.FirstName;
             usr.LastName = inputModel.LastName;
@@ -472,7 +503,8 @@
 
             try
             {
-                await UserManagerExtensions.UpdateUserProfile(UserManager, user, usr);
+                @*await UserManagerExtensions.UpdateUserProfile(UserManager, user, usr);*@
+                await pService.UpdateUserProfile( user, usr);
             }
             catch (Exception e)
             {
@@ -485,12 +517,15 @@
             newHistory.ID = 0;
             newHistory.PostID = -1;
             newHistory.CreationDate = DateTime.Now;
-            newHistory.PosterID = usr.PublicId;
-            newHistory.UserDisplayName = usr.FirstName + " " + usr.LastName;
+            newHistory.PosterID = usrID;
+            newHistory.UserDisplayName = fullName;
             newHistory.Title = "Hippra";
             newHistory.Detail = "Profile updated";
             newHistory.HistoryTypes = "edited profile";
             await hService.AddHistory(newHistory);
+
+            NavigationManager.NavigateTo("FTRefreshSignIn?returnUrl=FTEditProfile", true);
+
             this.StateHasChanged();
             return;
         }
