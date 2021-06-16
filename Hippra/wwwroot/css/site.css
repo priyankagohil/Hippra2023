@@ -337,6 +337,7 @@ textarea {
 .hover-class:hover {
     background-color: #cce5ff;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .label-img {

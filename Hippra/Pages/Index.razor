@@ -190,8 +190,9 @@
 
 									foreach (var c in SearchResults)
 									{
-			 <div class="border border-dark rounded p-4 mb-2 hover-class" @onclick="(e=>OpenViewModal(c.ID))">
-			  <div class="row">
+			 <a class="hover-class" href=@($"/viewcase/{c.ID}")>
+			  <div id="search-result" class="border border-dark rounded p-4 mb-2 hover-class">
+	  <div class="row">
 			   <div class="col-md-9 align-self-center">
 				<h4 class="">@c.Topic</h4>
 				<div class=""><strong></strong>@c.ParsedCategory · @c.ParsedSubCategory</div>
@@ -210,8 +211,10 @@
 				<div class=""><strong>Description:</strong> @c.Description.Left(200)</div>
 			   </div>
 			  </div>
+			  </div>
+		
 
-			 </div>
+			 </a>
 
 									}
 				}
