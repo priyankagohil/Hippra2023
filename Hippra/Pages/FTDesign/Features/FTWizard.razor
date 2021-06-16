@@ -255,6 +255,10 @@
                                 <div>
                                     <DataAnnotationsValidator />
                                     <ValidationSummary />
+                                    @if (hasPasswordError)
+                                    {
+                                        <div class="alert alert-danger">The Password must contains a Uppercase, a Lowercase, a Number, and a Special characters. Please try again.</div>
+                                    }
                                 </div>
 
                             </div>
@@ -310,6 +314,7 @@
         public string cssClass { get; set; }
     }
     private bool hasError { get; set; } = false;
+    private bool hasPasswordError { get; set; } = false;
 
 
     // CONFIG
@@ -416,6 +421,14 @@
     private async Task SubmitSignUp()
     {
         hasError = false;
+        hasPasswordError = false;
+        //validate password
+        if (inputModel.Password.All(Char.IsLetterOrDigit))
+        {
+            hasPasswordError = true;
+            return;
+        }
+
         var baseurl = NavigationManager.Uri;
         baseurl = baseurl.Remove(baseurl.Length - 10);
 
