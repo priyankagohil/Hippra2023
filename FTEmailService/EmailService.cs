@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MimeKit;
+using System.Net.Mail;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -46,39 +46,26 @@ namespace FTEmailService
                 string mailUserPwd = _emailCred;
                 try
                 {
+                    SmtpClient client = new SmtpClient("smtp-mail.outlook.com");
+                    client.Port = 587;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.UseDefaultCredentials = false;
+                    System.Net.NetworkCredential credential =
+                        new System.Net.NetworkCredential(mailUser, mailUserPwd);
+                    client.EnableSsl = true;
+                    client.Credentials = credential;
 
-                    // create message using MailKit
-                    var msg = new MimeMessage();
-                    msg.From.Add(new MailboxAddress(_senderName, _senderEmail));
-                    msg.To.Add(new MailboxAddress("", email));
+                    MailMessage msg = new MailMessage(new MailAddress(_senderEmail, _senderName), new MailAddress(email, ""));
                     msg.Subject = subject;
-
-                    msg.Body = new TextPart("html")
-                    {
-                        Text = message
-                    };
-
-                    // send
-
-                    using (var client = new MailKit.Net.Smtp.SmtpClient())
-                    {
-                        client.Connect("smtp-mail.outlook.com", 587, false);
-
-                        // Note: since we don't have an OAuth2 token, disable
-                        // the XOAUTH2 authentication mechanism.
-                        client.AuthenticationMechanisms.Remove("XOAUTH2");
-
-                        // Note: only needed if the SMTP server requires authentication
-                        client.Authenticate(mailUser, mailUserPwd);
-
-                        client.Send(msg);
-                        client.Disconnect(true);
-                    }
+                    msg.Body = message;
+                    msg.IsBodyHtml = true;
+                    // client.Send(msg);
+                    await client.SendMailAsync(msg);
+                    client.Dispose();
 
                 }
-                catch (Exception e)
+                catch
                 {
-                    var text = e;
                     return;
                 }
             }
@@ -104,34 +91,23 @@ namespace FTEmailService
                 string mailUserPwd = _emailCred;
                 try
                 {
+                    SmtpClient client = new SmtpClient("smtp-mail.outlook.com");
+                    client.Port = 587;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.UseDefaultCredentials = false;
+                    System.Net.NetworkCredential credential =
+                        new System.Net.NetworkCredential(mailUser, mailUserPwd);
+                    client.EnableSsl = true;
+                    client.Credentials = credential;
 
-                    // create message using MailKit
-                    var msg = new MimeMessage();
-                    msg.From.Add(new MailboxAddress(_senderName, _senderEmail));
-                    msg.To.Add(new MailboxAddress("", _senderEmail));
+                    MailMessage msg = new MailMessage(new MailAddress(_senderEmail, _senderName), new MailAddress(email, ""));
                     msg.Subject = subject;
+                    msg.Body = message;
+                    msg.IsBodyHtml = true;
+                    // client.Send(msg);
+                    await client.SendMailAsync(msg);
+                    client.Dispose();
 
-                    msg.Body = new TextPart("html")
-                    {
-                        Text = message
-                    };
-
-                    // send
-
-                    using (var client = new MailKit.Net.Smtp.SmtpClient())
-                    {
-                        client.Connect("smtp-mail.outlook.com", 587, false);
-
-                        // Note: since we don't have an OAuth2 token, disable
-                        // the XOAUTH2 authentication mechanism.
-                        client.AuthenticationMechanisms.Remove("XOAUTH2");
-
-                        // Note: only needed if the SMTP server requires authentication
-                        client.Authenticate(mailUser, mailUserPwd);
-
-                        client.Send(msg);
-                        client.Disconnect(true);
-                    }
 
                 }
                 catch
@@ -143,7 +119,56 @@ namespace FTEmailService
         }
 
 
-        public async Task FTSendEmailAsync(string senderName, string senderEmail, 
+
+        public async Task FTSend2AdminEmailAsync(string remail, string subject, string message)
+        {
+
+            if (null == remail)
+            {
+                return;
+            }
+            RegexUtilities util = new RegexUtilities();
+            if (!util.IsValidEmail(remail))
+            {
+                return;
+            }
+
+            if (null != _emailAccount && null != _emailCred)
+            {
+                string mailUser = _emailAccount;
+                string mailUserPwd = _emailCred;
+                try
+                {
+                    SmtpClient client = new SmtpClient("smtp-mail.outlook.com");
+                    client.Port = 587;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.UseDefaultCredentials = false;
+                    System.Net.NetworkCredential credential =
+                        new System.Net.NetworkCredential(mailUser, mailUserPwd);
+                    client.EnableSsl = true;
+                    client.Credentials = credential;
+
+                    MailMessage msg = new MailMessage(new MailAddress(_senderEmail, _senderName), new MailAddress(_senderEmail, ""));
+                    msg.Subject = remail + " : " + subject;
+                    msg.Body = message;
+                    msg.IsBodyHtml = true;
+                    // client.Send(msg);
+                    await client.SendMailAsync(msg);
+                    client.Dispose();
+
+
+                }
+                catch // (SmtpException e)
+                {
+                    // Console.WriteLine("Hi!");
+                    return;
+                }
+            }
+            return;
+        }
+
+
+        public async Task FTSendEmailAsync(string senderName, string senderEmail,
             string email, string subject, string message)
         {
 
@@ -156,41 +181,31 @@ namespace FTEmailService
             {
                 return;
             }
-            
-            if (null != _emailAccount && null!= _emailCred)
+
+            if (null != _emailAccount && null != _emailCred)
             {
                 string mailUser = _emailAccount;
                 string mailUserPwd = _emailCred;
                 try
                 {
 
-                    // create message using MailKit
-                    var msg = new MimeMessage();
-                    msg.From.Add(new MailboxAddress(senderName, senderEmail));
-                    msg.To.Add(new MailboxAddress("", email));
+                    SmtpClient client = new SmtpClient("smtp-mail.outlook.com");
+                    client.Port = 587;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.UseDefaultCredentials = false;
+                    System.Net.NetworkCredential credential =
+                        new System.Net.NetworkCredential(mailUser, mailUserPwd);
+                    client.EnableSsl = true;
+                    client.Credentials = credential;
+
+                    MailMessage msg = new MailMessage(new MailAddress(senderEmail, senderName), new MailAddress(email, ""));
                     msg.Subject = subject;
-
-                    msg.Body = new TextPart("html")
-                    {
-                        Text = message
-                    };
-
-                    // send
-
-                    using (var client = new MailKit.Net.Smtp.SmtpClient())
-                    {
-                        client.Connect("smtp-mail.outlook.com", 587, false);
-
-                        // Note: since we don't have an OAuth2 token, disable
-                        // the XOAUTH2 authentication mechanism.
-                        client.AuthenticationMechanisms.Remove("XOAUTH2");
-
-                        // Note: only needed if the SMTP server requires authentication
-                        client.Authenticate(mailUser, mailUserPwd);
-
-                        client.Send(msg);
-                        client.Disconnect(true);
-                    }
+                    msg.Body = message;
+                    msg.IsBodyHtml = true;
+                    //client.Send(msg);
+                    await client.SendMailAsync(msg);
+                    
+                    client.Dispose();
 
                 }
                 catch
