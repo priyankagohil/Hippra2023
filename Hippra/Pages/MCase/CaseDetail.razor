@@ -94,7 +94,7 @@
 
                             </div>
                             <div class="col-md-8">
-                                <div class=""><strong>Created By:</strong> @pCase.PosterName <span class="text-black-50"> (@pCase.PosterSpecialty) </span></div>
+                                <div class="" @onclick="(e => viewPage(pCase.PosterID))"><strong>Created By:</strong> @pCase.PosterName <span class="text-black-50"> (@pCase.PosterSpecialty) </span></div>
                                 <div><strong>Case Status:</strong> @pCase.ParsedStatus</div>
                                 <div><strong>Priority:</strong> @pCase.Priority</div>
                                 <div><strong>Date Created:</strong> @pCase.DateCreated.ToShortDateString() </div>
@@ -296,6 +296,11 @@
         StateHasChanged();
 
     }
+
+    private async Task viewPage(int id)
+	{
+		NavigationManager.NavigateTo("/PersonalPage/" + id);
+	}
 
     private async Task EditMode()
     {
