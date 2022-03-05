@@ -12,6 +12,7 @@
 @inject UserManager<AppUser> UserManager*@
 @inject IOptions<AppSettings> settings
 @inject ProfileService pService
+@inject HippraService hService
 @inject IJSRuntime JSRuntime
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
@@ -33,9 +34,36 @@
                 <br />
                 <div class="lead">Users</div>
                 <hr />
-                @foreach (var i in UserNameList)
+@*                @foreach (var i in UserNameList)
                 {
                     <div>@i</div>
+                    }*@
+                    <div class="row">
+                        <div class="col-md-4">
+                            User Name
+                        </div>
+
+                        <div class="col-md-4">
+                            # of Posts
+                        </div>
+                        <div class="col-md-4">
+                            # of Comments
+                        </div>
+                    </div>
+                @foreach (var i in UserReports)
+                {
+                   <div class="row">
+                        <div class="col-md-4">
+                           @i.UserName
+                        </div>
+
+                        <div class="col-md-4">
+                            @i.NumCase
+                        </div>
+                        <div class="col-md-4">
+                            @i.NumComments
+                        </div>
+                    </div>
                 }
             </div>
 
@@ -61,6 +89,8 @@
     private int NumOfUsers { get; set; } = 0;
     private List<string> UserNameList { get; set; } = new List<string>();
 
+    private List<UserReport> UserReports { get; set; } = new List<UserReport>();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -70,13 +100,18 @@
         if (user.Identity.IsAuthenticated)
         {
             var claimEmail = user.Claims.FirstOrDefault(s => s.Type == "NormalizedEmail")?.Value;
-            if (claimEmail == settings.Value.FTManagerUsr.ToUpper())
+            if (claimEmail == settings.Value.FTManagerUsr.ToUpper()||claimEmail == settings.Value.SupervisorUsr.ToUpper() )
             {
                 isAdmin = true;
                 notApprovedUserList = await pService.GetProfiles();
                 NumOfUsers = await pService.GetUserCount();
                 UserNameList = await pService.GetUserNameList();
-
+                UserReports = await pService.GetUserReport();
+                foreach(var userReport in UserReports)
+                {
+                    userReport.NumCase = await hService.GetMyCaseCount(userReport.PublicId);
+                    userReport.NumComments = await hService.GetCommentCount(userReport.PublicId);
+                }
             }
  @*           var usr = await UserManager.GetUserAsync(user);
             if (usr.NormalizedEmail == settings.Value.FTManagerUsr.ToUpper())

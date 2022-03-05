@@ -16,6 +16,9 @@ namespace Hippra
         public string FTEmailAccount { get; set; }
         public string FTEmailCred { get; set; }
 
+        public string SupervisorUsr { get; set; }
+        
+
         public string RootUrl { get; set; }
         public string StorageUrl { get; set; }
     }

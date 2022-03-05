@@ -1292,6 +1292,11 @@ namespace Hippra.Services
             stats.Answers = await _context.CaseComments.AsNoTracking().CountAsync(c => c.PosterId == postId && c.PosterId != c.Case.PosterID);
             return stats;
         }
+        public async Task<int> GetCommentCount(int posterId)
+        {
+            using var _context = DbFactory.CreateDbContext();
+            return await _context.CaseComments.AsNoTracking().CountAsync(c => c.PosterId == posterId);
+        }
         //Connections
         public async Task<bool> AddConnection(Connection conn)
         {

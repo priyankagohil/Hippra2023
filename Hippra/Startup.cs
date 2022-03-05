@@ -124,6 +124,7 @@ namespace Hippra
 
                 Configuration.GetSection("AppSettings").GetSection("FTEmailAccount").Value = Configuration["FTEmailAccount"];
                 Configuration.GetSection("AppSettings").GetSection("FTEmailCred").Value = Configuration["FTEmailCred"];
+                Configuration.GetSection("AppSettings").GetSection("SupervisorUsr").Value = Configuration["SupervisorUsr"];
                 Configuration.GetSection("AppSettings").GetSection("FTManagerUsr").Value = Configuration["FTManagerUsr"];
                 Configuration.GetSection("AppSettings").GetSection("FTManagerPwd").Value = Configuration["FTManagerPwd"];
                 Configuration.GetSection("AppSettings").GetSection("RootUrl").Value = Configuration["RootUrl"];

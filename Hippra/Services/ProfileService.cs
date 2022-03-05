@@ -488,6 +488,11 @@ namespace Hippra.Services
             return await Hippra.Extensions.UserManagerExtensions.GetAllUsersName(_userManager);
         }
 
+        public async Task<List<UserReport>> GetUserReport()
+        {
+            return await Hippra.Extensions.UserManagerExtensions.GetUserReport(_userManager);
+        }
+
         public async Task UpdateUserProfile(ClaimsPrincipal cpUser, AppUser usr)
         {
             var user = await Hippra.Extensions.UserManagerExtensions.FindByPublicIDNoTrackAsync(_userManager, usr.PublicId);

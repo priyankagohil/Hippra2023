@@ -10,6 +10,7 @@
 @using Hippra.Services
 @using Hippra.Models.SQL
 @using Hippra.Models.Enums
+@using Hippra.Pages.Admin
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor httpContextAccessor
@@ -21,7 +22,10 @@
 @inject ProfileService pService
 @using Microsoft.AspNetCore.Mvc.Rendering;
 @using Hippra.Extensions
+@using Microsoft.Extensions.Options
 @inject IAuthorizationService AuthorizationService
+@inject IOptions<AppSettings> settings
+
 
 <AuthorizeView>
 	<Authorized Context="ViewProfileContext">
@@ -37,6 +41,9 @@
 	</label>
 	<label class="btn  btn-outline-dark @cssActivityLog" @onclick="(e => ShowActivityLog())">
 	 <input type="radio" name="options" id="option2" autocomplete="off"> Activity Log
+	</label>
+	<label class="btn  btn-outline-dark @cssDashboard" @onclick="(e => ShowDashboard())">
+	 <input type="radio" name="options" id="option3" autocomplete="off"> Dashboard
 	</label>
 				@*                      <label class="btn  btn-outline-dark @cssNotification" @onclick="(e => ShowNotification())">
 					<input type="radio" name="options" id="option3" autocomplete="off"> Notifications
@@ -481,7 +488,7 @@
    </div>
   </div>
 		}
-				else
+				else if(actionOptions==2)
 				{
   <div class="ft-main-px">
 
@@ -722,6 +729,19 @@
 	</div>
    </div>
   </div>
+		}else{
+			  <div class="ft-main-px">
+
+   <div class="card">
+	<div class="card-body">
+	 <div class="row">
+	  <div class="offset-md-2 col-md-8 offset-md-2 text-center">
+			<Dashboard/>
+	  </div>
+	 </div>
+	</div>
+   </div>
+  </div>
 		}
 
 	</Authorized>
@@ -767,6 +787,7 @@
 	private string boardCertified = "No";
 	private string cssProfile { get; set; } = "active";
 	private string cssActivityLog { get; set; } = "";
+	private string cssDashboard { get; set; } = "";
 	private string cssNotification { get; set; } = "";
 	private string historyDate = "";
 	private int usrID { get; set; }
@@ -781,12 +802,21 @@
 	private bool AmericanBoardCertified = false;
 	private string fullName = "";
 
+	private bool isAdmin { get; set; } = false;
+
 	protected override async Task OnInitializedAsync()
 	{
 		authState = await authenticationStateTask;
 		user = authState.User;
 		if (user.Identity.IsAuthenticated)
 		{
+
+            var claimEmail = user.Claims.FirstOrDefault(s => s.Type == "NormalizedEmail")?.Value;
+            if (claimEmail == settings.Value.FTManagerUsr.ToUpper()
+            ||claimEmail == settings.Value.SupervisorUsr.ToUpper() )
+            {
+                isAdmin = true;
+            }
 
 			try
 			{
@@ -958,6 +988,7 @@
 		actionOptions = 0;
 		cssProfile = "active";
 		cssActivityLog = "";
+		cssDashboard = "";
 		cssNotification = "";
 
 		this.StateHasChanged();
@@ -967,6 +998,16 @@
 		actionOptions = 1;
 		cssProfile = "";
 		cssActivityLog = "active";
+		cssDashboard = "";
+		cssNotification = "";
+	}
+
+	private async Task ShowDashboard()
+	{
+		actionOptions = 3;
+		cssProfile = "";
+		cssActivityLog = "";
+		cssDashboard = "active";
 		cssNotification = "";
 	}
 	private async Task ShowNotification()
@@ -974,6 +1015,7 @@
 		actionOptions = 2;
 		cssProfile = "";
 		cssActivityLog = "";
+		cssDashboard = "";
 		cssNotification = "active";
 	}
 	private async Task ChangePage(int targetPage)

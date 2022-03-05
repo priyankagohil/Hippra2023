@@ -106,7 +106,7 @@
         if (user.Identity.IsAuthenticated)
         {
             var claimEmail = user.Claims.FirstOrDefault(s => s.Type == "NormalizedEmail")?.Value;
-            if (claimEmail == settings.Value.FTManagerUsr.ToUpper())
+            if (claimEmail == settings.Value.FTManagerUsr.ToUpper()||claimEmail == settings.Value.SupervisorUsr.ToUpper() )
             {
                 isAdmin = true;
                 notApprovedUserList = await pService.GetProfiles();

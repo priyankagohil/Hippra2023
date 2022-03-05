@@ -7,6 +7,7 @@ using Hippra.Models.SQL;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Hippra.Models.Enums;
+using Hippra.Models.POCO;
 
 namespace Hippra.Extensions
 {
@@ -152,7 +153,7 @@ namespace Hippra.Extensions
         public static async Task<List<string>> GetAllUsersName(this UserManager<AppUser> um)
         {
 
-            var users = await um.Users.ToListAsync();
+            var users = await um.Users.AsNoTracking().ToListAsync();
             List<string> uList = new List<string>();
             foreach (var u in users)
             {
@@ -160,6 +161,22 @@ namespace Hippra.Extensions
             }
             return uList;
 
+        }
+
+        public static async Task<List<UserReport>> GetUserReport(this UserManager<AppUser> um)
+        {
+            List<UserReport> results = new List<UserReport>();
+            var users = await um.Users.AsNoTracking().ToListAsync();
+            foreach (var u in users)
+            {
+                var uReport = new UserReport();
+                uReport.UserName = u.FirstName + " " + u.LastName;
+                uReport.PublicId = u.PublicId;
+                
+                results.Add(uReport);
+            }
+
+            return results;
         }
     }
 }
