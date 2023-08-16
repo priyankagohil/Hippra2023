@@ -19,7 +19,7 @@ using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http.Extensions;
 using System.Security.Claims;
 using Newtonsoft.Json;
-using FTEmailService;
+using Hippra.Services.Email;
 
 namespace Hippra.Services
 {
@@ -30,7 +30,7 @@ namespace Hippra.Services
 
         //private readonly FriendManagerService _fmService;
         //private readonly ILogger<RegisterModel> _logger;
-        private readonly FTEmailService.IEmailSender _emailSender;
+        private readonly IEmailService _emailSender;
         private readonly ApplicationDbContext _context;
         //private AzureStorage Storage;
         //private UserDataHelper UserDataHelper;
@@ -40,7 +40,7 @@ namespace Hippra.Services
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             //FriendManagerService fmService,
-            FTEmailService.IEmailSender emailSender,
+           IEmailService emailSender,
             ApplicationDbContext context,
             IOptions<AppSettings> settings)
         {

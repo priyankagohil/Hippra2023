@@ -95,9 +95,10 @@ namespace FTEmailService
                     client.Port = 587;
                     client.DeliveryMethod = SmtpDeliveryMethod.Network;
                     client.UseDefaultCredentials = false;
-                    System.Net.NetworkCredential credential =
-                        new System.Net.NetworkCredential(mailUser, mailUserPwd);
+               
                     client.EnableSsl = true;
+                    System.Net.NetworkCredential credential =
+                   new System.Net.NetworkCredential(mailUser, mailUserPwd);
                     client.Credentials = credential;
 
                     MailMessage msg = new MailMessage(new MailAddress(_senderEmail, _senderName), new MailAddress(email, ""));
@@ -110,8 +111,9 @@ namespace FTEmailService
 
 
                 }
-                catch
+                catch (Exception e)
                 {
+                    var t = e;
                     return;
                 }
             }

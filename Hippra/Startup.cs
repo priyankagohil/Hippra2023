@@ -21,6 +21,7 @@ using Hippra.Models.SQL;
 using Hippra.Services;
 using AutoMapper;
 using System.Runtime.InteropServices;
+using Hippra.Services.Email;
 
 namespace Hippra
 {
@@ -108,10 +109,12 @@ namespace Hippra
 
             if (CurrentEnvironment.IsDevelopment())
             {
-                emailAccount = Configuration["SecAppSettings:FTEmailAccount"];
-                emailCred = Configuration["SecAppSettings:FTEmailCred"];
-                Configuration.GetSection("AppSettings").GetSection("FTEmailAccount").Value = emailAccount;
-                Configuration.GetSection("AppSettings").GetSection("FTEmailCred").Value = emailCred;
+                //emailAccount = Configuration["SecAppSettings:FTEmailAccount"];
+                //emailCred = Configuration["SecAppSettings:FTEmailCred"];
+                //Configuration.GetSection("AppSettings").GetSection("FTEmailAccount").Value = emailAccount;
+                //Configuration.GetSection("AppSettings").GetSection("FTEmailCred").Value = emailCred;
+                emailAccount = Configuration.GetSection("AppSettings").GetSection("FTEmailAccount").Value;
+                emailCred = Configuration.GetSection("AppSettings").GetSection("FTEmailCred").Value;
                 services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
             }
             else
@@ -145,6 +148,11 @@ namespace Hippra
             // means run this service in background
             services.AddTransient<HippraService>();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<AppUser>>();
+            services.AddScoped<IEmailService, SendgridEmailService>(client =>
+            {
+                var appKey = Configuration["SendgridAppKey"];
+                return new SendgridEmailService(appKey);
+            });
 
         }
 

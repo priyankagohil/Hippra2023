@@ -8,141 +8,149 @@
 @using System.Text.Encodings.Web;
 @using Hippra.Models.FTDesign;
 @using Hippra.Services;
-@inject Microsoft.AspNetCore.Components.NavigationManager  NavigationManager
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager
 @inject ProfileService pService;
 @using Hippra.Models.SQL;
 @*@inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager*@
 @using System.Security.Claims
 
-    <div class="ft-main-px">
-        <br />
-        <div class="card">
-            <div class="card-body">
-                <br />
-                <br />
-                <div class="d-block text-center">
-                    <EditForm Model="@inputModel" OnValidSubmit="@SubmitEmail">
-                        <DataAnnotationsValidator />
-                        <ValidationSummary />
+<div class="ft-main-px">
+    <br />
+    <div class="card">
+        <div class="card-body">
+            <br />
+            <br />
+            <div class="d-block text-center">
+                <EditForm Model="@inputModel" OnValidSubmit="@SubmitEmail">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="col d-md-none ">
+                        <img src="/img/idea/i2s.jpg" class="img-fluid" />
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col d-none d-md-block  ">
+                            <img src="/img/idea/i1s.jpg" class="img-fluid" />
+                        </div>
                         <div class="col d-md-none ">
-                            <img src="/img/idea/i2s.jpg" class="img-fluid" />
-                        </div>
-                        <div class="row align-items-center">
-                            <div class="col d-none d-md-block  ">
-                                <img src="/img/idea/i1s.jpg" class="img-fluid" />
-                            </div>
-                            <div class="col d-md-none ">
-                                <div class="">
-                                    <br />
-                                    <div class="mb-3 display-4 ">Contact Us</div>
-                                    <br />
-                                    <br />
-                                    <div class="mb-3">
-                                        <InputText class="form-control" id="Name" type="text" required placeholder="Name" @bind-Value="@inputModel.Name" aria-label="Name" aria-describedby="Name" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <InputText class="form-control" id="Email" type="email" required placeholder="Email" @bind-Value="@inputModel.Email" aria-label="Email" aria-describedby="Email" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <InputText class="form-control" id="Subject" type="text" required placeholder="Subject" @bind-Value="@inputModel.Subject" aria-label="Subject" aria-describedby="Subject" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <InputTextArea class="form-control" id="Message" required placeholder="Message" @bind-Value="@inputModel.Message" row="12" aria-label="Message" aria-describedby="Message" />
-                                    </div>
-                                    <br />
-                                    <div class="mx-2">
-                                        <div class="d-flex justify-content-end">
-                                            <button class="btn btn-outline-dark" type="submit">Send</button>
-
-                                        </div>
-
-                                        @if (hasError)
-                                        {
-                                            <div class="alert alert-danger">Something went wrong. Please try again.</div>
-                                        }
-                                        <br />
-
-                                        @if (status == 1)
-                                        {
-                                            <div class="alert alert-info">Please fill out all fields.</div>
-                                        }
-                                        <br />
-
-                                        @if (status == 2)
-                                        {
-                                            <div class="alert alert-info">Email sent, we'll respond soon.</div>
-                                        }
-                                        <br />
-                                        <br />
-                                    </div>
+                            <div class="">
+                                <br />
+                                <div class="mb-3 display-4 ">Contact Us</div>
+                                <br />
+                                <br />
+                                <div class="mb-3">
+                                    <InputText class="form-control" id="Name" type="text" required placeholder="Name" @bind-Value="@inputModel.Name" aria-label="Name" aria-describedby="Name" />
                                 </div>
-
-                            </div>
-                            <div class="col d-none d-md-block ">
-                                <div class="mr-5">
-                                    <br />
-                                    <div class="mb-3 display-4 ">Contact Us</div>
-                                    <br />
-                                    <br />
-                                    <div class="mb-3">
-                                        <InputText class="form-control" id="Name" type="text" required placeholder="Name" @bind-Value="@inputModel.Name" aria-label="Name" aria-describedby="Name" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <InputText class="form-control" id="Email" type="email" required placeholder="Email" @bind-Value="@inputModel.Email" aria-label="Email" aria-describedby="Email" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <InputText class="form-control" id="Subject" type="text" required placeholder="Subject" @bind-Value="@inputModel.Subject" aria-label="Subject" aria-describedby="Subject" />
-                                    </div>
-                                    <div class="mb-3">
-                                        <InputTextArea class="form-control" id="Message" required placeholder="Message" @bind-Value="@inputModel.Message" row="12" aria-label="Message" aria-describedby="Message" />
-                                    </div>
-                                    <br />
-                                    <div class="mx-2">
-                                        <div class="d-flex justify-content-end">
-                                            <button class="btn btn-outline-dark" type="submit">Send</button>
-
-                                        </div>
-
-                                        @if (hasError)
-                                        {
-                                            <div class="alert alert-danger">Something went wrong. Please try again.</div>
-                                        }
-                                        <br />
-
-                                        @if (status == 1)
-                                        {
-                                            <div class="alert alert-info">Please fill out all fields.</div>
-                                        }
-                                        <br />
-
-                                        @if (status == 2)
-                                        {
-                                            <div class="alert alert-info">Email sent, we'll respond soon.</div>
-                                        }
-                                        <br />
-                                        <br />
-                                    </div>
+                                <div class="mb-3">
+                                    <InputText class="form-control" id="Email" type="email" required placeholder="Email" @bind-Value="@inputModel.Email" aria-label="Email" aria-describedby="Email" />
                                 </div>
+                                <div class="mb-3">
+                                    <InputText class="form-control" id="Subject" type="text" required placeholder="Subject" @bind-Value="@inputModel.Subject" aria-label="Subject" aria-describedby="Subject" />
+                                </div>
+                                <div class="mb-3">
+                                    <InputTextArea class="form-control" id="Message" required placeholder="Message" @bind-Value="@inputModel.Message" row="12" aria-label="Message" aria-describedby="Message" />
+                                </div>
+                                <br />
+                                <div class="mx-2">
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-outline-dark" type="submit">Send</button>
 
+                                    </div>
+                                    @if (sending)
+                                    {
+                                        <div class="alert alert-danger">Sending...</div>
+                                    }
+                                    @if (hasError)
+                                    {
+                                        <div class="alert alert-danger">Something went wrong. Please try again.</div>
+                                    }
+                                    <br />
+
+                                    @if (status == 1)
+                                    {
+                                        <div class="alert alert-info">Please fill out all fields.</div>
+                                    }
+                                    <br />
+
+                                    @if (status == 2)
+                                    {
+                                        <div class="alert alert-info">Email sent, we'll respond soon.</div>
+                                    }
+                                    <br />
+                                    <br />
+                                </div>
                             </div>
 
                         </div>
-                    </EditForm>
+                        <div class="col d-none d-md-block ">
+                            <div class="mr-5">
+                                <br />
+                                <div class="mb-3 display-4 ">Contact Us</div>
+                                <br />
+                                <br />
+                                <div class="mb-3">
+                                    <InputText class="form-control" id="Name" type="text" required placeholder="Name" @bind-Value="@inputModel.Name" aria-label="Name" aria-describedby="Name" />
+                                </div>
+                                <div class="mb-3">
+                                    <InputText class="form-control" id="Email" type="email" required placeholder="Email" @bind-Value="@inputModel.Email" aria-label="Email" aria-describedby="Email" />
+                                </div>
+                                <div class="mb-3">
+                                    <InputText class="form-control" id="Subject" type="text" required placeholder="Subject" @bind-Value="@inputModel.Subject" aria-label="Subject" aria-describedby="Subject" />
+                                </div>
+                                <div class="mb-3">
+                                    <InputTextArea class="form-control" id="Message" required placeholder="Message" @bind-Value="@inputModel.Message" row="12" aria-label="Message" aria-describedby="Message" />
+                                </div>
+                                <br />
+                                <div class="mx-2">
+                                    <div class="d-flex justify-content-end">
+                                        <button class="btn btn-outline-dark" type="submit" disabled="@sending">Send</button>
 
-                </div>
-                <br />
-                <br />
+                                    </div>
+                                    @if (sending)
+                                    {
+                                        <div class="alert alert-info">Sending...</div>
+                                    }
+                                    <br />
+                                    @if (hasError)
+                                    {
+                                        <div class="alert alert-danger">Something went wrong. Please try again.</div>
+                                    }
+                                    <br />
+
+                                    @if (status == 1)
+                                    {
+                                        <div class="alert alert-info">Please fill out all fields.</div>
+                                    }
+                                    <br />
+
+                                    @if (status == 2)
+                                    {
+                                        <div class="alert alert-info">Email sent, we'll respond soon.</div>
+                                    }
+                                    <br />
+                                    <br />
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </EditForm>
+
             </div>
+            <br />
+            <br />
         </div>
     </div>
-    <br />
+</div>
+<br />
 
 
 
 @code {
     private FTContactUsModel inputModel { get; set; } = new FTContactUsModel();
     private bool hasError { get; set; } = false;
+    private bool sending { get; set; } = false;
     private int status { get; set; } = 0;
     private bool sent { get; set; } = false;
 
@@ -153,8 +161,10 @@
 
     private async Task SubmitEmail()
     {
+        sending = true;
         if (sent)
         {
+            sending = false;
             return;
         }
         hasError = false;
@@ -173,6 +183,10 @@
             {
                 status = 2;
                 sent = true;
+                inputModel.Name = "";
+                inputModel.Email = "";
+                inputModel.Subject = "";
+                inputModel.Message = "";
             }
             if (result == 1)
             {
@@ -185,7 +199,7 @@
         {
             hasError = true;
         }
-
+        sending = false;
 
     }
 

@@ -185,6 +185,13 @@
 								<hr />
 								<br />
 								<div class="mb-3">
+
+									@if(IsLoading)
+									{
+											<p><em>Searching...</em></p>
+									}
+									else
+									{
 									@if (Count > 0)
 				{
 
@@ -223,7 +230,7 @@
 		 <div>No Case Found. Try Modify Search Criteria or Filter.</div>
 									}
 
-
+									}
 								</div>
 								@if (Count > PageSize)
 				{
@@ -950,6 +957,8 @@
 		}
 
 
+
+
 	</Authorized>
 	<NotAuthorized>
 		<Landing></Landing>
@@ -979,7 +988,7 @@
 
 	private bool hasError { get; set; } = false;
 	private int status { get; set; } = 0;
-
+	private bool IsLoading = false;
 	private string searchString { get; set; } = "";
 
 	private bool showFilters { get; set; } = false;
@@ -1021,7 +1030,7 @@
 	private string mTitle { get; set; } = "Post New Case";
 	private bool mIsCreate = true;
 	private bool viewMode = true;
-
+	
 	private ParsedCase pCase { get; set; } = new ParsedCase();
 
 	private string cssAllActive { get; set; } = "active";
@@ -1073,12 +1082,12 @@
 		{
 			@*usr = await UserManager.GetUserAsync(user);*@
 
-            try
+			try
 			{
 				if(userId==-1){
 					userId = Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "PublicId")?.Value);
 				}
-				
+
 				posterSpeciality = ParseMedicalSpecialty((MedicalSpecialtyType)Int32.Parse(user.Claims.FirstOrDefault(s => s.Type == "MedicalSpecialty")?.Value));
 			}
 			catch (FormatException e)
@@ -1153,10 +1162,22 @@
 			//Count = await hService.GetMyCaseCount(usr.PublicId);
 		}
 
-		foreach (var i in cases)
-		{
+		//foreach (var i in cases)
+		//{
 
-			SearchResults.Add(new ParsedCase()
+		//	SearchResults.Add(new ParsedCase()
+		//	{
+		//		ID = i.ID,
+		//		Topic = i.Topic,
+		//		Description = i.Description,
+		//		DateCreated = i.DateCreated,
+		//		Priority = ParsePriority(i.ResponseNeeded),
+		//		ParsedCategory = ParseCategoryFromSub(i.MedicalCategory),
+		//		ParsedSubCategory = ParseSubCategory(i.MedicalCategory)
+		//	});
+		//}
+
+		SearchResults=cases.Select(i=>new ParsedCase()
 			{
 				ID = i.ID,
 				Topic = i.Topic,
@@ -1165,8 +1186,8 @@
 				Priority = ParsePriority(i.ResponseNeeded),
 				ParsedCategory = ParseCategoryFromSub(i.MedicalCategory),
 				ParsedSubCategory = ParseSubCategory(i.MedicalCategory)
-			});
-		}
+			}).ToList();
+
 		//history stuffs
 		if (searchString != "")
 		{
@@ -1186,12 +1207,13 @@
 			{
 				newHistory.Detail = '"' + searchString + '"';
 			}
-			await hService.AddHistory(newHistory);
+			hService.AddHistory(newHistory);
 		}
 
 	}
 	private async Task searchHandler()
 	{
+		IsLoading = true;
 		if (actionOptions == 1)
 		{
 			await ShowMyCases();
@@ -1240,6 +1262,7 @@
 		cssMyActive = "";
 
 		this.StateHasChanged();
+		IsLoading = false;
 		//await JSRuntime.InvokeAsync<string>("blazorExtensions.toggleModal", "mPostModal");
 	}
 	private async Task ShowMyCases()
@@ -1267,6 +1290,7 @@
 
 		mTitle = "My Cases";
 		this.StateHasChanged();
+		IsLoading = false;
 		//await JSRuntime.InvokeAsync<string>("blazorExtensions.toggleModal", "mPostModal");
 	}
 
