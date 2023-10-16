@@ -1,0 +1,446 @@
+@import url("https://fonts.googleapis.com/css?family=Noto Sans N'Ko Unjoined");
+
+
+ul, li, header {
+    margin: 100;
+    padding: 100;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    font-family: "Noto Sans N'Ko Unjoined", sans-serif;
+}
+
+/* Style the header and navigation bar */
+header {
+    
+    margin-bottom: 10px;
+    background-color: #004170;
+    color: #fff;
+    padding: 10px 0;
+}
+
+nav {
+    display: flex;
+    
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 3rem;
+    width: 100%;
+    
+}
+
+
+/* Style the logo */
+.logo {
+    flex-grow: 1; /* Grow to take available space */
+    position: absolute;
+    left: 1%;
+    top: 1.5%;
+}
+
+.logo svg {
+    fill: #fff; /* Change the fill color of your SVG logo */
+    height: 40px; /* Adjust the height as needed */
+    width: auto; /* Maintain aspect ratio */
+} 
+
+/* Style the navigation links */
+
+.nav-link-left {
+    list-style: none;
+    display: flex;
+    align-self: center;
+}
+
+.nav-link-right{
+    list-style: none;
+    display: flex;
+    position: absolute;
+    right: 0px;
+}
+
+.nav-link-right li{
+    margin-right: 20px;
+    padding: 6px 12px;
+}
+
+
+
+.nav-link-left li {
+    margin-right: 30px; 
+    line-height: 40px;
+}
+
+.nav-link-right a,
+.nav-link-left a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+.nav-link-left a:hover {
+    color: #ff6600;
+}
+
+.nav-login a:hover{
+    color: #ff6600;
+}
+
+.register-btn{
+    background-color: #ff6600;
+    /* padding: 4px 10px; */
+    border-radius: 7px; 
+    color: #fff;
+}
+
+
+.tag-line-hung{
+    background-color: #fff;
+    padding: 4px 50px;
+    border-radius: 16px; 
+    width: fit-content;  
+    margin-left: 80px;
+    margin-top: 80px; 
+    font-size: 24px;
+    
+}
+
+.bold-tag-line{
+    font-size: 80px;
+    margin-left: 80px;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #fff;
+    /* margin-bottom: 40px; */
+}
+
+.intro-sub{
+    font-size: 26px;
+    margin-left: 80px;
+    color: #fff;
+}
+
+.create-acc-btn{
+    font-size: 26px;
+    margin-left: 70px;
+    background-color: #ff6600;
+    color: #fff;
+    width: fit-content;
+    border-radius: 20px; 
+    padding: 6px 20px;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+
+.create-acc-btn:active{
+    box-shadow: inset 0 0 10px 1px rgba(0, 0, 0, 0.5);
+    color: black;
+}
+
+.btn:hover{
+    cursor: pointer;
+    box-shadow: inset 0 0 10px 1px rgba(0, 0, 0, 0.5);
+}
+
+
+.alrdy-reg{
+    margin-left: 80px;
+    margin-top: 10px;
+    font-size: small;
+    color: #fff;
+}
+
+.alrdy-reg a{
+    color: #fff;
+}
+
+.intro-blw-hdr{
+    margin-top: -10px;
+    background-color: #004170; 
+    /* padding: 20px 0 100px 0; */
+    padding-bottom: 30px;
+    padding-top: 20px;
+    
+    
+}
+
+
+
+.why-hippra{
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    color: #ff6600;
+    padding-top: 30px;
+    margin-bottom: 10px;
+}
+
+.why-container {
+    gap: 2.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    display: grid;
+    padding: 70px;
+    margin-top: -10px;
+}
+.icon{
+    font-size: 26px;
+}
+
+.container-four {
+    position: relative;
+    text-align: center;
+    padding: 1.5rem .5rem 1.25rem 1.5rem ;
+    border-radius: .25rem;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, .15); */
+}
+
+
+.many-features{
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    padding-top: 30px;
+}
+
+.explore_more{
+    text-align: center;
+    color: #0077CC;
+    cursor: pointer;
+}
+
+.right-arrow-btn{
+    display: inline-block;
+    transition: transform 0.3s;
+}
+
+.explore_more:hover .right-arrow-btn{
+    transform: translateX(.25rem);
+}
+  
+
+.hd-bold{
+    padding-top: 10px;
+    font-weight: bold;
+}
+
+.sub-txt{
+    padding-top: 10px;
+    font-size: 10px;
+}
+
+.feature-container{
+    gap: 0.5rem;
+    display: flex;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.container-three{
+    width: 30%; 
+    height: auto; 
+    margin-right: 10px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    margin-left: 20px;
+    margin-right: 20px;
+    border-radius: 15px;
+}
+
+.featured-left{
+    color: #6f5192;
+    background-color: #dcd3e7;
+    border-radius: 7px;
+    width: fit-content; 
+    padding: 4px 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+}
+
+.featured-center{
+    color: #00008B;
+    background-color: #B9D9EB;
+    border-radius: 7px;
+    width: fit-content; 
+    padding: 4px 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+}
+
+.featured-right{
+    color: #007f00;
+    background-color: #ccffcc;
+    border-radius: 7px;
+    width: fit-content; 
+    padding: 4px 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+}
+
+.image-container {
+    width: 100%; 
+    height: 200px; 
+    overflow: hidden; 
+}
+
+.image-container img {
+    max-width: 100%; 
+    height: auto; 
+}
+
+.container-content{
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+    text-align: justify;
+}
+
+.container-btn{
+    text-align: center;
+    border: 2px solid #0077CC; 
+    border-radius: 9px;
+    margin: 50px 10px 50px 10px;
+}
+
+.more-button {
+    display: inline-block;
+    padding: 10px 20px; 
+    
+    color: #0077CC; 
+    text-decoration: none; 
+    font-weight: bold; 
+}
+
+.podcast-container{
+    display: flex;
+    background-color: 	#C0C0C0;
+    background-image: url('White-Line.png'); /* URL to your PNG image */
+    background-size: 20% auto; /* Reduce the width to 50% while maintaining the original height */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    background-position: center; /* Center the image within the container */
+    color: white; /* Set text color for contrast */
+    
+    margin-top: 30px;
+}
+
+.podcast-container li{
+    list-style: none;
+}
+
+.podcast-container p{
+    margin-top: 10px;
+    font-size: 2rem;
+}
+
+.pod-links{
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.pod-links:hover{
+    color: #fff;
+}
+
+.podcast-container-1{
+    flex: 60%; /* 60% width for the first container */
+    padding: 20px; /* Add padding as needed */
+    /* border: 1px solid #ccc; */
+}
+
+.podcast-container-2{
+    flex: 40%; /* 40% width for the second container */
+    padding: 20px; /* Add padding as needed */
+    /* border: 1px solid #ccc; */
+}
+
+
+
+
+.pre-footer-container{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+.footer-container-four{
+    flex: 1; 
+    padding: 20px;
+    /* border: 1px solid #ccc; */
+}
+
+.footer-container-four li{
+    list-style: none;
+    margin-top: 20px;
+}
+
+.footer-links{
+    text-decoration: none;
+    color: #03989F;
+}
+
+
+
+.footer-text{
+    color: #fff;
+    margin-left: 50px;
+    font-size: small;
+}
+
+.fa {
+    padding: 20px;
+    /* font-size: 30px; */
+    width: 20px;
+    text-align: center;
+    text-decoration: none;
+    margin: 5px 2px;
+    border-radius: 50%;
+
+  }
+
+.fa:hover {
+    opacity: 0.7;
+}
+
+.fa-facebook {
+    background: #03989F;
+    color: white;
+}
+  
+.fa-twitter {
+    background: #03989F;
+    color: white;
+}
+
+.fa-linkedin {
+    background: #03989F;
+    color: white;
+}
+
+.footer{
+    background-color: #004170;
+    width: 100%;
+    height: 8rem;
+    margin-top: 50px;
+}
+
+.myButton{
+    background-color: #ff6600;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+}
+
+.myButton:hover{
+    cursor: pointer;
+    box-shadow: inset 0 0 10px 1px rgba(0, 0, 0, 0.5);
+}
+
