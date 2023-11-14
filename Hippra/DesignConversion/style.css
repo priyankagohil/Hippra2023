@@ -10,13 +10,14 @@ body {
     margin: 0px;
     padding: 0px;
     font-family: "Noto Sans N'Ko Unjoined", sans-serif;
+    background-color: #093B58;
 }
 
 /* Style the header and navigation bar */
 header {
     
     margin-bottom: 10px;
-    background-color: #004170;
+    background-color: #093B58;
     color: #fff;
     padding: 10px 0;
 }
@@ -163,12 +164,10 @@ nav {
 
 .intro-blw-hdr{
     margin-top: -10px;
-    background-color: #004170; 
+    background-color: #093B58; 
     /* padding: 20px 0 100px 0; */
     padding-bottom: 30px;
     padding-top: 20px;
-    
-    
 }
 
 
@@ -177,9 +176,10 @@ nav {
     text-align: center;
     font-size: 40px;
     font-weight: bold;
-    color: #ff6600;
+    color: #DA5810;
     padding-top: 30px;
     margin-bottom: 10px;
+    background-color: rgba(255, 255, 255, 0.55);
 }
 
 .why-container {
@@ -188,6 +188,7 @@ nav {
     display: grid;
     padding: 70px;
     margin-top: -10px;
+    background-color: rgba(255, 255, 255, 0.55);
 }
 .icon{
     font-size: 26px;
@@ -198,7 +199,7 @@ nav {
     text-align: center;
     padding: 1.5rem .5rem 1.25rem 1.5rem ;
     border-radius: .25rem;
-    /* box-shadow: 0 2px 4px rgba(0, 0, 0, .15); */
+    
 }
 
 
@@ -235,20 +236,27 @@ nav {
     font-size: 10px;
 }
 
+.many-features,
+.explore_more,
+.text {
+    color: #fff;
+}
+
 .feature-container{
     gap: 0.5rem;
-    display: flex;
     grid-template-columns: repeat(3, 1fr);
+    display: flex;          
+    justify-content: center; 
 }
 
 .container-three{
-    width: 30%; 
-    height: auto; 
-    margin-right: 10px; 
+    width: 25%; 
+    height: fit-content; 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
     border-radius: 15px;
+    background-color: #fff;
 }
 
 .featured-left{
@@ -320,13 +328,12 @@ nav {
 
 .podcast-container{
     display: flex;
-    background-color: 	#C0C0C0;
+    background-color: rgba(255, 255, 255, 0.55);
     background-image: url('White-Line.png'); /* URL to your PNG image */
     background-size: 20% auto; /* Reduce the width to 50% while maintaining the original height */
     background-repeat: no-repeat; /* Prevent the image from repeating */
     background-position: center; /* Center the image within the container */
     color: white; /* Set text color for contrast */
-    
     margin-top: 30px;
 }
 
@@ -368,6 +375,7 @@ nav {
     display: flex;
     justify-content: space-between;
     margin-top: 50px;
+    margin-left: 40px;
 }
 
 .footer-container-four{
@@ -386,24 +394,20 @@ nav {
     color: #03989F;
 }
 
-
-
 .footer-text{
     color: #fff;
     margin-left: 50px;
     font-size: small;
 }
 
-.fa {
+.fa{
     padding: 20px;
-    /* font-size: 30px; */
     width: 20px;
     text-align: center;
     text-decoration: none;
     margin: 5px 2px;
     border-radius: 50%;
-
-  }
+}
 
 .fa:hover {
     opacity: 0.7;
@@ -425,7 +429,7 @@ nav {
 }
 
 .footer{
-    background-color: #004170;
+    background-color: #093B58;
     width: 100%;
     height: 8rem;
     margin-top: 50px;
@@ -435,8 +439,10 @@ nav {
     background-color: #ff6600;
     color: #fff;
     border: none;
-    border-radius: 5px;
-    font-size: 15px;
+    border-radius: 2px;
+    font-size: 10px;
+    padding: 5px 10px;
+    margin-left: 20px;
 }
 
 .myButton:hover{
