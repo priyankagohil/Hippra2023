@@ -1,0 +1,608 @@
+/**********************************************************************************/
+/******************************** HTML Tag Styling ********************************/
+/**********************************************************************************/
+
+html, body {
+  height: 100%;
+}
+
+main {
+  /* padding: 0px 10px; */
+  margin-left: 82px;
+  margin-right: 20px;
+}
+
+p { margin:0 }
+
+span.inline {
+  display: inline-block;
+}
+
+
+a:link {
+  text-decoration: none;
+}
+
+ul {
+  list-style-type: none;
+}
+/**********************************************************************************/
+/******************************** Background Color Styling ************************/
+/**********************************************************************************/
+.background-grey-1{ background-color:#F1F2F6 ; }
+.background-grey-2{ background-color:#F4F4F4 ; }
+.background-grey-navbar{ background-color:#F7F7F8 ; }
+.background-green{ background-color:#1DA39D ; }
+.background-white{ background-color:#ffffff ; }
+.background-light-green{ background-color:#F3FAF9;}
+
+/**********************************************************************************/
+/******************************** Fonts: colors and heading styles ************************************/
+/**********************************************************************************/
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+.text-green{ color:#1DA39D ; }
+.text-orange{ color:#DA5810 ; }
+.text-navy-blue{ color:#093B58 ; }
+.text-grey-1{ color:#939393 ; }
+.text-grey-2{ color:#949494 ; }
+.text-grey-3{ color:#636468 ; }
+.text-grey-4{ color:#504B56 ; }
+.text-grey-5{ color:#2B2C34 ; }
+.text-black{ color:#000000 ; }
+.text-white{ color:#ffffff ; }
+
+.h1{ 
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+  font-size: 24px;
+}
+.h2{ 
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+  font-size: 20px;
+}
+.h3{ 
+  font-family: 'Roboto', sans-serif;
+  font-weight: medium;
+  font-size: 18px;
+}
+.h4{ 
+  font-family: 'Roboto', sans-serif;
+  font-weight: medium;
+  font-size: 16px;
+}
+.h5{ 
+  font-family: 'Roboto', sans-serif;
+  font-weight: medium;
+  font-size: 12px;
+}
+.h6{ 
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.h7{ 
+  font-family: 'Roboto', sans-serif;
+  font-weight: normal;
+  font-size: 15px;
+}
+.h8{ 
+  font-family: 'Roboto', sans-serif;
+  font-weight: normal;
+  font-size: 14px;
+}
+
+/**********************************************************************************/
+/******************************** Icon colors and styling Styling ******************************/
+/**********************************************************************************/
+
+#icon-notifications{
+  fill: #636468;
+}
+#icon-down-arrow{
+  stroke: #636468;
+}
+#filter1{
+  fill: #636468;
+  margin-left:10px
+}
+.icon-add {
+  fill: #636468;
+  padding: 10px;
+  margin-left: 29%;
+  /* position: absolute; */
+  /* right: 0px; */
+  /* float: right; */
+  margin-top: 3px;
+  width: 25px;
+  align-items: center;
+}
+
+.icon-reply, .icon-share{
+  fill: #DA5810;
+}
+.icon-more, .icon-bookmark, .icon-right-arrow{
+  fill: #039F98;
+}
+.icon-comment{
+  stroke: #039F98;
+}
+
+
+.icon-expand-sidebar{
+  stroke:#9DA3AA;
+  cursor: pointer;
+}
+
+.icon-collapse-sidebar{
+  stroke:#9DA3AA;
+  text-align: right !important;
+  cursor: pointer;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: auto;
+  background-color: #1C1F21;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 10px;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+  top: 22%;
+  left: 100%;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+/**********************************************************************************/
+/******************************** Buttons *******************************/
+/**********************************************************************************/
+/* btn1 is used to toggle between "recent(selected)" and "trending(non-active)" 
+buttons in sort-by-view option */
+.btn1-selected{
+  width: 110;
+  height: 30px;
+  padding: 0px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color:#63AEAB ;
+  color:#ffffff  ;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+}
+.btn1-selected:hover{
+  background-color:#1DA39D;
+}
+.btn1-non-active{
+  width: 110px;
+  height: 30px;
+  padding: 0px 20px;
+  border-radius: 5px;
+  border: 1px solid #DE6C2D;
+  background-color: #ffffff ;
+  color: #DE6C2D;
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  text-align: center;
+}
+.btn1-non-active:hover{
+  font-weight: bold;
+  text-align: center;
+}
+/* btn2 is used for "post" button */
+.btn2{
+  margin-top: 8px;
+  width: auto;
+  height: 26px;
+  padding: 0px 20px;
+  border: none;
+  border-radius: 10px;
+  background-color: #DA5810 ;
+  color:#ffffff;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.btn2:hover{
+  background-color: #DE6C2D ;
+}
+
+/* btn3 is used for "tags" button */
+.btn3{
+  margin-top: 13px;
+  width: auto;
+  height: 24px;
+  padding: 0px 10px;
+  border: none;
+  border-radius: 10px;
+  background-color:#D9D9D9  ;
+  color: #000000;
+  font-family: 'Roboto', sans-serif;
+  font-weight: medium;
+  font-size: 12px;
+}
+
+.btn3:hover{
+  font-weight: bold;
+  text-align: center;
+}
+/**********************************************************************************/
+/******************************** forms *******************************/
+/**********************************************************************************/
+input#searchbar{
+  width: 340px;
+  height: 27px;
+  padding-left: 10px;
+  border: 1px solid #D9D9D9;
+  border-radius: 10px;
+  color: #504B56;
+  outline: none;
+}
+input#searchbar:focus {
+  border: 2px solid #636468;
+}
+
+input#add-a4h-case{
+  padding-left: 20px;
+  width: 100%;
+  height: 49px;
+  background-color: #F1F2F6;
+  color: #636468;
+  border: none;
+  border-radius: 20px;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  font-weight: medium;
+  font-size: 18px;
+  outline: none;
+}
+
+input#add-a4h-case:focus{
+  border: 2px solid #DA5810;
+}
+/*********************************************************************/
+/************************* Alignment and common margins ***********************/
+/*********************************************************************/
+/* to vertically align elements */
+.space-content-equally{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.space-content-left{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+
+.margin-left{
+  margin-left: 10px;
+}
+.margin-left-right{
+  margin: 0px 10px;
+}
+
+.margin-right{
+  margin-right:10px;
+}
+
+.margin-bottom{
+  margin-bottom: 15px;
+}
+
+.margin-top{
+  margin-top: 10px;
+}
+
+.margin-top-navbar{
+  margin-top: 20px;
+  overflow: visible;
+}
+
+.author-details{
+  margin: 9px 0px 13px 0px;
+}
+
+
+.text-align-right, .sort-cases{
+  text-align: right;
+}
+
+
+/*********************************************************************/
+/* ****************************** Table ****************************** */
+/*********************************************************************/
+ /* Create two unequal columns that floats next to each other */
+#row{
+  margin-top: 15px;
+  height: 100%; 
+  overflow: visible;
+}
+
+#left{
+  float: left;
+  width: 40%;
+  border-right: 30px solid white;
+  max-height: 100%;
+  box-sizing: border-box; 
+  overflow: visible;
+}
+#right{
+  float: left;
+  width: 60%;
+  max-height: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+#a4h-card-list{
+  max-height: 500px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  box-sizing: border-box;
+
+}
+#knowledge-card-list{
+  max-height: 595px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  box-sizing: border-box;
+
+}
+
+
+/* Clear floats after the columns */
+/* .row:after {
+  content: "";
+  display: table;
+  clear: both;
+} */
+
+
+/*********************************************************************/
+/******************************* Remaining Classes and IDs *******************************/
+/*********************************************************************/
+.user-profile-picture {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  margin-left: 22px;
+}
+
+/******************************** Sidebar ********************************/
+.sidenav {
+    height: 100%; /* Full-height */
+    width: 74px;
+    position: fixed; 
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #F7F7F8; 
+    padding: 20px 8px;
+    box-sizing: border-box;
+    text-align: center;
+    
+}
+
+
+.nav{
+  margin: 0px 8px ;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidebar_bottom {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+.nav__listitem svg {
+  stroke: #40454A;
+  stroke-width: 1.5;
+  z-index: 99;
+  position: relative;
+}
+
+.nav__listitem-active svg {
+  stroke: #039F98;
+  stroke-width: 2;
+}
+
+.nav__listitem-active::before {
+  content: "";
+  width: 45.5px;
+  height: 45.5px;
+  background-color: white;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid #E0E3E6;
+  position: absolute;
+  text-align: center;
+  align-items: center;
+  transition: transform 400ms cubic-bezier(0, 0.76, 0.58, 1.43);
+  z-index: 1;
+}
+
+/******************************** expanded sidebar ********************************/
+#sidenav-expanded{
+  height: 100%; 
+  width: 0;
+  background-color: #F7F7F8; 
+  overflow: hidden; 
+  padding: 20px 0px;
+  box-sizing: border-box;
+  /* text-align: left; */
+
+  position: fixed; 
+  z-index: 100; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+
+}
+
+#sidenav-expanded .nav{
+  text-align: left;
+}
+
+#sidenav-expanded .sidebar_bottom{
+  text-align: right;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.expanded_nav__listitem{
+  color: #504B56;
+  text-align: left;
+  align-items: center;
+}
+
+.expanded_nav__listitem svg {
+  stroke: #40454A;
+  stroke-width: 1.5;
+}
+
+.expanded_nav__listitem-active svg {
+  stroke: #039F98;
+  stroke-width: 2;
+  position: relative;
+  z-index: 500;
+}
+.expanded_nav__listitem-active p {
+  color: #039F98;
+  position: relative;
+  z-index: 500;
+}
+
+.expanded_nav__listitem-active::before {
+  content: "";
+  width: 244px;
+  height: 48px;
+  background-color: white;
+  display: block;
+  border-radius: 10px;
+  border: 1px solid #E0E3E6;
+  position: absolute;
+  text-align: left;
+  align-items: center;
+  z-index: 100;
+  transition: fill 400ms cubic-bezier(0, 0.76, 0.58, 1.43);
+}
+
+/******************************** a4h case cards ********************************/
+
+.input-icons svg {
+  position: absolute;
+}
+
+.a4h-case-card {
+  border-radius: 10px;
+  border:1px solid #DA5810;
+  padding: 20px 20px 10px 20px; 
+  box-shadow: 5px 5px 4px #D9D9D9;
+}
+
+.tags{
+  /* height: 24px; */
+  width: auto;
+  padding: 6px 10px;
+  border-radius: 20px;
+}
+
+/******************************** knowledge case cards ********************************/
+
+.knowledge-case-card{
+  border-radius:10px;
+  border: 1px solid #1DA39D;
+  box-shadow: 5px 5px 4px #D9D9D9;
+  padding:20px 20px 0px 20px;
+  /* height:212px; */
+}
+/* .upper-knowledge-case-card {
+  border-radius: 10px 10px 0px 0px;
+  padding: 20px; 
+  height: 150px;  
+}
+  
+.lower-knowledge-case-card{
+  border-radius: 0px 0px 10px 10px;
+  padding: 0px 20px; 
+  height:64px;
+} */
+
+.author-profile-picture{
+  width: 35px; 
+  height: 35px;
+  border-radius: 50%;
+  align-items: center;
+  margin-right: 10px;
+}
+
+/******************************** Dropdown ********************************/
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-border{
+  padding-bottom: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.dropbtn{
+  cursor: pointer;
+}
+
+#myDropdown{
+  display: none;
+}
+
+.dropdown_content {
+  /* display: none; */
+  padding: 10px 15px;
+  position: absolute;
+  right: 0;
+  background-color: #f9f9f9;
+  min-width: 250px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-radius: 10px;
+} 
+
+.dropdown_content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown_content a:hover {
+  background-color: #ddd;
+}
+
+.show {display: block;}
+
+
+/* .arrow {
+  transform: rotate(180deg);
+  transition: 0.2s ease;
+} */
